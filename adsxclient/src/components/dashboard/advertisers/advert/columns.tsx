@@ -13,55 +13,36 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import EditAdItem from "./EditAdvert"
-import DeleteAdItem from "./DeleteAdvert"
+import EditAdvert from "./EditAdvert"
+import DeleteAdvert from "./DeleteAdvert"
 
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type AdItem = {
-  id: any
- _id: string
-  title: string
-  description: string
-  creative: string
-  creativeurl?: string
-  clickUrl: string
-  campaignId: string
-  adItemiserId: string
-  impressions: number
-  clicks: number
-  dateCreated: Date
-  ageRange: string[]
-  gender: string[]
-  interests: string[]
+export type Advert = {
+  id: string
+  amount: number
+  status: "pending" | "processing" | "success" | "failed"
+  email: string
 }
 
-export const columns: ColumnDef<AdItem>[] = [
- {
-    accessorKey: "title",
-    header: "Title",
+export const columns: ColumnDef<Advert>[] = [
+  {
+    accessorKey: "status",
+    header: "Status",
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "email",
+    header: "Email",
   },
   {
-    accessorKey: "clickUrl",
-    header: "Click URL",
-  },
-  {
-    accessorKey: "impressions",
-    header: "Impressions",
-  },
-  {
-    accessorKey: "clicks",
-    header: "Clicks",
-  },
+    accessorKey: "amount",
+    header: "Amount",
+    },
   {
     id: "actions",
     cell: ({ row }) => {
-      const AdItem = row.original
+      const Advert = row.original
  
       return (
         <DropdownMenu>
@@ -75,11 +56,11 @@ export const columns: ColumnDef<AdItem>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <EditAdItem AdItemID={AdItem.id} />
+                <EditAdvert AdvertID={Advert.id} />
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
-                <DeleteAdItem AdItemID={AdItem.id} />
+                <DeleteAdvert AdvertID={Advert.id} />
             </DropdownMenuItem>
             
           </DropdownMenuContent>
