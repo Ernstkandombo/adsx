@@ -37,36 +37,39 @@ export default function AssignCampaign({ CampaignID }) {
             });
     }, []);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+   const handleSubmit = async (event) => {
+    event.preventDefault();
 
-        const formData = {
-            campaignId: CampaignID,
-            placementId: selectedPlacement,
-            websiteId: selectedWebsite,
-        };
-        console.log(formData)
-        try {
-            const response = await axios.post('http://localhost:5001/api/campaignassignment', formData);
-            console.log('Campaign assigned successfully:', response.data);
-            toast.success('Campaign assigned successfully');
-            // Reset form after successful submission
-            setSelectedPlacement("");
-            setSelectedWebsite("");
-            // Set campaignIdResponse state with the received campaignId
-            setCampaignIdResponse(response.data.campaignId);
-            
-           
-            toast({
-            description:response.data.campaignId,
-            position: 'top-center',
-        });
+    // Check if selectedPlacement is empty
+    if (!selectedPlacement) {
+        // Handle case where no placement is selected
+        console.error('No placement selected');
+        toast.error('Please select a placement');
+        return;
+    }
 
-        } catch (error) {
-            console.error('Error assigning campaign:', error);
-            toast.error('Error assigning campaign');
-        }
+    const formData = {
+        campaignId: CampaignID,
+        placementId: selectedPlacement, // Ensure selectedPlacement is a valid ObjectId or null
+        websiteId: selectedWebsite,
     };
+    console.log(formData)
+    try {
+        const response = await axios.post('http://localhost:5001/api/campaignassignment', formData);
+        console.log('Campaign assigned successfully:', response.data);
+        toast.success('Campaign assigned successfully', {
+            onClose: () => setCampaignIdResponse(null) // Clear campaignIdResponse when toast is closed
+        });
+        // Reset form after successful submission
+        setSelectedPlacement("");
+        setSelectedWebsite("");
+        // Set campaignIdResponse state with the received campaignId
+        setCampaignIdResponse(response.data._id);
+    } catch (error) {
+        console.error('Error assigning campaign:', error);
+        toast.error('Error assigning campaign');
+    }
+};
 
     return (
         <Dialog>
@@ -119,13 +122,7 @@ export default function AssignCampaign({ CampaignID }) {
                         <Button type="submit">Assign</Button>
                     </DialogFooter>
                 </form>
-                {/* Display campaignIdResponse if it's available */}
-                {campaignIdResponse && (
-                    <div>
-                        <Label>Campaign ID:</Label>
-                        <input type="text" value={campaignIdResponse} readOnly />
-                    </div>
-                )}
+
             </DialogContent>
         </Dialog>
     );
