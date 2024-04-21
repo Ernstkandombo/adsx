@@ -4,7 +4,6 @@ const AdItemSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     creative: { type: String, required: true },
-    url: { type: String, required: true },
     clickUrl: { type: String, required: true },
     campaignId: { type: mongoose.Schema.Types.ObjectId, ref: 'Campaign', required: true },
     advertiserId: { type: mongoose.Schema.Types.ObjectId, ref: 'Advertiser', required: true },

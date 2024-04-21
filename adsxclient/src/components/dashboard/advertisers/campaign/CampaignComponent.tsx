@@ -1,5 +1,5 @@
 import React from 'react'
-
+import axios from 'axios';
 
 import { Campaign, columns } from '@/components/dashboard/advertisers/campaign/columns';
 import { DataTable } from '@/components/dashboard/advertisers/campaign/data-table';
@@ -8,28 +8,14 @@ import { DataTable } from '@/components/dashboard/advertisers/campaign/data-tabl
 
 async function getData(): Promise<Campaign[]> {
   // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      },
-   
-    // ...
-  ]
+  // Fetch data from your API here.
+  try {
+    const response = await axios.get('http://localhost:5001/api/campaign/',{ cache: 'no-store' });
+    return response.data; // Assuming your API returns an array of Advert objects
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return []; // Return empty array in case of an error
+  }
 }
  
 

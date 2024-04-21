@@ -1,9 +1,8 @@
-"use client"
+'use client'
+import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,38 +10,56 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import EditAdvert from "./EditAdvert"
-import DeleteAdvert from "./DeleteAdvert"
-
+import EditAdvert from "./EditAdvert";
+import DeleteAdvert from "./DeleteAdvert";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Advert = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+  _id: string;
+  title: string;
+  description: string;
+  creative: string;
+
+  clickUrl: string;
+  campaignId: string;
+  advertiserId: string;
+  impressions: number;
+  clicks: number;
+  dateCreated: Date;
+  ageRange: string[];
+  gender: string[];
+  interests: string[];
+};
 
 export const columns: ColumnDef<Advert>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "title",
+    header: "Title",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "description",
+    header: "Description",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
-    },
+    accessorKey: "creative",
+    header: "Creative",
+  },
+  
+  {
+    accessorKey: "impressions",
+    header: "Impressions",
+  },
+  {
+    accessorKey: "clicks",
+    header: "Clicks",
+  },
   {
     id: "actions",
     cell: ({ row }) => {
-      const Advert = row.original
+      const Advert = row.original;
  
       return (
         <DropdownMenu>
@@ -56,16 +73,16 @@ export const columns: ColumnDef<Advert>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <EditAdvert AdvertID={Advert.id} />
+                <EditAdvert AdvertID={Advert._id} />
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
-                <DeleteAdvert AdvertID={Advert.id} />
+                <DeleteAdvert AdvertID={Advert._id} />
             </DropdownMenuItem>
             
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];

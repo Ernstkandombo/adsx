@@ -1,9 +1,8 @@
 "use client"
+import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,39 +10,69 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import EditCampaign from "./EditCampaign"
-import DeleteCampaign from "./DeleteCampaign"
+import EditCampaign from "./EditCampaign";
+import DeleteCampaign from "./DeleteCampaign";
 
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+// Define the type for the Campaign
 export type Campaign = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+  _id: string;
+  name: string;
+  description: string;
+  advertiserId: string;
+  startDate: Date;
+  endDate: Date;
+  dailyBudget: number;
+  totalBudget: number;
+  clicks: number;
+  impressions: number;
+  dateCreated: Date;
+};
 
+// Define the columns for the React table
 export const columns: ColumnDef<Campaign>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "description",
+    header: "Description",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
-    },
+    accessorKey: "startDate",
+    header: "Start Date",
+    // You might want to format the date here
+    // Example: cell: ({ value }) => new Date(value).toLocaleDateString()
+  },
+  {
+    accessorKey: "endDate",
+    header: "End Date",
+    // You might want to format the date here
+    // Example: cell: ({ value }) => new Date(value).toLocaleDateString()
+  },
+  {
+    accessorKey: "dailyBudget",
+    header: "Daily Budget",
+  },
+  {
+    accessorKey: "totalBudget",
+    header: "Total Budget",
+  },
+  {
+    accessorKey: "clicks",
+    header: "Clicks",
+  },
+  {
+    accessorKey: "impressions",
+    header: "Impressions",
+  },
   {
     id: "actions",
     cell: ({ row }) => {
-      const Campaign = row.original
- 
+      const campaign = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -56,16 +85,14 @@ export const columns: ColumnDef<Campaign>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <EditCampaign CampaignID={Campaign.id} />
+              <EditCampaign CampaignID={campaign._id} />
             </DropdownMenuItem>
-
             <DropdownMenuItem asChild>
-                <DeleteCampaign CampaignID={Campaign.id} />
+              <DeleteCampaign CampaignID={campaign._id} />
             </DropdownMenuItem>
-            
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
