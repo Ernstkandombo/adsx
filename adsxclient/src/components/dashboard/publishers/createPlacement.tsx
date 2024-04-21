@@ -19,12 +19,11 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectGroup,
-  SelectLabel,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { useForm } from 'react-hook-form';
 
 export default function CreatePlacement() {
   const [placementData, setPlacementData] = useState({
@@ -32,10 +31,12 @@ export default function CreatePlacement() {
     description: "",
     websiteId: "",
     websiteUrl: "",
+    publisherId: "6624c982c54d9f664fb57061",
     width: 0,
     height: 0,
   });
   const [websites, setWebsites] = useState([]);
+  const form = useForm();
 
   useEffect(() => {
     axios.get('http://localhost:5001/api/websites')
@@ -55,28 +56,28 @@ export default function CreatePlacement() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Extract websiteId and websiteUrl from the selected value
     const [websiteId, websiteUrl] = placementData.websiteId.split(',');
 
     // Update placementData with websiteId and websiteUrl
-    setPlacementData(prevData => ({
-      ...prevData,
+    const updatedPlacementData = {
+      ...placementData,
       websiteId,
       websiteUrl
-    }));
+    };
 
-    axios.post('http://localhost:5001/api/placement', placementData)
-      .then(response => {
-        console.log('Placement created successfully:', response.data);
-        toast.success('Placement created successfully');
-      })
-      .catch(error => {
-        console.error('Error creating placement:', error);
-        toast.error('Error creating placement');
-      });
+    try {
+      const response = await axios.post('http://localhost:5001/api/placement', updatedPlacementData);
+      console.log('Placement created successfully:', response.data);
+      toast.success('Placement created successfully');
+      
+    } catch (error) {
+      console.error('Error creating placement:', error);
+      toast.error('Error creating placement');
+    }
   };
 
   return (
@@ -103,25 +104,22 @@ export default function CreatePlacement() {
                 <Label>Description:</Label>
                 <Input type="text" name="description" value={placementData.description} onChange={handleChange} />
               </div>
-              <div className="col-span-2">
+              <div className="col-span-1">
                 <Label>Website URL:</Label>
-                <Select>
-                  <SelectTrigger className="w-1/2">
+                <Select onValueChange={(value) => setPlacementData(prevData => ({ ...prevData, websiteId: value }))} defaultValue={placementData.websiteId}>
+                  <SelectTrigger>
                     <SelectValue placeholder="Select a website" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Websites</SelectLabel>
-                      {websites.map(website => (
-                        <SelectItem key={website._id} value={`${website._id},${website.url}`}>
-                          {website.url}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
+                    {websites.map(website => (
+                      <SelectItem key={website._id} value={`${website._id},${website.url}`}>
+                        {website.url}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
-              <div className="py-4 col-span-2">
+              <div className="pt-4 col-span-2">
                 <p>Dimensions</p>
               </div>
               <div>
@@ -142,4 +140,3 @@ export default function CreatePlacement() {
     </Dialog>
   );
 }
- 

@@ -1,9 +1,8 @@
 'use client'
 
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'sonner';
 import {
     Dialog,
     DialogContent,
@@ -13,95 +12,82 @@ import {
     DialogHeader,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
     SelectItem,
-    SelectGroup,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { toast } from 'sonner';
+import Link from "next/link"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+const FormSchema = z.object({
+    websiteId: z.string({
+        required_error: "Please select a website.",
+    })
+})
 
 export default function EditPlacement({ placementId }) {
+    const [websites, setWebsites] = useState([]);
     const [placementData, setPlacementData] = useState({
-        name: "",
-        description: "",
-        websiteId: "",
-        websiteUrl: "", // Added websiteUrl state
-        publisherId: "",
-        width: 0,
-        height: 0,
+        name: '',
+        description: '',
+        width: '',
+        height: '',
     });
-    const [websites, setWebsites] = React.useState([]);
-    const [selectedWebsite, setSelectedWebsite] = React.useState({
-        _id: "",
-        url: "",
-    });
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+    })
 
-
-
-    // Fetch placement data and list of websites based on placementId when the component mounts
     useEffect(() => {
-        axios.all([
-            axios.get(`http://localhost:5001/api/placement/${placementId}`),
-            axios.get('http://localhost:5001/api/websites')
-        ])
-            .then(axios.spread((placementResponse, websitesResponse) => {
-                setPlacementData(placementResponse.data);
-                setWebsites(websitesResponse.data);
-            }))
+        // Fetch placement details when component mounts
+        axios.get(`http://localhost:5001/api/placement/${placementId}`)
+            .then(response => {
+                const { websiteId, ...placementData } = response.data;
+                setPlacementData(placementData);
+                form.setValue("websiteId", websiteId);
+            })
             .catch(error => {
-                // Handle error
-                console.error('Error fetching data:', error);
+                console.error('Error fetching placement:', error);
+                toast.error('Failed to fetch placement');
+            });
+
+        // Fetch websites when component mounts
+        axios.get('http://localhost:5001/api/websites')
+            .then(response => {
+                setWebsites(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching websites:', error);
+                toast.error('Failed to fetch websites');
             });
     }, [placementId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setPlacementData({
-            ...placementData,
+        setPlacementData(prevState => ({
+            ...prevState,
             [name]: value,
-        });
+        }));
     };
 
-    const handleSelectChange = (e) => {
-        const { value } = e.target;
-        const website = websites.find(site => site._id === value);
-        setSelectedWebsite(website);
+    const handleSubmit = (data) => {
+        // Submit placement data including websiteId
+        axios.put(`http://localhost:5001/api/placement/${placementId}`, data)
+            .then(response => {
+                toast.success('Placement updated successfully');
+            })
+            .catch(error => {
+                console.error('Error updating placement:', error);
+                toast.error('Failed to update placement');
+            });
     };
-    
-    
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Extract websiteId and websiteUrl from the selected value
-    const [websiteId, websiteUrl] = placementData.websiteId.split(',');
-
-    // Update placementData with websiteId and websiteUrl
-    setPlacementData(prevData => ({
-        ...prevData,
-        websiteId,
-        websiteUrl: websiteUrl 
-    }));
-    
-    axios.put(`http://localhost:5001/api/placement/${placementId}`, placementData)
-        .then(response => {
-            // Handle success
-            console.log('Placement updated successfully:', response.data);
-            toast.success('Placement updated successfully');
-        })
-        .catch(error => {
-            // Handle error
-            console.error('Error updating placement:', error);
-            toast.error('Error updating placement');
-        });
-};
-
 
     return (
         <Dialog>
@@ -118,7 +104,7 @@ export default function EditPlacement({ placementId }) {
                     </DialogDescription>
                 </DialogHeader>
                 <div className="overflow-y-auto">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={form.handleSubmit(handleSubmit)} >
                         <div className="grid grid-cols-2 gap-4 py-4">
                             <div>
                                 <Label>Name:</Label>
@@ -128,26 +114,23 @@ export default function EditPlacement({ placementId }) {
                                 <Label>Description:</Label>
                                 <Input type="text" name="description" value={placementData.description} onChange={handleChange} />
                             </div>
-                            <div className="col-span-2">
+                            <div className="col-span-1">
                                 <Label>Website URL:</Label>
-                                <Select>
-                                    <SelectTrigger className="w-1/2">
+                                <Select onValueChange={(value) => form.setValue("websiteId", value)} defaultValue={form.getValues().websiteId}>
+                                    <SelectTrigger>
                                         <SelectValue placeholder="Select a website" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Websites</SelectLabel>
-                                            {websites.map(website => (
-                                                <SelectItem key={website._id} value={`${website._id},${website.url}`}>
-                                                    {website.url}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
+                                        {websites.map(website => (
+                                            <SelectItem key={website._id} value={website._id}>
+                                                {website.url}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="py-4 col-span-2">
-                                <p>Diamensions</p>
+                            <div className="pt-4 col-span-2">
+                                <p>Dimensions</p>
                             </div>
                             <div>
                                 <Label>Width:</Label>
