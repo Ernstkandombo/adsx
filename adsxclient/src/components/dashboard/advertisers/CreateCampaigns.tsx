@@ -18,8 +18,7 @@ export default function CreateCampaigns() {
         dailyBudget: '',
          totalBudget: '',
         advertiserId: "6623830857a0a0a874b17bc5", 
-    impressions: 0,
-    clicks: 0
+    
     });
 
     const handleChange = (e) => {

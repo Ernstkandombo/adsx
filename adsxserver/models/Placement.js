@@ -8,8 +8,7 @@ const PlacementSchema = new mongoose.Schema({
     zoneId: { type: mongoose.Schema.Types.ObjectId, ref: 'Zone', required: true },
     width: { type: Number, required: true },
     height: { type: Number, required: true },
-    clicks: { type: Number, default: 0 },
-    impressions: { type: Number, default: 0 },
+
     dateCreated: { type: Date, default: Date.now }
 });
 

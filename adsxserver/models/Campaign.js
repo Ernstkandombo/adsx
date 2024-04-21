@@ -8,8 +8,7 @@ const CampaignSchema = new mongoose.Schema({
     endDate: { type: Date, required: true },
     dailyBudget: { type: Number, required: true },
     totalBudget: { type: Number, required: true },
-    clicks: { type: Number, default: 0 },
-    impressions: { type: Number, default: 0 },
+
     dateCreated: { type: Date, default: Date.now }
 });
 
