@@ -3,7 +3,7 @@ import Nav from '@/components/dashboard/Nav'
 import Metrics from '@/components/dashboard/publishers/Metrics';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card'
 import CreateZone from '@/components/dashboard/publishers/CreateZone';
-import ZoneComponent from '@/components/dashboard/publishers/zones/ZoneComponent';
+import ZoneComponent from '@/components/dashboard/publishers/Campaign/ZoneComponent';
 import WebsiteComponent from '@/components/dashboard/publishers/websites/WebsiteComponent';
 import PlacementComponent from '@/components/dashboard/publishers/placement/PlacementComponent';
 import CreatePlacement from '@/components/dashboard/publishers/createPlacement';

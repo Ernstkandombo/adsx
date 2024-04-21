@@ -5,7 +5,7 @@ import CreateCampaigns from '@/components/dashboard/advertisers/CreateCampaigns'
 import AddAdvert from '@/components/dashboard/advertisers/AddAdvert';
 import Metrics from '@/components/dashboard/advertisers/Metrics';
 
-import ZoneAssignComponent from '@/components/dashboard/advertisers/ZoneAssigns/ZoneAssignComponent';
+import PlacementAssignComponent from '@/components/dashboard/advertisers/PlacementAssigns/PlacementAssignComponent';
 import CampaignComponent from '@/components/dashboard/advertisers/campaign/CampaignComponent';
 import AdvertComponent from '@/components/dashboard/advertisers/advert/AdvertComponent';
 
@@ -57,13 +57,13 @@ export default function page() {
                         <Card x-chunk="dashboard-01-chunk-5">
                             <CardHeader className="flex flex-row items-center">
                                 <div className="grid gap-2">
-                                    <CardTitle className="text-xls">Zones Assignment</CardTitle>
-                                    <CardDescription>View All Available Zones And Assign the Zones</CardDescription>
+                                    <CardTitle className="text-xls">Placements Assignment</CardTitle>
+                                    <CardDescription>View All Available Placements And Assign the Placements</CardDescription>
                                 </div>
                              
                             </CardHeader>
                             <CardContent className="grid gap-8">
-                                <ZoneAssignComponent />
+                                <PlacementAssignComponent />
                             </CardContent>
                         </Card>
                     </section>

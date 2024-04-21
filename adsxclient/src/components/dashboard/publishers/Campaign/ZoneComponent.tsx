@@ -2,12 +2,13 @@ import React from 'react'
 import axios from 'axios';
 
 
-import { Zone, columns } from '@/components/dashboard/publishers/zones/columns';
-import { DataTable } from '@/components/dashboard/publishers/zones/data-table';
+import { Campaign, columns } from '@/components/dashboard/publishers/Campaign/columns';
+import { DataTable } from '@/components/dashboard/publishers/Campaign/data-table';
 
 
 
-async function getData(): Promise<Zone[]> {
+
+async function getData(): Promise<Campaign[]> {
   // Fetch data from your API here.
   return [
     {
@@ -35,7 +36,7 @@ async function getData(): Promise<Zone[]> {
 }
  
 
-export default async function ZoneComponent() {
+export default async function CampaignComponent() {
       
     const data = await getData()
 

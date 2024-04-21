@@ -1,15 +1,15 @@
 import React from 'react'
 
 import axios from 'axios';
-import { ZoneAssign, columns } from '@/components/dashboard/advertisers/ZoneAssigns/columns';
-import { DataTable } from '@/components/dashboard/advertisers/ZoneAssigns/data-table';
+import { PlacementAssign, columns } from '@/components/dashboard/advertisers/PlacementAssigns/columns';
+import { DataTable } from '@/components/dashboard/advertisers/PlacementAssigns/data-table';
 
 
 
-async function getData(): Promise<ZoneAssign[]> {
+async function getData(): Promise<PlacementAssign[]> {
   // Fetch data from your API here.
   try {
-    const response = await axios.get('http://localhost:5001/api/zone/',{ cache: 'no-store' });
+    const response = await axios.get('http://localhost:5001/api/Placement/',{ cache: 'no-store' });
     return response.data; // Assuming your API returns an array of Advert objects
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -18,7 +18,7 @@ async function getData(): Promise<ZoneAssign[]> {
 }
  
 
-export default async function ZoneAssignComponent() {
+export default async function PlacementAssignComponent() {
       
     const data = await getData()
 

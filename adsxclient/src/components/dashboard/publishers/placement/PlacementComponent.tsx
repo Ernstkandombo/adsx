@@ -1,8 +1,8 @@
 import React from 'react'
 import axios from 'axios';
 
-import { Zone, columns } from '@/components/dashboard/publishers/zones/columns';
-import { DataTable } from '@/components/dashboard/publishers/zones/data-table';
+import { Zone, columns } from '@/components/dashboard/publishers/Campaign/columns';
+import { DataTable } from '@/components/dashboard/publishers/Campaign/data-table';
 
 
 

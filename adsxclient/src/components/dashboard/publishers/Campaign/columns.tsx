@@ -13,20 +13,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import EditZone from "./EditZone"
-import DeleteZone from "./DeleteZone"
+import AssignCampaign from "./CamapignAssign"
 
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Zone = {
+export type Campaign = {
   id: string
   amount: number
   status: "pending" | "processing" | "success" | "failed"
   email: string
 }
 
-export const columns: ColumnDef<Zone>[] = [
+export const columns: ColumnDef<Campaign>[] = [
   {
     accessorKey: "status",
     header: "Status",
@@ -42,7 +41,7 @@ export const columns: ColumnDef<Zone>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const zone = row.original
+      const Campaign = row.original
  
       return (
         <DropdownMenu>
@@ -56,13 +55,10 @@ export const columns: ColumnDef<Zone>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <EditZone ZoneID={zone.id} />
+                <AssignCampaign CampaignID={Campaign.id} />
             </DropdownMenuItem>
 
-            <DropdownMenuItem asChild>
-                <DeleteZone ZoneID={zone.id} />
-            </DropdownMenuItem>
-            
+           
           </DropdownMenuContent>
         </DropdownMenu>
       )

@@ -4,11 +4,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import ZoneAssign from "./ZoneAssign";
+import PlacementAssign from "./PlacementAssign";
 import { Badge } from "@/components/ui/badge"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type ZoneAssign = {
+export type PlacementAssign = {
  _id: string;
   name: string;
   description: string;
@@ -18,7 +18,7 @@ export type ZoneAssign = {
   dateCreated: Date;
 };
 
-export const columns: ColumnDef<ZoneAssign>[] = [
+export const columns: ColumnDef<PlacementAssign>[] = [
  {
     accessorKey: "name",
     header: "Name",
@@ -43,7 +43,7 @@ export const columns: ColumnDef<ZoneAssign>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const Zone = row.original;
+      const Placement = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -56,7 +56,7 @@ export const columns: ColumnDef<ZoneAssign>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <ZoneAssign ZoneAssignID={Zone._id} />
+              <PlacementAssign PlacementAssignID={Placement._id} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
