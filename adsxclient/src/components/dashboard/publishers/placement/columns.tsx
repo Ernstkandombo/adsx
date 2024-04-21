@@ -21,6 +21,7 @@ export type Placement = {
   name: string;
   description: string;
   websiteId: string; // Assuming websiteId is of type string
+  websiteUrl: string;
   publisherId: string; // Assuming publisherId is of type string
   zoneId: string; // Assuming zoneId is of type string
   width: number;
@@ -38,17 +39,10 @@ export const columns: ColumnDef<Placement>[] = [
     header: "Description",
   },
   {
-    accessorKey: "websiteId",
-    header: "Website ID",
+    accessorKey: "websiteUrl",
+    header: "Website URL",
   },
-  {
-    accessorKey: "publisherId",
-    header: "Publisher ID",
-  },
-  {
-    accessorKey: "zoneId",
-    header: "Zone ID",
-  },
+  
   {
     accessorKey: "width",
     header: "Width",

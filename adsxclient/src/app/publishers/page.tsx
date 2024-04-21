@@ -2,8 +2,8 @@ import React from 'react'
 import Nav from '@/components/dashboard/Nav'
 import Metrics from '@/components/dashboard/publishers/Metrics';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card'
-import CreateZone from '@/components/dashboard/publishers/CreateZone';
-import ZoneComponent from '@/components/dashboard/publishers/Campaign/ZoneComponent';
+
+import CampaignComponent from '@/components/dashboard/publishers/Campaign/CampaignComponent';
 import WebsiteComponent from '@/components/dashboard/publishers/websites/WebsiteComponent';
 import PlacementComponent from '@/components/dashboard/publishers/placement/PlacementComponent';
 import CreatePlacement from '@/components/dashboard/publishers/createPlacement';
@@ -22,16 +22,16 @@ export default async function page() {
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 grid-rows-2 md:grid-rows-2 lg:grid-rows-2 gap-4">
 
                     <section className="grid-item md:col-span-3 lg:col-span-3">
-                        <Card x-chunk="dashboard-01-chunk-5">
+                       <Card x-chunk="dashboard-01-chunk-5">
                             <CardHeader className="flex flex-row items-center">
                                 <div className="grid gap-2">
-                                    <CardTitle className="text-xls">Zones</CardTitle>
-                                    <CardDescription>Manage Zones</CardDescription>
+                                    <CardTitle className="text-xls">Websites</CardTitle>
+                                    <CardDescription>All Your Websites</CardDescription>
                                 </div>
-                                <CreateZone />
+
                             </CardHeader>
                             <CardContent className="grid gap-8">
-                                <ZoneComponent />
+                                <WebsiteComponent />
                             </CardContent>
                         </Card>
                     </section>
@@ -50,18 +50,20 @@ export default async function page() {
                         </Card>
                     </section>
                     <section className="grid-item md:col-span-2 lg:col-span-2 lg:row-span-2 lg:col-start-4 lg:row-start-1">
-                        <Card x-chunk="dashboard-01-chunk-5">
+                             <Card x-chunk="dashboard-01-chunk-5">
                             <CardHeader className="flex flex-row items-center">
                                 <div className="grid gap-2">
-                                    <CardTitle className="text-xls">Websites</CardTitle>
-                                    <CardDescription>All Your Websites</CardDescription>
+                                    <CardTitle className="text-xls">Campaigns</CardTitle>
+                                    <CardDescription>View ALL Availables Campaigns</CardDescription>
                                 </div>
-
+                                
                             </CardHeader>
                             <CardContent className="grid gap-8">
-                                <WebsiteComponent />
+                                <CampaignComponent />
                             </CardContent>
                         </Card>
+
+                        
                     </section>
 
                     

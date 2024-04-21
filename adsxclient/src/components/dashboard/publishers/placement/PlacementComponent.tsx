@@ -1,13 +1,13 @@
 import React from 'react'
 import axios from 'axios';
 
-import { Zone, columns } from '@/components/dashboard/publishers/Campaign/columns';
-import { DataTable } from '@/components/dashboard/publishers/Campaign/data-table';
+import { Placement, columns } from '@/components/dashboard/publishers/Placement/columns';
+import { DataTable } from '@/components/dashboard/publishers/Placement/data-table';
 
 
 
 
-async function getData(): Promise<Zone[]> {
+async function getData(): Promise<Placement[]> {
   // Fetch data from your API here.
   try {
     const response = await axios.get('http://localhost:5001/api/placement/');
@@ -28,3 +28,5 @@ export default async function PlacementComponent() {
      <DataTable columns={columns} data={data} />
   )
 }
+
+

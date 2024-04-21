@@ -16,28 +16,50 @@ import {
 import AssignCampaign from "./CamapignAssign"
 
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+
+// Define the type for the Campaign
 export type Campaign = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+  _id: string;
+  name: string;
+  description: string;
+  advertiserId: string;
+  startDate: Date;
+  endDate: Date;
+  dailyBudget: number;
+  totalBudget: number;
+  clicks: number;
+  impressions: number;
+  dateCreated: Date;
+};
 
 export const columns: ColumnDef<Campaign>[] = [
-  {
-    accessorKey: "status",
-    header: "Status",
+ {
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "description",
+    header: "Description",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
-    },
+    accessorKey: "startDate",
+    header: "Start Date",
+   
+  },
+  {
+    accessorKey: "endDate",
+    header: "End Date",
+     
+  },
+  {
+    accessorKey: "dailyBudget",
+    header: "Daily Budget",
+  },
+  {
+    accessorKey: "totalBudget",
+    header: "Total Budget",
+  },
+  
   {
     id: "actions",
     cell: ({ row }) => {
@@ -55,7 +77,7 @@ export const columns: ColumnDef<Campaign>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <AssignCampaign CampaignID={Campaign.id} />
+                <AssignCampaign CampaignID={Campaign._id} />
             </DropdownMenuItem>
 
            
