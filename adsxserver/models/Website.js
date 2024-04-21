@@ -4,6 +4,7 @@ const WebsiteSchema = new mongoose.Schema({
     url: { type: String, required: true },
     description: { type: String },
     category: { type: String },
+    publisherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Publisher', required: true },
     dateCreated: { type: Date, default: Date.now },
     //target creterias
     ageRange: [String],

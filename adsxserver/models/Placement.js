@@ -4,9 +4,8 @@ const PlacementSchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     websiteId: { type: mongoose.Schema.Types.ObjectId, ref: 'Website', required: true },
-    websiterl: { type: String, required: true },
+    websiteUrl: { type: String, required: true },
     publisherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Publisher', required: true },
-    zoneId: { type: mongoose.Schema.Types.ObjectId, ref: 'Zone', required: true },
     width: { type: Number, required: true },
     height: { type: Number, required: true },
 
