@@ -82,7 +82,7 @@ export default function CreateCampaigns() {
                         </div>
                     </div>
                     <DialogFooter className="py-8">
-                        <Button type="submit">Save</Button>
+                        <Button type="submit">Create Campaign</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

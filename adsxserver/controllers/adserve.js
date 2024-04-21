@@ -11,10 +11,11 @@ exports.adServe = async (req, res) => {
         if (!campaignAssignment) {
             return res.status(404).send({ error: 'Campaign assignment not found' });
         }
-
-        const adItems = await AdItem.find();
+        const campaignId = campaignAssignment.campaignId;
+        const adItems = await AdItem.find({ campaignId });
 
         console.log("Ad Items:", adItems);
+
 
         const website = await Website.find({ websiteId: campaignAssignment._id.placementId });
 

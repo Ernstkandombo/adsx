@@ -58,14 +58,7 @@ export const columns: ColumnDef<Campaign>[] = [
     accessorKey: "totalBudget",
     header: "Total Budget",
   },
-  {
-    accessorKey: "clicks",
-    header: "Clicks",
-  },
-  {
-    accessorKey: "impressions",
-    header: "Impressions",
-  },
+  
   {
     id: "actions",
     cell: ({ row }) => {
