@@ -1,36 +1,21 @@
 import React from 'react'
-
+import axios from 'axios';
 
 import { Zone, columns } from '@/components/dashboard/publishers/zones/columns';
 import { DataTable } from '@/components/dashboard/publishers/zones/data-table';
 
 
 
+
 async function getData(): Promise<Zone[]> {
   // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      },
-    
-   
-    // ...
-  ]
+  try {
+    const response = await axios.get('http://localhost:5001/api/placement/');
+    return response.data; // Assuming your API returns an array of Advert objects
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return []; // Return empty array in case of an error
+  }
 }
  
 

@@ -1,9 +1,8 @@
-"use client"
+'use client'
+import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,39 +10,58 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import EditZone from "./EditPlacement"
-import DeleteZone from "./DeletePlacement"
+import EditPlacement from "./EditPlacement";
+import DeletePlacement from "./DeletePlacement";
 
+// Define the shape of the data for the Placement model
+export type Placement = {
+  _id: string; // Assuming Mongoose generates an _id field
+  name: string;
+  description: string;
+  websiteId: string; // Assuming websiteId is of type string
+  publisherId: string; // Assuming publisherId is of type string
+  zoneId: string; // Assuming zoneId is of type string
+  width: number;
+  height: number;
+  dateCreated: Date;
+};
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Zone = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
-
-export const columns: ColumnDef<Zone>[] = [
+export const columns: ColumnDef<Placement>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "description",
+    header: "Description",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
-    },
+    accessorKey: "websiteId",
+    header: "Website ID",
+  },
+  {
+    accessorKey: "publisherId",
+    header: "Publisher ID",
+  },
+  {
+    accessorKey: "zoneId",
+    header: "Zone ID",
+  },
+  {
+    accessorKey: "width",
+    header: "Width",
+  },
+  {
+    accessorKey: "height",
+    header: "Height",
+  },
   {
     id: "actions",
     cell: ({ row }) => {
-      const zone = row.original
- 
+      const placement = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -56,16 +74,14 @@ export const columns: ColumnDef<Zone>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <EditZone ZoneID={zone.id} />
+              <EditPlacement placementId={placement._id} />
             </DropdownMenuItem>
-
             <DropdownMenuItem asChild>
-                <DeleteZone ZoneID={zone.id} />
+              <DeletePlacement placementId={placement._id} />
             </DropdownMenuItem>
-            
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];

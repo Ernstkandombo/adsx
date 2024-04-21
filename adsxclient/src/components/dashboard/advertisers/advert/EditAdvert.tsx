@@ -15,98 +15,87 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-export default function EditAdvert({ AdvertID }) {
+export default function EditWebsite({ websiteId }) {
     const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        creative: '',
-        url: '',
-        clickUrl: '',
-        campaignId: '',
-        advertiserId: '',
+        name: "",
+        url: "",
+        description: "",
+        category: "",
         ageRange: [],
         gender: [],
-        interests: []
+        interests: [],
     });
 
+    // Fetch website data based on websiteId when the component mounts
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5001/api/aditem/${AdvertID}`);
+        axios.get(`http://localhost:5001/api/websites/${websiteId}`)
+            .then(response => {
                 setFormData(response.data);
-            } catch (error) {
-                console.error('Error fetching advert details:', error);
-            }
-        };
-
-        fetchData();
-    }, [AdvertID]);
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error fetching website data:', error);
+            });
+    }, [websiteId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // If the name is ageRange, gender, or interests, split the value into an array
-        // and update the state accordingly
-        if (["ageRange", "gender", "interests"].includes(name)) {
-            setFormData({
-                ...formData,
-                [name]: value.split(',')
-            });
-        } else {
-            setFormData({
-                ...formData,
-                [name]: value
-            });
-        }
+        setFormData({
+            ...formData,
+            [name]: name === 'ageRange' || name === 'gender' || name === 'interests' ? value.split(',') : value,
+        });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            await axios.put(`http://localhost:5001/api/aditem/${AdvertID}`, formData);
-            console.log('Advert details updated successfully');
-            toast.success("Advert details updated successfully");
-        } catch (error: any) {
-            console.error('Error updating advert details:', error);
-            toast.error("Error updating Advert details:", error.message);
-        }
+        axios.put(`http://localhost:5001/api/websites/${websiteId}`, formData)
+            .then(response => {
+                // Handle success
+                console.log('Website updated successfully:', response.data);
+                toast.success('Website updated successfully');
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error updating website:', error);
+                toast.error('Error updating website');
+            });
     };
 
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant="ghost" className="m-1">
-                    Edit Advert
+                    Edit Website
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[750px]">
                 <DialogHeader>
-                    <DialogTitle className="my-2">Edit Advert</DialogTitle>
+                    <DialogTitle className="my-2">Edit Website</DialogTitle>
                     <DialogDescription>
-                        Make changes to your Advert. Click save when you're done.
+                        Make changes to your Website. Click save when you're done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="overflow-y-auto">
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-2 gap-4 py-4">
                             <div>
-                                <Label>Title:</Label>
-                                <Input type="text" name="title" value={formData.title} onChange={handleChange} />
+                                <Label>Name:</Label>
+                                <Input type="text" name="name" value={formData.name} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <Label>URL:</Label>
+                                <Input type="url" name="url" value={formData.url} onChange={handleChange} />
                             </div>
                             <div>
                                 <Label>Description:</Label>
                                 <Input type="text" name="description" value={formData.description} onChange={handleChange} />
                             </div>
                             <div>
-                                <Label>Creative:</Label>
-                                <Input type="text" name="creative" value={formData.creative} onChange={handleChange} />
+                                <Label>Category:</Label>
+                                <Input type="text" name="category" value={formData.category} onChange={handleChange} />
                             </div>
-                            
-                            <div>
-                                <Label>Click URL:</Label>
-                                <Input type="text" name="clickUrl" value={formData.clickUrl} onChange={handleChange} />
-                            </div>
-                            
                         </div>
+                        
                         <div className="grid gap-4">
                             <div className="col-span-2 text-bold py-4">
                                 <p>Targeting credentials</p>
@@ -123,10 +112,12 @@ export default function EditAdvert({ AdvertID }) {
                                 <Label>Interests:</Label>
                                 <Input type="text" name="interests" value={formData.interests.join(',')} onChange={handleChange} />
                             </div>
-                            <DialogFooter className="col-span-2 py-4">
-                                <Button type="submit">Save</Button>
-                            </DialogFooter>
+                           
                         </div>
+                        
+                        <DialogFooter  className="col-span-2 py-6">
+                            <Button type="submit">Save</Button>
+                        </DialogFooter>
                     </form>
                 </div>
             </DialogContent>

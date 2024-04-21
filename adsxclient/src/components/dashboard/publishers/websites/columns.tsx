@@ -1,9 +1,9 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,39 +11,48 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import EditWebsite from "./EditWebsite"
-import DeleteWebsite from "./DeleteWebsite"
-import GetWebsiteTag from "./GetWebsiteTag"
+import EditWebsite from "./EditWebsite";
+import DeleteWebsite from "./DeleteWebsite";
+import GetWebsiteTag from "./GetWebsiteTag";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+// Define the shape of the data for the Website model
 export type Website = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+  _id: string; // Assuming Mongoose generates an _id field
+  name: string;
+  url: string;
+  description?: string;
+  category?: string;
+  dateCreated: Date;
+  ageRange?: string[];
+  gender?: string[];
+  interests?: string[];
+};
 
 export const columns: ColumnDef<Website>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "url",
+    header: "URL",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
-    },
+    accessorKey: "description",
+    header: "Description",
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
+  },
+ 
   {
     id: "actions",
     cell: ({ row }) => {
-      const Website = row.original
- 
+      const website = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -52,24 +61,22 @@ export const columns: ColumnDef<Website>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-         <DropdownMenuContent align="center" className="flex flex-col">
+          <DropdownMenuContent align="center" className="flex flex-col">
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <GetWebsiteTag WebsiteID={Website.id} />
+              <GetWebsiteTag websiteId={website._id} />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <EditWebsite WebsiteID={Website.id} />
+              <EditWebsite websiteId={website._id} />
             </DropdownMenuItem>
-
             <DropdownMenuItem asChild>
-                <DeleteWebsite WebsiteID={Website.id} />
+              <DeleteWebsite websiteId={website._id} />
             </DropdownMenuItem>
-            
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];

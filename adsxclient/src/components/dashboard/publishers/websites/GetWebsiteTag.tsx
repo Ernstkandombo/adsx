@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 
-export default function GetWebsiteTag({ WebsiteID }) {
+export default function GetWebsiteTag({ websiteId }) {
   return (
     <Dialog>
         

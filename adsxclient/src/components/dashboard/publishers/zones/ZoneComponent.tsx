@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios';
 
 
 import { Zone, columns } from '@/components/dashboard/publishers/zones/columns';

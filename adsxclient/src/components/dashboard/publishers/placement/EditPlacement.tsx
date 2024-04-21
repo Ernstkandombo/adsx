@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 
-export default function EditPlacement({ ZoneID }) {
+export default function EditPlacement({ placementID }) {
   return (
     <Dialog>
         

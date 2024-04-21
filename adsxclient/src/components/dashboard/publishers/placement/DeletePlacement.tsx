@@ -3,7 +3,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from "@/components/ui/button";
 
 
-export default function DeletePlacement({ZoneID}) {
+export default function DeletePlacement({placementID}) {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
