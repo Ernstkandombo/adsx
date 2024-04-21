@@ -5,7 +5,8 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/com
 import CreateZone from '@/components/dashboard/publishers/CreateZone';
 import ZoneComponent from '@/components/dashboard/publishers/zones/ZoneComponent';
 import WebsiteComponent from '@/components/dashboard/publishers/websites/WebsiteComponent';
-
+import PlacementComponent from '@/components/dashboard/publishers/placement/PlacementComponent';
+import CreatePlacement from '@/components/dashboard/publishers/createPlacement';
 export default async function page() {
   
     return (
@@ -18,8 +19,9 @@ export default async function page() {
                 <section className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
                     <Metrics />
                 </section>
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <section className="grid-item md:col-span-3">
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 grid-rows-2 md:grid-rows-2 lg:grid-rows-2 gap-4">
+
+                    <section className="grid-item md:col-span-3 lg:col-span-3">
                         <Card x-chunk="dashboard-01-chunk-5">
                             <CardHeader className="flex flex-row items-center">
                                 <div className="grid gap-2">
@@ -33,7 +35,21 @@ export default async function page() {
                             </CardContent>
                         </Card>
                     </section>
-                    <section className="grid-item md:col-span-2">
+                    <section className="grid-item md:col-span-3 lg:col-span-3 lg:col-start-1 lg:row-start-2">
+                        <Card x-chunk="dashboard-01-chunk-5">
+                            <CardHeader className="flex flex-row items-center">
+                                <div className="grid gap-2">
+                                    <CardTitle className="text-xls">Placement Assignment</CardTitle>
+                                    <CardDescription>View All Available Placement And Assign the Zones</CardDescription>
+                                </div>
+                             <CreatePlacement />
+                            </CardHeader>
+                            <CardContent className="grid gap-8">
+                                <PlacementComponent />
+                            </CardContent>
+                        </Card>
+                    </section>
+                    <section className="grid-item md:col-span-2 lg:col-span-2 lg:row-span-2 lg:col-start-4 lg:row-start-1">
                         <Card x-chunk="dashboard-01-chunk-5">
                             <CardHeader className="flex flex-row items-center">
                                 <div className="grid gap-2">
@@ -47,7 +63,10 @@ export default async function page() {
                             </CardContent>
                         </Card>
                     </section>
+
+                    
                 </div>
+                
 
             </main>
         </div>

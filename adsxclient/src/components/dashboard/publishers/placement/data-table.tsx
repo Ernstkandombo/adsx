@@ -52,18 +52,18 @@ export function DataTable<TData, TValue>({
 
     return (
 <>
-        <div className="flex items-center pt-4 ">
+        <div className="flex items-center pt-4">
         <Input
-          placeholder="Filter Campaigns..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter Zones..."
+          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("email")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
       </div>
-    <div className="rounded-md border w-full overflow-x-auto  ">
-      <Table >
+    <div className="rounded-md border">
+      <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -99,12 +99,11 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No Campaigns Created.
+                No Zones Created.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
-        
       </Table>
     </div>
     

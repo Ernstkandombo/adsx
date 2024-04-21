@@ -43,14 +43,12 @@ export const columns: ColumnDef<Campaign>[] = [
   {
     accessorKey: "startDate",
     header: "Start Date",
-    // You might want to format the date here
-    // Example: cell: ({ value }) => new Date(value).toLocaleDateString()
+   
   },
   {
     accessorKey: "endDate",
     header: "End Date",
-    // You might want to format the date here
-    // Example: cell: ({ value }) => new Date(value).toLocaleDateString()
+     
   },
   {
     accessorKey: "dailyBudget",

@@ -9,26 +9,36 @@ import { Badge } from "@/components/ui/badge"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type ZoneAssign = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+ _id: string;
+  name: string;
+  description: string;
+  publisherId: string;
+  width: number;
+  height: number;
+  dateCreated: Date;
 };
 
 export const columns: ColumnDef<ZoneAssign>[] = [
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ( status ) => <Badge variant="secondary">{status.getValue()}</Badge>,
-   
+ {
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "description",
+    header: "Description",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
+    accessorKey: "width",
+    header: "Width",
+  },
+  {
+    accessorKey: "height",
+    header: "Height",
+  },
+  {
+    accessorKey: "dateCreated",
+    header: "Date Created",
+    
   },
   {
     id: "actions",
@@ -46,7 +56,7 @@ export const columns: ColumnDef<ZoneAssign>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <ZoneAssign ZoneAssignID={Zone.id} />
+              <ZoneAssign ZoneAssignID={Zone._id} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
