@@ -64,19 +64,3 @@ exports.getCampaignsByAdvertiser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-exports.getCampaignStats = async (req, res) => {
-    try {
-        const campaign = await Campaign.findById(req.params.id);
-        if (!campaign) {
-            return res.status(404).json({ message: 'Campaign not found' });
-        }
-        const impressions = campaign.impressions || 0;
-        const clicks = campaign.clicks || 0;
-        const ctr = (clicks / impressions) * 100 || 0;
-        const stats = { impressions, clicks, ctr };
-        res.json(stats);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};

@@ -9,6 +9,6 @@ router.get('/:id', campaignController.getCampaign);
 router.put('/:id', campaignController.updateCampaign);
 router.delete('/:id', campaignController.deleteCampaign);
 router.get('/advertiser/:advertiserId', campaignController.getCampaignsByAdvertiser);
-router.get('/stats/:id', campaignController.getCampaignStats);
+
 
 module.exports = router;
