@@ -69,10 +69,18 @@ exports.adServe = async (req, res) => {
 
         console.log("Ad Items:", adItems); // Log the adItems
 
+        // Get Placement by ID
+        const placement = await Placement.findById(campaignAssignment.placementId);
+
+        if (!placement) {
+            throw new Error('Placement not found.');
+        }
+
+        console.log("Placement:", placement); // Log the placement
 
         // Filter AdItems that match Placement dimensions
-        const eligibleAdItems = campaign.adItems.filter(adItem => {
-            return adItem.width === campaignAssignment.placementId.width && adItem.height === campaignAssignment.placementId.height;
+        const eligibleAdItems = adItems.filter(adItem => {
+            return adItem.width === placement.width && adItem.height === placement.height;
         });
 
         console.log("Eligible Ad Items:", eligibleAdItems); // Log the eligibleAdItems
@@ -84,7 +92,7 @@ exports.adServe = async (req, res) => {
 
         // Create embeddingTag
         const embeddingTag = `
-        <div>
+        <div id="AdItem">
             <a href="${randomAdItem.clickUrl}" target="_blank">
             <img src="${randomAdItem.creative}" alt="${randomAdItem.title}">
             </a>

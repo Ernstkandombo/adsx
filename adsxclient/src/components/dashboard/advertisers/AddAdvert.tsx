@@ -1,6 +1,8 @@
 'use client'
-import React, { useState } from 'react'; // Import React and useState
+
+import React, { useState, useEffect } from 'react'; // Import React, useState, and useEffect
 import axios from 'axios'; // Import axios for making HTTP requests
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -14,30 +16,42 @@ import { PlusCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
 export default function AddAdvert() {
-  const [formData, setFormData] = useState({ // Initialize formData state
+  const [formData, setFormData] = useState({
     title: '',
     description: '',
     creative: '',
     clickUrl: '',
-    campaignId: "6623822657a0a0a874b17bbf", 
-    advertiserId: "6623830857a0a0a874b17bc5", 
+    campaignId: '', // This will be set when a campaign is selected
+    advertiserId: "6623830857a0a0a874b17bc5",
+    width: 0,
+    height: 0,
     impressions: 0,
-    clicks: 0, 
+    clicks: 0,
     ageRange: [],
     gender: [],
     interests: []
   });
+  const [campaigns, setCampaigns] = useState([]);
 
-  const handleChange = (e) => { // Define handleChange function
+  useEffect(() => {
+    axios.get('http://localhost:5001/api/campaign')
+      .then(response => {
+        setCampaigns(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching campaigns:', error);
+      });
+  }, []);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "ageRange" || name === "gender" || name === "interests") {
-      // If the field is ageRange, gender, or interests, split the string value into an array
       setFormData(prevState => ({
         ...prevState,
-        [name]: value.split(',').map(item => item.trim()) // Split the string by comma and trim whitespace
+        [name]: value.split(',').map(item => item.trim())
       }));
     } else {
       setFormData(prevState => ({
@@ -47,30 +61,39 @@ export default function AddAdvert() {
     }
   };
 
-  const handleSubmit = async (e) => { // Define handleSubmit function as async
+  const handleCampaignChange = (value) => {
+    setFormData(prevData => ({
+      ...prevData,
+      campaignId: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5001/api/adItem/`, formData); // Make axios PUT request
-      console.log('Advert details updated successfully');
-      toast.success("Advert details updated successfully");
-    } catch (error : any) {
-      console.error('Error updating advert details:', error);
-      toast.error("Error updating Advert details:", error.message);
+      await axios.post(`http://localhost:5001/api/aditem/`, formData);
+      console.log('Advert Created successfully');
+      toast.success("Advert Created successfully");
+      // Reset form data after successful submission
+      setFormData({
+        title: '',
+        description: '',
+        creative: '',
+        clickUrl: '',
+        campaignId: '', // Reset campaignId to empty string
+        advertiserId: "6623830857a0a0a874b17bc5",
+        width: 0,
+        height: 0,
+        impressions: 0,
+        clicks: 0,
+        ageRange: [],
+        gender: [],
+        interests: []
+      });
+    } catch (error) {
+      console.error('Error Creating advert: ', error);
+      toast.error("Error Creating Advert: ", error.message);
     }
-    // Reset form data after submission
-    setFormData({
-      title: '',
-    description: '',
-    creative: '',
-    clickUrl: '',
-    campaignId: "6623822657a0a0a874b17bbf", 
-    advertiserId: "6623830857a0a0a874b17bc5", 
-    impressions: 0,
-    clicks: 0, 
-    ageRange: [],
-    gender: [],
-    interests: []
-    });
   };
 
   return (
@@ -81,21 +104,36 @@ export default function AddAdvert() {
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Advert</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[650px]">
+      <DialogContent className="sm:max-w-[850px]">
         <DialogHeader>
           <DialogTitle className="my-2">Add New Advertisement</DialogTitle>
           <DialogDescription>Fill in the details below to add a new Advertisement.</DialogDescription>
         </DialogHeader>
-        <div className="overflow-y-auto">
+           <div className="overflow-y-auto">
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4 py-4">
+            <div className="grid grid-cols-3 gap-4 py-4">
               <div>
                 <Label>Title:</Label>
                 <Input type="text" name="title" value={formData.title} onChange={handleChange} />
               </div>
-              <div>
+              <div className="col-span-2">
                 <Label>Description:</Label>
                 <Input type="text" name="description" value={formData.description} onChange={handleChange} />
+              </div>
+              <div >
+                <Label>Campaigns:</Label>
+                <Select onValueChange={handleCampaignChange} defaultValue="">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a campaign" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {campaigns.map(campaign => (
+                      <SelectItem key={campaign._id} value={campaign._id}>
+                        {campaign.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <Label>Creative:</Label>
@@ -106,26 +144,43 @@ export default function AddAdvert() {
                 <Input type="text" name="clickUrl" value={formData.clickUrl} onChange={handleChange} />
               </div>
             </div>
-            <div className="grid gap-4">
-              <div className="col-span-2 text-bold py-4">
-                <p>Targeting credentials</p>
+              <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="col-span-2 text-bold ">
+                <p className="font-semibold">Size:</p>
+              </div>
+              <div>
+                <Label>width:</Label>
+                <Input type="text" name="width" value={formData.width} onChange={handleChange} />
+              </div>
+                    <div>
+                <Label>height:</Label>
+                <Input type="text" name="height" value={formData.height} onChange={handleChange} />
+              </div>
+               
+            </div>
+       
+
+            <div className="grid grid-cols-3 gap-4 pt-2">
+              <div className="col-span-3 text-bold ">
+                <p className="font-semibold">Targeting credentials</p>
               </div>
               <div className="col-span-1">
                 <Label>Age Range:</Label>
                 <Input type="text" name="ageRange" value={formData.ageRange.join(',')} onChange={handleChange} />
               </div>
-              <div>
+              <div  className="col-span-1">
                 <Label>Gender:</Label>
                 <Input type="text" name="gender" value={formData.gender.join(',')} onChange={handleChange} />
               </div>
-              <div>
+              <div  className="col-span-1">
                 <Label>Interests:</Label>
                 <Input type="text" name="interests" value={formData.interests.join(',')} onChange={handleChange} />
               </div>
-              <DialogFooter className="col-span-2 py-4">
+              
+            </div>
+            <DialogFooter className="col-span-2 pt-10">
                 <Button type="submit">Add Advert</Button>
               </DialogFooter>
-            </div>
           </form>
         </div>
       </DialogContent>

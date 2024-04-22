@@ -13,7 +13,7 @@ const CampaignRoutes = require("./routes/CampaignRoute");
 const CampaignAssignmentRoutes = require("./routes/CampaignAssignment");
 const PlacementRoutes = require("./routes/PlacementRoute");
 const WebsiteRoutes = require("./routes/WebsiteRoute");
-const ZoneRoutes = require("./routes/Zone");
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 // Enable CORS for all requests
@@ -28,7 +28,7 @@ app.use("/api/campaignassignment", CampaignAssignmentRoutes);
 app.use("/api/placement", PlacementRoutes);
 app.use("/api/publisher", PublisherRoutes);
 app.use("/api/websites", WebsiteRoutes);
-app.use("/api/zone", ZoneRoutes);
+
 // Middleware to enable CORS
 // Middleware
 app.use(bodyParser.json({ limit: "50mb" }));
