@@ -69,7 +69,7 @@ export const columns: ColumnDef<Website>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <EditWebsite websiteId={website._id} />
+              <EditWebsite/>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <DeleteWebsite websiteId={website._id} />

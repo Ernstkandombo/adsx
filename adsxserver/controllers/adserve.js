@@ -40,6 +40,13 @@ exports.adServe = async (req, res) => {
 
         adItem.impressions++;
         adItem.clicks++;
+        // Sum up clicks and impressions from adItems
+        const totalClicks = adItems.reduce((acc, curr) => acc + curr.clicks, 0);
+        const totalImpressions = adItems.reduce((acc, curr) => acc + curr.impressions, 0);
+
+        // Update campaignAssignment's clicks and impressions
+        campaignAssignment.clicks = totalClicks;
+        campaignAssignment.impressions = totalImpressions;
 
 
         await Promise.all([campaignAssignment.save(), adItem.save()]);

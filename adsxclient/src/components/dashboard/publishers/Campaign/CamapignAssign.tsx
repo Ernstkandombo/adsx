@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { Input } from '@/components/ui/input';
 
 export default function AssignCampaign({ CampaignID }) {
     const [placementOptions, setPlacementOptions] = useState([]);
@@ -37,42 +38,45 @@ export default function AssignCampaign({ CampaignID }) {
             });
     }, []);
 
-   const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // Check if selectedPlacement is empty
-    if (!selectedPlacement) {
-        // Handle case where no placement is selected
-        console.error('No placement selected');
-        toast.error('Please select a placement');
-        return;
-    }
-
-    const formData = {
-        campaignId: CampaignID,
-        placementId: selectedPlacement, // Ensure selectedPlacement is a valid ObjectId or null
-        websiteId: selectedWebsite,
+    const handleCloseDialog = () => {
+        // Reset campaignIdResponse when closing the dialog
+        setCampaignIdResponse(null);
     };
-    console.log(formData)
-    try {
-        const response = await axios.post('http://localhost:5001/api/campaignassignment', formData);
-        console.log('Campaign assigned successfully:', response.data);
-        toast.success('Campaign assigned successfully', {
-            onClose: () => setCampaignIdResponse(null) // Clear campaignIdResponse when toast is closed
-        });
-        // Reset form after successful submission
-        setSelectedPlacement("");
-        setSelectedWebsite("");
-        // Set campaignIdResponse state with the received campaignId
-        setCampaignIdResponse(response.data._id);
-    } catch (error) {
-        console.error('Error assigning campaign:', error);
-        toast.error('Error assigning campaign');
-    }
-};
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        // Check if selectedPlacement is empty
+        if (!selectedPlacement) {
+            // Handle case where no placement is selected
+            console.error('No placement selected');
+            toast.error('Please select a placement');
+            return;
+        }
+
+        const formData = {
+            campaignId: CampaignID,
+            placementId: selectedPlacement, // Ensure selectedPlacement is a valid ObjectId or null
+            websiteId: selectedWebsite,
+        };
+
+        try {
+            const response = await axios.post('http://localhost:5001/api/campaignassignment', formData);
+            console.log('Campaign assigned successfully:', response.data);
+            toast.success('Campaign assigned successfully');
+            // Reset form after successful submission
+            setSelectedPlacement("");
+            setSelectedWebsite("");
+            // Set campaignIdResponse state with the received campaignId
+            setCampaignIdResponse(response.data._id);
+        } catch (error) {
+            console.error('Error assigning campaign:', error);
+            toast.error('Error assigning campaign');
+        }
+    };
 
     return (
-        <Dialog>
+        <Dialog onClose={handleCloseDialog}>
             <DialogTrigger asChild>
                 <Button variant="ghost" className="m-1">
                     Assign Campaign
@@ -117,12 +121,16 @@ export default function AssignCampaign({ CampaignID }) {
                                 </SelectContent>
                             </Select>
                         </div>
+                        <div className="col-span-2 py-4">
+                            <Label>Campaign Assignment Code:</Label>
+                            <p className="text-xs py-2">To be used for getting embedding tag:</p>
+                            <Input type="text" value={campaignIdResponse || ''} disabled />
+                        </div>
                     </div>
                     <DialogFooter className="col-span-2 py-6">
                         <Button type="submit">Assign</Button>
                     </DialogFooter>
                 </form>
-
             </DialogContent>
         </Dialog>
     );
