@@ -101,8 +101,8 @@ exports.adServe = async (req, res) => {
         console.log("Random Ad Item:", randomAdItem); // Log the randomAdItem
         // Create embeddingTag
         const embeddingTag = `
-    <div id="AdItem">
-        <a href="${randomAdItem.clickUrl}" target="_blank">
+    <div id="advert">
+        <a id="${randomAdItem._id}" href="${randomAdItem.clickUrl}" target="_blank">
         <img src="${randomAdItem.creative}" alt="${randomAdItem.title}">
         </a>
     </div>
