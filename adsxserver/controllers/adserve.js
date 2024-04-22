@@ -1,5 +1,3 @@
-/** @format */
-
 const express = require("express");
 const router = express.Router();
 const CampaignAssignment = require("../models/CampaignAssignment");
@@ -10,20 +8,12 @@ exports.postTrackingInfo = async (req, res) => {
     try {
         const { adItemId, impressions, clicks } = req.body;
 
-        console.log("Received tracking data:");
-        console.log("adItemId:", adItemId);
-        console.log("impressions:", impressions);
-        console.log("clicks:", clicks);
-
         // Update AdItem
         const updatedAdItem = await AdItem.findByIdAndUpdate(adItemId, {
             $inc: { impressions: impressions, clicks: clicks }
         }, { new: true });
 
-        console.log("Updated AdItem:", updatedAdItem);
-
         if (!updatedAdItem) {
-            console.log("AdItem not found");
             return res.status(404).json({ success: false, error: "AdItem not found" });
         }
 
@@ -33,10 +23,7 @@ exports.postTrackingInfo = async (req, res) => {
         // Find the CampaignAssignment with the same campaign ID
         const campaignAssignment = await CampaignAssignment.findOne({ campaignId: adItemCampaign });
 
-        console.log("CampaignAssignment:", campaignAssignment);
-
         if (!campaignAssignment) {
-            console.log("CampaignAssignment not found");
             return res.status(404).json({ success: false, error: "CampaignAssignment not found" });
         }
         // Get all AdItems belonging to the same campaignAssignment
@@ -51,9 +38,6 @@ exports.postTrackingInfo = async (req, res) => {
             return adItem.width === placement.width && adItem.height === placement.height;
         });
 
-        console.log("filtered Ad Items:", filteredAdItems)
-        console.log("AdItems belonging to the same campaign:", campaignAdItems);
-
         // Calculate total clicks and impressions for the campaign
         let totalClicks = 0;
         let totalImpressions = 0;
@@ -63,15 +47,10 @@ exports.postTrackingInfo = async (req, res) => {
             totalImpressions += adItem.impressions;
         });
 
-        console.log("Total clicks for the campaign:", totalClicks);
-        console.log("Total impressions for the campaign:", totalImpressions);
-
         // Update CampaignAssignment with the new totals
         campaignAssignment.clicks = totalClicks;
         campaignAssignment.impressions = totalImpressions;
         await campaignAssignment.save();
-
-        console.log("Updated CampaignAssignment:", campaignAssignment);
 
         // Respond with success status and updated CampaignAssignment data
         res.status(200).json({ success: true, data: campaignAssignment });
@@ -81,14 +60,10 @@ exports.postTrackingInfo = async (req, res) => {
     }
 };
 
-
 // Ad serve
 exports.adServe = async (req, res) => {
     try {
-        console.log("Request Params:", req.params);
         const campaignAssignmentId = req.params.id; // Update to req.params.id
-
-        console.log("Campaign Assignment ID:", campaignAssignmentId); // Log the campaignAssignmentId
 
         // Get CampaignAssignment by ID
         const campaignAssignment = await CampaignAssignment.findById(
@@ -97,14 +72,10 @@ exports.adServe = async (req, res) => {
             .populate("campaignId")
             .populate("placementId");
 
-        console.log("Campaign Assignment:", campaignAssignment); // Log the campaignAssignment
-
         // Get AdItems for Campaign
         const adItems = await AdItem.find({
             campaignId: campaignAssignment.campaignId,
         });
-
-        console.log("Ad Items:", adItems); // Log the adItems
 
         // Get Placement by ID
         const placement = await Placement.findById(campaignAssignment.placementId);
@@ -113,8 +84,6 @@ exports.adServe = async (req, res) => {
             throw new Error("Placement not found.");
         }
 
-        console.log("Placement:", placement); // Log the placement
-
         // Filter AdItems that match Placement dimensions
         const eligibleAdItems = adItems.filter((adItem) => {
             return (
@@ -122,13 +91,10 @@ exports.adServe = async (req, res) => {
             );
         });
 
-        console.log("Eligible Ad Items:", eligibleAdItems); // Log the eligibleAdItems
-
         // Select random AdItem
         const randomAdItem =
             eligibleAdItems[Math.floor(Math.random() * eligibleAdItems.length)];
 
-        console.log("Random Ad Item:", randomAdItem); // Log the randomAdItem
         // Create embeddingTag
         const embeddingTag = `
             //advert
@@ -171,8 +137,6 @@ exports.adServe = async (req, res) => {
                 clicks: clicks
             };
 
-            console.log("Data being sent:", data);
-
             fetch("http://localhost:5001/api/adserve/tracking", {
                 method: "POST",
                 headers: {
@@ -184,7 +148,6 @@ exports.adServe = async (req, res) => {
                 if (!response.ok) {
                     throw new Error("Failed to update tracking");
                 }
-                console.log("Tracking updated successfully");
                 // Clear impressions and clicks after sending
                 impressions = 0;
                 clicks = 0;
