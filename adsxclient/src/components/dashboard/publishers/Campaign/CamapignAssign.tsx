@@ -123,7 +123,7 @@ export default function AssignCampaign({ CampaignID }) {
                         </div>
                         <div className="col-span-2 py-4">
                             <Label>Campaign Assignment Code:</Label>
-                            <p className="text-xs py-2">To be used for getting embedding tag:</p>
+                            <p className="text-xs py-2">To be used for getting embedding tag: <span className="text-gray-400">save the code somwhere</span></p>
                             <Input type="text" value={campaignIdResponse || ''} disabled />
                         </div>
                     </div>

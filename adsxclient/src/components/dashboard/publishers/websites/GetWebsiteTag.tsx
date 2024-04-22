@@ -28,6 +28,8 @@ export default function GetWebsiteTag() {
     const [embeddingTag, setEmbeddingTag] = useState('');
     const [error, setError] = useState('');
 
+    
+
     useEffect(() => {
         const fetchEmbeddingTag = async () => {
             try {
