@@ -65,7 +65,7 @@ export const columns: ColumnDef<Website>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <GetWebsiteTag websiteId={website._id} />
+              <GetWebsiteTag />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
