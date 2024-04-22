@@ -1,9 +1,11 @@
-const express = require('express');
+/** @format */
+
+const express = require("express");
 const router = express.Router();
-const CampaignAssignment = require('../models/CampaignAssignment');
-const AdItem = require('../models/AdItem');
-const Campaign = require('../models/Campaign');
-const Placement = require('../models/Placement');
+const CampaignAssignment = require("../models/CampaignAssignment");
+const AdItem = require("../models/AdItem");
+const Campaign = require("../models/Campaign");
+const Placement = require("../models/Placement");
 
 // Get tracking info
 exports.getTrackingInfo = async (req, res) => {
@@ -20,18 +22,21 @@ exports.getTrackingInfo = async (req, res) => {
         await adItem.save();
 
         // Get CampaignAssignment by ID
-        const campaignAssignment = await CampaignAssignment.findById(campaignAssignmentId)
-            .populate('campaignId')
-            .populate('placementId');
+        const campaignAssignment = await CampaignAssignment.findById(
+            campaignAssignmentId
+        )
+            .populate("campaignId")
+            .populate("placementId");
 
         // Get total clicks and impressions for Campaign
-        const campaign = await Campaign.findById(campaignAssignment.campaignId._id)
-            .populate('adItems');
+        const campaign = await Campaign.findById(
+            campaignAssignment.campaignId._id
+        ).populate("adItems");
 
         let totalClicks = 0;
         let totalImpressions = 0;
 
-        campaign.adItems.forEach(adItem => {
+        campaign.adItems.forEach((adItem) => {
             totalClicks += adItem.clicks;
             totalImpressions += adItem.impressions;
         });
@@ -47,25 +52,27 @@ exports.getTrackingInfo = async (req, res) => {
     }
 };
 
-
 // Ad serve
 exports.adServe = async (req, res) => {
     try {
         console.log("Request Params:", req.params);
         const campaignAssignmentId = req.params.id; // Update to req.params.id
 
-
         console.log("Campaign Assignment ID:", campaignAssignmentId); // Log the campaignAssignmentId
 
         // Get CampaignAssignment by ID
-        const campaignAssignment = await CampaignAssignment.findById(campaignAssignmentId)
-            .populate('campaignId')
-            .populate('placementId');
+        const campaignAssignment = await CampaignAssignment.findById(
+            campaignAssignmentId
+        )
+            .populate("campaignId")
+            .populate("placementId");
 
         console.log("Campaign Assignment:", campaignAssignment); // Log the campaignAssignment
 
         // Get AdItems for Campaign
-        const adItems = await AdItem.find({ campaignId: campaignAssignment.campaignId })
+        const adItems = await AdItem.find({
+            campaignId: campaignAssignment.campaignId,
+        });
 
         console.log("Ad Items:", adItems); // Log the adItems
 
@@ -73,33 +80,36 @@ exports.adServe = async (req, res) => {
         const placement = await Placement.findById(campaignAssignment.placementId);
 
         if (!placement) {
-            throw new Error('Placement not found.');
+            throw new Error("Placement not found.");
         }
 
         console.log("Placement:", placement); // Log the placement
 
         // Filter AdItems that match Placement dimensions
-        const eligibleAdItems = adItems.filter(adItem => {
-            return adItem.width === placement.width && adItem.height === placement.height;
+        const eligibleAdItems = adItems.filter((adItem) => {
+            return (
+                adItem.width === placement.width && adItem.height === placement.height
+            );
         });
 
         console.log("Eligible Ad Items:", eligibleAdItems); // Log the eligibleAdItems
 
         // Select random AdItem
-        const randomAdItem = eligibleAdItems[Math.floor(Math.random() * eligibleAdItems.length)];
+        const randomAdItem =
+            eligibleAdItems[Math.floor(Math.random() * eligibleAdItems.length)];
 
         console.log("Random Ad Item:", randomAdItem); // Log the randomAdItem
-
         // Create embeddingTag
         const embeddingTag = `
-        <div id="AdItem">
-            <a href="${randomAdItem.clickUrl}" target="_blank">
-            <img src="${randomAdItem.creative}" alt="${randomAdItem.title}">
-            </a>
-        </div>
-        `;
+    <div id="AdItem">
+        <a href="${randomAdItem.clickUrl}" target="_blank">
+        <img src="${randomAdItem.creative}" alt="${randomAdItem.title}">
+        </a>
+    </div>
+    `;
 
-        res.status(200).send(embeddingTag);
+        res.set("Content-Type", "text/plain"); // Set content type to plain text
+        res.status(200).send(embeddingTag); // Send embeddingTag as text
     } catch (error) {
         console.error("Error in adServe:", error); // Log any errors
         res.status(500).json({ success: false, error: error.message });

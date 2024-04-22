@@ -1,5 +1,12 @@
 'use client'
 
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -14,10 +21,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea"
 
 export default function GetWebsiteTag() {
     const [campaignAssignmentCode, setCampaignAssignmentCode] = useState('');
-    const [embeddingTag, setEmbeddingTag] = useState(null);
+    const [embeddingTag, setEmbeddingTag] = useState('');
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -27,12 +35,12 @@ export default function GetWebsiteTag() {
                 if (!response.ok) {
                     throw new Error('Failed to fetch embedding tag');
                 }
-                const data = await response.json();
+                const data = await response.text(); // Receive response as text
                 setEmbeddingTag(data);
                 setError('');
             } catch (error) {
                 setError(error.message);
-                setEmbeddingTag(null);
+                setEmbeddingTag('');
             }
         };
 
@@ -74,7 +82,7 @@ export default function GetWebsiteTag() {
                         ) : (
                             <div className="col-span-2 py-4">
                                 {embeddingTag ? (
-                                    <iframe src={embeddingTag.iframeSrc} width="728" height="90" frameborder="0" scrolling="no"></iframe>
+                                    <Textarea className="h-[150px]" value={embeddingTag} disabled />
                                 ) : (
                                     <div>No embedding tag available</div>
                                 )}
