@@ -1,9 +1,7 @@
 'use client'
 
+import React, { useState, useEffect } from 'react';
 
-import React, { useState } from 'react';
-import axios from 'axios';
-import sanitizeHtml from 'sanitize-html';
 import {
     Dialog,
     DialogContent,
@@ -16,26 +14,36 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
 export default function GetWebsiteTag() {
-    const [campaignAssignmentCode, setCampaignAssignmentCode] = useState("");
-    const [embeddingTag, setEmbeddingTag] = useState("");
-    const [error, setError] = useState(null);
+    const [campaignAssignmentCode, setCampaignAssignmentCode] = useState('');
+    const [embeddingTag, setEmbeddingTag] = useState(null);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchEmbeddingTag = async () => {
+            try {
+                const response = await fetch(`http://localhost:5001/api/adserve/${campaignAssignmentCode}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch embedding tag');
+                }
+                const data = await response.json();
+                setEmbeddingTag(data);
+                setError('');
+            } catch (error) {
+                setError(error.message);
+                setEmbeddingTag(null);
+            }
+        };
+
+        if (campaignAssignmentCode) {
+            fetchEmbeddingTag();
+        }
+    }, [campaignAssignmentCode]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        try {
-            const response = await axios.get(`http://localhost:5001/api/adserve/${campaignAssignmentCode}`);
-            console.log('Embedding tag received:', response.data);
-            const sanitizedEmbeddingTag = sanitizeHtml(response.data);
-            setEmbeddingTag(sanitizedEmbeddingTag);
-            setError(null); // Reset error state
-        } catch (error) {
-            console.error('Error fetching embedding tag:', error);
-            setError('Error fetching embedding tag. Please check the campaign assignment code.');
-        }
+        // Add your form submission logic here
     };
 
     return (
@@ -64,7 +72,13 @@ export default function GetWebsiteTag() {
                         {error ? (
                             <p className="text-red-500">{error}</p>
                         ) : (
-                            <div className="col-span-2 py-4" dangerouslySetInnerHTML={{ __html: embeddingTag }}></div>
+                            <div className="col-span-2 py-4">
+                                {embeddingTag ? (
+                                    <iframe src={embeddingTag.iframeSrc} width="728" height="90" frameborder="0" scrolling="no"></iframe>
+                                ) : (
+                                    <div>No embedding tag available</div>
+                                )}
+                            </div>
                         )}
                     </div>
                     <DialogFooter className="col-span-2 py-6">

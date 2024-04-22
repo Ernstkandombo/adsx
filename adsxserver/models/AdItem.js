@@ -7,6 +7,8 @@ const AdItemSchema = new mongoose.Schema({
     clickUrl: { type: String, required: true },
     campaignId: { type: mongoose.Schema.Types.ObjectId, ref: 'Campaign', required: true },
     advertiserId: { type: mongoose.Schema.Types.ObjectId, ref: 'Advertiser', required: true },
+    width: { type: Number, default: 0 },
+    height: { type: Number, default: 0 },
     impressions: { type: Number, default: 0 },
     clicks: { type: Number, default: 0 },
     dateCreated: { type: Date, default: Date.now },

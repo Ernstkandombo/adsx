@@ -69,7 +69,7 @@ export default async function page() {
                     
                 </div>
                 
-
+            
             </main>
         </div>
     )

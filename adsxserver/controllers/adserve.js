@@ -29,31 +29,15 @@ exports.adServe = async (req, res) => {
         const randomIndex = Math.floor(Math.random() * adItems.length);
         const adItem = adItems[randomIndex];
 
-        const embeddingTag = `
-            <div>
-                <a href="${adItem.clickUrl}" target="_blank">
-                    <img src="${adItem.creative}" alt="${adItem.title}">
-                </a>
-            </div>
+        const iframeSrc = `/tracking?campaignId=${campaignAssignment._id}&adItemId=${adItem._id}`;
+
+        const iframeTag = `
+            <iframe src="${iframeSrc}" width="728" height="90" frameborder="0" scrolling="no"></iframe>
         `;
 
-
-        adItem.impressions++;
-        adItem.clicks++;
-        // Sum up clicks and impressions from adItems
-        const totalClicks = adItems.reduce((acc, curr) => acc + curr.clicks, 0);
-        const totalImpressions = adItems.reduce((acc, curr) => acc + curr.impressions, 0);
-
-        // Update campaignAssignment's clicks and impressions
-        campaignAssignment.clicks = totalClicks;
-        campaignAssignment.impressions = totalImpressions;
-
-
-        await Promise.all([campaignAssignment.save(), adItem.save()]);
-
-        res.send(embeddingTag);
+        res.send(iframeTag);
     } catch (error) {
         console.error(error);
         res.status(500).send({ error: 'Internal server error' });
     }
-};
+}
