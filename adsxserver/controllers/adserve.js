@@ -142,7 +142,7 @@ exports.adServe = async (req, res) => {
 
             //advert script for tracking
 
-            <script>
+           <script>
     document.addEventListener("DOMContentLoaded", function() {
         const advertDiv = document.getElementById("advert");
         const anchorTag = advertDiv.querySelector("a");
@@ -165,22 +165,29 @@ exports.adServe = async (req, res) => {
 
         // Function to update tracking on the server
         function updateTracking() {
+            const data = {
+                adItemId: adItemId,
+                impressions: impressions,
+                clicks: clicks
+            };
+
+            console.log("Data being sent:", data);
+
             fetch("http://localhost:5001/api/adserve/tracking", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    adItemId: adItemId,
-                    impressions: impressions,
-                    clicks: clicks
-                })
+                body: JSON.stringify(data)
             })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Failed to update tracking");
                 }
                 console.log("Tracking updated successfully");
+                // Clear impressions and clicks after sending
+                impressions = 0;
+                clicks = 0;
             })
             .catch(error => {
                 console.error("Error updating tracking:", error);
