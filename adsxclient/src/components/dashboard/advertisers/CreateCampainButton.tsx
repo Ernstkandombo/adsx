@@ -18,6 +18,9 @@ import { toast } from 'sonner';
 
 
 export default function CreateCampainButton() {
+
+        const currentUserID = "66241266565c9aa620c7402a";
+  
         const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -25,7 +28,7 @@ export default function CreateCampainButton() {
         endDate: '',
         dailyBudget: '',
           totalBudget: '',
-          advertiserId: "6623830857a0a0a874b17bc5", 
+          advertiserId: currentUserID, 
         
     });
 

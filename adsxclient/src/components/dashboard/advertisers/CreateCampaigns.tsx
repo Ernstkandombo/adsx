@@ -10,6 +10,9 @@ import { Input } from '@/components/ui/input'; // Import Input component
 import { Label } from '@/components/ui/label'; // Import Label component
 
 export default function CreateCampaigns() {
+        
+    const currentUserID = "66241266565c9aa620c7402a";
+  
        const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -17,7 +20,7 @@ export default function CreateCampaigns() {
         endDate: '',
         dailyBudget: '',
          totalBudget: '',
-        advertiserId: "6623830857a0a0a874b17bc5", 
+        advertiserId: currentUserID, 
     
     });
 

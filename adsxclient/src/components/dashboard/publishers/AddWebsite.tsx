@@ -16,11 +16,15 @@ import { Label } from '@/components/ui/label'; // Import Label component
 import { Input } from '@/components/ui/input'; // Import Input component
 
 export default function AddWebsite() {
+    
+  const currentUserID = "66241266565c9aa620c7402a";
+  
     const [formData, setFormData] = useState({
         name: "",
         url: "",
         description: "",
         category: "",
+        publisherId: currentUserID,
         ageRange: [],
         gender: [],
         interests: [],

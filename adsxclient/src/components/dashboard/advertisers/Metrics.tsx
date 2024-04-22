@@ -1,20 +1,26 @@
 'use client'
-import React from 'react'
-import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-    CardContent,
-} from "@/components/ui/card"
-import CreateCampaignButton from './CreateCampainButton'
-
-
-
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import CreateCampaignButton from './CreateCampainButton';
 
 export default function Metrics() {
+    const [metricsData, setMetricsData] = useState(null);
+    const currentUserID = "66241266565c9aa620c7402a";
+
+    useEffect(() => {
+        const fetchMetricsData = async () => {
+            try {
+                const response = await axios.post(`http://localhost:5001/api/report/advertiser/${currentUserID}`);
+                setMetricsData(response.data);
+            } catch (error) {
+                console.error('Error fetching metrics data:', error);
+            }
+        };
+
+        fetchMetricsData();
+    }, [currentUserID]);
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-5 grid-rows-1 gap-4">
             <Card className="md:col-span-2">
@@ -32,32 +38,30 @@ export default function Metrics() {
             <Card className="text-white bg-black md:col-start-3">
                 <CardHeader className=" pb-2">
                     <CardDescription className="text-white font-bold py-2">Impressions</CardDescription>
-                    <CardTitle className="text-4xl">1000</CardTitle>
+                    <CardTitle className="text-4xl">{metricsData ? metricsData.totalImpressions : '-'}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-xs text-muted-foreground">+25% from last week</div>
+
                 </CardContent>
             </Card>
             <Card className="text-white bg-black md:col-start-4">
                 <CardHeader className="pb-2">
                     <CardDescription className="text-white font-bold py-2">Clicks</CardDescription>
-                    <CardTitle className="text-4xl">100</CardTitle>
+                    <CardTitle className="text-4xl">{metricsData ? metricsData.totalClicks : '-'}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-xs text-muted-foreground">+25% from last week</div>
+                  
                 </CardContent>
             </Card>
             <Card className="text-white bg-black md:col-start-5">
                 <CardHeader className="pb-2">
-                    <CardDescription className="text-white font-bold py-2">Revenue</CardDescription>
-                    <CardTitle className="text-4xl">100</CardTitle>
+                    <CardDescription className="text-white font-bold py-2">Cost</CardDescription>
+                    <CardTitle className="text-4xl">{metricsData ? `N$ ${metricsData.totalCost}` : '-'}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-xs text-muted-foreground">+25% from last week</div>
+               
                 </CardContent>
             </Card>
         </div>
-
-
-    )
+    );
 }

@@ -1,107 +1,78 @@
-const Report = require('../models/Report');
+const Campaign = require('../models/Campaign');
+const CampaignAssignment = require('../models/CampaignAssignment');
+const Placement = require('../models/Placement');
 
-exports.createReport = async (req, res) => {
+exports.getAdvertiserMetrixData = async (req, res) => {
+    const { userID } = req.params;
+
     try {
-        const { campaignId, advertiserId, publisherId, clicks, impressions, revenue, dateRange } = req.body;
 
-        // Create a new report
-        const newReport = new Report({
-            campaignId,
-            advertiserId,
-            publisherId,
-            clicks,
-            impressions,
-            revenue,
-            dateRange,
+        const campaigns = await Campaign.find({ advertiserId: userID });
+
+
+        const campaignIds = campaigns.map(campaign => campaign._id);
+
+
+
+        const campaignAssignments = await CampaignAssignment.find({ campaignId: { $in: campaignIds } });
+
+
+        let totalClicks = 0;
+        let totalImpressions = 0;
+        campaignAssignments.forEach(assignment => {
+            totalClicks += assignment.clicks;
+            totalImpressions += assignment.impressions;
         });
 
-        // Save the new report to the database
-        const savedReport = await newReport.save();
+        // Calculate total cost
+        const clickCost = totalClicks * 2.50;
+        const impressionCost = totalImpressions * 1.00;
+        const totalCost = clickCost + impressionCost;
 
-        res.status(201).json(savedReport);
 
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        res.json({ totalClicks, totalImpressions, totalCost });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 
-exports.getReportsByCampaign = async (req, res) => {
+
+
+
+
+
+
+exports.getPublisherMetrixData = async (req, res) => {
+    const { userID } = req.params;
+
     try {
-        const { campaignId } = req.params;
+        // Find all placements with the given userID (publisherId)
+        const placements = await Placement.find({ publisherId: userID });
 
-        // Fetch reports for the specified campaign
-        const reports = await Report.find({ campaignId }).populate('advertiserId').populate('publisherId');
+        // Get placementIds from the found placements
+        const placementIds = placements.map(placement => placement._id);
 
-        res.json(reports);
+        // Find all campaignAssignments with placementIds matching the found placements
+        const campaignAssignments = await CampaignAssignment.find({ placementId: { $in: placementIds } });
 
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
+        // Calculate total clicks and impressions from campaignAssignments
+        let totalClicks = 0;
+        let totalImpressions = 0;
+        campaignAssignments.forEach(assignment => {
+            totalClicks += assignment.clicks;
+            totalImpressions += assignment.impressions;
+        });
 
-exports.getReportsByPublisher = async (req, res) => {
-    try {
-        const { publisherId } = req.params;
+        // Calculate total revenue
+        const clickRevenue = totalClicks * 2.50;
+        const impressionRevenue = totalImpressions * 1.00;
+        const totalRevenue = clickRevenue + impressionRevenue;
 
-        // Fetch reports for the specified publisher
-        const reports = await Report.find({ publisherId }).populate('campaignId').populate('advertiserId');
-
-        res.json(reports);
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-exports.getReportById = async (req, res) => {
-    try {
-        const { reportId } = req.params;
-
-        // Fetch the report with the specified ID
-        const report = await Report.findById(reportId).populate('campaignId').populate('advertiserId').populate('publisherId');
-
-        res.json(report);
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-exports.updateReport = async (req, res) => {
-    try {
-        const { reportId } = req.params;
-        const { clicks, impressions, revenue, dateRange } = req.body;
-
-        // Update the report with the specified ID
-        const updatedReport = await Report.findByIdAndUpdate(
-            reportId,
-            { clicks, impressions, revenue, dateRange },
-            { new: true }
-        );
-
-        res.json(updatedReport);
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-exports.deleteReport = async (req, res) => {
-    try {
-        const { reportId } = req.params;
-
-        // Delete the report with the specified ID
-        await Report.findByIdAndDelete(reportId);
-
-        res.json({ message: 'Report deleted' });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        // Send the total clicks, impressions, and revenue to the client
+        res.json({ totalClicks, totalImpressions, totalRevenue });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };

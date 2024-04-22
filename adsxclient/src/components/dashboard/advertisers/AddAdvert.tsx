@@ -19,13 +19,16 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
 export default function AddAdvert() {
+
+  const currentUserID = "66241266565c9aa620c7402a";
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     creative: '',
     clickUrl: '',
     campaignId: '', // This will be set when a campaign is selected
-    advertiserId: "6623830857a0a0a874b17bc5",
+    advertiserId: currentUserID,
     width: 0,
     height: 0,
     impressions: 0,

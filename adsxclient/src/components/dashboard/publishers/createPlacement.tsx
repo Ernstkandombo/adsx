@@ -26,12 +26,16 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 
 export default function CreatePlacement() {
+
+        
+  const currentUserID = "66241266565c9aa620c7402a";
+  
     const [placementData, setPlacementData] = useState({
         name: "",
         description: "",
         websiteId: "",
         websiteUrl: "",
-        publisherId: "6624c982c54d9f664fb57061",
+        publisherId: currentUserID,
         width: 0,
         height: 0,
     });
