@@ -59,10 +59,10 @@ initialState: { //This line
 <>
         <div className="flex items-center pt-4">
         <Input
-          placeholder="Filter Campaigns..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter Campaigns Assingment..."
+          value={(table.getColumn("campaign")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("campaign")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
