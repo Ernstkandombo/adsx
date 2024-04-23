@@ -1,15 +1,10 @@
 'use client'
 
-
+// pages/auth/signin.js
 import React, { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from 'next/link';
@@ -39,13 +34,21 @@ export default function SignIn() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (validateForm()) {
-            // Perform login logic here
+            // Call NextAuth.js signIn function
+            const result = await signIn('credentials', {
+                email,
+                password,
+                redirect: false // Set to true if you want NextAuth.js to handle redirection after authentication
+            });
 
-            
+            if (result?.error) {
+                // Handle authentication error
+                console.error('Authentication error:', result.error);
+            }
         }
     };
 

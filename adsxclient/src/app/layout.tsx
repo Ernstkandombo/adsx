@@ -20,10 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-       <SessionProvider session={session}>
+   
         <body className={inter.className}>{children}</body>
         <Toaster richColors />
-      </SessionProvider>
+    
     </html>
   );
 }

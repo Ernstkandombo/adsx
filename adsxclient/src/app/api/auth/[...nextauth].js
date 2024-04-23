@@ -16,7 +16,7 @@ export default NextAuth({
                     const { email, password } = credentials;
 
                     // Make a request to your authentication endpoint
-                    const response = await axios.post('/api/auth/authenticate', { email, password });
+                    const response = await axios.post('http://localhost:5001/api/auth/', { email, password });
 
                     // If authentication is successful, return the user object
                     if (response.status === 200 && response.data.token) {
@@ -37,9 +37,9 @@ export default NextAuth({
     },
     pages: {
         signIn: '/', // Custom sign-in page
-        signup: '/auth/sign-up', // Custom sign-out page
-
+        signUp: '/auth/sign-up', // Custom sign-up page
     },
+
     callbacks: {
         async jwt(token, user) {
             // This callback is used to manage the JWT token
