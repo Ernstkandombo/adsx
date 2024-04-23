@@ -66,22 +66,24 @@ exports.adServe = async (req, res) => {
         const campaignAssignmentId = req.params.id; // Update to req.params.id
 
         // Get CampaignAssignment by ID
-        const campaignAssignment = await CampaignAssignment.findById(
-            campaignAssignmentId
-        )
+        const campaignAssignment = await CampaignAssignment.findById(campaignAssignmentId)
             .populate("campaignId")
             .populate("placementId");
 
+        // Handle case where CampaignAssignment is not found
+        if (!campaignAssignment) {
+            return res.status(404).json({ message: 'CampaignAssignment not found' });
+        }
+
         // Get AdItems for Campaign
-        const adItems = await AdItem.find({
-            campaignId: campaignAssignment.campaignId,
-        });
+        const adItems = await AdItem.find({ campaignId: campaignAssignment.campaignId });
 
         // Get Placement by ID
         const placement = await Placement.findById(campaignAssignment.placementId);
 
+        // Handle case where Placement is not found
         if (!placement) {
-            throw new Error("Placement not found.");
+            return res.status(404).json({ message: 'Placement not found' });
         }
 
         // Filter AdItems that match Placement dimensions
@@ -90,6 +92,11 @@ exports.adServe = async (req, res) => {
                 adItem.width === placement.width && adItem.height === placement.height
             );
         });
+
+        // Handle case where no eligible AdItem is found
+        if (eligibleAdItems.length === 0) {
+            return res.status(404).json({ message: 'No eligible AdItem found' });
+        }
 
         // Select random AdItem
         const randomAdItem =
