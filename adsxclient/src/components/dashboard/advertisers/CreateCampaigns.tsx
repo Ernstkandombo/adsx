@@ -38,6 +38,17 @@ export default function CreateCampaigns() {
             await axios.post('http://localhost:5001/api/campaign', formData); // Adjust the URL to match your backend API endpoint
             console.log('Campaign created successfully');
             toast.success('Campaign created successfully');
+
+            // Reset form data after successful submission
+      setFormData({
+       name: '',
+        description: '',
+        startDate: '',
+        endDate: '',
+        dailyBudget: '',
+         totalBudget: '',
+        advertiserId: currentUserID, 
+      });
         } catch (error) {
             console.error('Error creating campaign:', error);
             toast.error('Error creating campaign');

@@ -21,7 +21,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 export default function AddAdvert() {
 
   const currentUserID = "66278b87053181ebcc05e0ea";
-  
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -84,7 +84,7 @@ export default function AddAdvert() {
         creative: '',
         clickUrl: '',
         campaignId: '', // Reset campaignId to empty string
-        advertiserId: "6623830857a0a0a874b17bc5",
+        advertiserId: currentUserID,
         width: 0,
         height: 0,
         impressions: 0,
@@ -112,7 +112,7 @@ export default function AddAdvert() {
           <DialogTitle className="my-2">Add New Advertisement</DialogTitle>
           <DialogDescription>Fill in the details below to add a new Advertisement.</DialogDescription>
         </DialogHeader>
-           <div className="overflow-y-auto">
+        <div className="overflow-y-auto">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-3 gap-4 py-4">
               <div>
@@ -147,7 +147,7 @@ export default function AddAdvert() {
                 <Input type="text" name="clickUrl" value={formData.clickUrl} onChange={handleChange} />
               </div>
             </div>
-              <div className="grid grid-cols-2 gap-4 pt-2">
+            <div className="grid grid-cols-2 gap-4 pt-2">
               <div className="col-span-2 text-bold ">
                 <p className="font-semibold">Size:</p>
               </div>
@@ -155,13 +155,13 @@ export default function AddAdvert() {
                 <Label>width:</Label>
                 <Input type="text" name="width" value={formData.width} onChange={handleChange} />
               </div>
-                    <div>
+              <div>
                 <Label>height:</Label>
                 <Input type="text" name="height" value={formData.height} onChange={handleChange} />
               </div>
-               
+
             </div>
-       
+
 
             <div className="grid grid-cols-3 gap-4 pt-2">
               <div className="col-span-3 text-bold ">
@@ -171,19 +171,19 @@ export default function AddAdvert() {
                 <Label>Age Range:</Label>
                 <Input type="text" name="ageRange" value={formData.ageRange.join(',')} onChange={handleChange} />
               </div>
-              <div  className="col-span-1">
+              <div className="col-span-1">
                 <Label>Gender:</Label>
                 <Input type="text" name="gender" value={formData.gender.join(',')} onChange={handleChange} />
               </div>
-              <div  className="col-span-1">
+              <div className="col-span-1">
                 <Label>Interests:</Label>
                 <Input type="text" name="interests" value={formData.interests.join(',')} onChange={handleChange} />
               </div>
-              
+
             </div>
             <DialogFooter className="col-span-2 pt-10">
-                <Button type="submit">Add Advert</Button>
-              </DialogFooter>
+              <Button type="submit">Add Advert</Button>
+            </DialogFooter>
           </form>
         </div>
       </DialogContent>

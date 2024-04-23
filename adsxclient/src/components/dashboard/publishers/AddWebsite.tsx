@@ -3,22 +3,22 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner'; // Import toast from Sonner
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-  DialogHeader,
-  DialogTrigger
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogTitle,
+    DialogHeader,
+    DialogTrigger
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label'; // Import Label component
 import { Input } from '@/components/ui/input'; // Import Input component
 
 export default function AddWebsite() {
-    
-  const currentUserID = "66241266565c9aa620c7402a";
-  
+
+    const currentUserID = "66278baa053181ebcc05e0f7";
+
     const [formData, setFormData] = useState({
         name: "",
         url: "",
@@ -45,6 +45,19 @@ export default function AddWebsite() {
                 // Handle success
                 console.log('Website added successfully:', response.data);
                 toast.success('Website added successfully');
+
+
+                // Reset form data after successful submission
+                setFormData({
+                    name: "",
+                    url: "",
+                    description: "",
+                    category: "",
+                    publisherId: currentUserID,
+                    ageRange: [],
+                    gender: [],
+                    interests: [],
+                });
             })
             .catch(error => {
                 // Handle error
@@ -83,7 +96,7 @@ export default function AddWebsite() {
                                 <Input type="text" name="category" value={formData.category} onChange={handleChange} />
                             </div>
                         </div>
-                        
+
                         <div className="grid gap-4">
                             <div className="col-span-2 text-bold py-4">
                                 <p>Targeting credentials</p>
@@ -101,7 +114,7 @@ export default function AddWebsite() {
                                 <Input type="text" name="interests" value={formData.interests.join(',')} onChange={handleChange} />
                             </div>
                         </div>
-                        
+
                         <DialogFooter className="col-span-2 py-6">
                             <Button type="submit">Add Website</Button>
                         </DialogFooter>

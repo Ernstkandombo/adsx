@@ -104,7 +104,7 @@ initialState: { //This line
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No Campaigns Created.
+                No Campaigns Assignment Created.
               </TableCell>
             </TableRow>
           )}
