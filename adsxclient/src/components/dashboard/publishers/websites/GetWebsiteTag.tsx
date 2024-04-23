@@ -30,9 +30,13 @@ export default function GetWebsiteTag() {
 
     
 
-    useEffect(() => {
-        const fetchEmbeddingTag = async () => {
-            try {
+  
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        // Add your form submission logic here
+
+         try {
                 const response = await fetch(`http://localhost:5001/api/adserve/${campaignAssignmentCode}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch embedding tag');
@@ -44,16 +48,6 @@ export default function GetWebsiteTag() {
                 setError(error.message);
                 setEmbeddingTag('');
             }
-        };
-
-        if (campaignAssignmentCode) {
-            fetchEmbeddingTag();
-        }
-    }, [campaignAssignmentCode]);
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        // Add your form submission logic here
     };
 
     return (
