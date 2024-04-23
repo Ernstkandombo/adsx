@@ -37,7 +37,7 @@ export default function Metrics() {
 
             <Card className="text-white bg-black md:col-start-3">
                 <CardHeader className=" pb-2">
-                    <CardDescription className="text-white font-bold py-2">Impressions</CardDescription>
+                    <CardDescription className="text-white font-bold py-2">Total Impressions</CardDescription>
                     <CardTitle className="text-4xl">{metricsData ? metricsData.totalImpressions : '-'}</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -46,7 +46,7 @@ export default function Metrics() {
             </Card>
             <Card className="text-white bg-black md:col-start-4">
                 <CardHeader className="pb-2">
-                    <CardDescription className="text-white font-bold py-2">Clicks</CardDescription>
+                    <CardDescription className="text-white font-bold py-2">Total Clicks</CardDescription>
                     <CardTitle className="text-4xl">{metricsData ? metricsData.totalClicks : '-'}</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -55,7 +55,7 @@ export default function Metrics() {
             </Card>
             <Card className="text-white bg-black md:col-start-5">
                 <CardHeader className="pb-2">
-                    <CardDescription className="text-white font-bold py-2">Cost</CardDescription>
+                    <CardDescription className="text-white font-bold py-2">Total Cost</CardDescription>
                     <CardTitle className="text-4xl">{metricsData ? `N$ ${metricsData.totalCost}` : '-'}</CardTitle>
                 </CardHeader>
                 <CardContent>
