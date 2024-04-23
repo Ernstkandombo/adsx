@@ -7,7 +7,7 @@ import { DataTable } from '@/components/dashboard/advertisers/campaign/data-tabl
 
 
 async function getData(): Promise<Campaign[]> {
-    const currentUserID = "66241266565c9aa620c7402a";
+    const currentUserID = "66278b87053181ebcc05e0ea";
 // Fetch data from your API here.
 try {
   const response = await axios.get(`http://localhost:5001/api/campaign/advertiser/${currentUserID}`);

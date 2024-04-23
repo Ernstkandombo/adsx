@@ -8,7 +8,7 @@ import { DataTable } from '@/components/dashboard/publishers/Placement/data-tabl
 
 
 async function getData(): Promise<Placement[]> {
-const currentUserID = "66241266565c9aa620c7402a";
+const currentUserID = "66278baa053181ebcc05e0f7";
 // Fetch data from your API here.
 try {
   const response = await axios.get(`http://localhost:5001/api/placement/publisher/${currentUserID}`);

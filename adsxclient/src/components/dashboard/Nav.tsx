@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export default function Nav() {
     const [userData, setUserData] = useState(null);
-    const currentUserID = '6623849609fafa84003e556b';
+    const currentUserID = '66278b87053181ebcc05e0ea';
 
     useEffect(() => {
         const fetchUserData = async () => {
