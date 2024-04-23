@@ -9,13 +9,13 @@ import axios from 'axios';
 
 export default function Nav() {
     const [userData, setUserData] = useState(null);
-    const userId = '6623849609fafa84003e556b';
+    const currentUserID = '6623849609fafa84003e556b';
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 // Fetch current user's data from the API
-                const response = await axios.get(`http://localhost:5001/api/publisher/${userId}`); // Adjust the endpoint based on your backend setup
+                const response = await axios.get(`http://localhost:5001/api/publisher/${currentUserID}`); // Adjust the endpoint based on your backend setup
                 setUserData(response.data);
             } catch (error) {
                 console.error('Error fetching user data:', error);

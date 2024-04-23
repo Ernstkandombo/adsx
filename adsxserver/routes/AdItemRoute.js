@@ -18,4 +18,8 @@ router.put('/:id', adItemController.updateAdItem);
 // Delete a specific AdItem by ID
 router.delete('/:id', adItemController.deleteAdItem);
 
+
+// Delete a specific AdItem by ID
+router.get('/advertiser/:id', adItemController.getAdItemByAvertiser);
+
 module.exports = router;

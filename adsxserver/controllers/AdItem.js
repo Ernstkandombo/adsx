@@ -55,3 +55,11 @@ exports.deleteAdItem = async (req, res) => {
     }
 };
 
+exports.getAdItemByAvertiser = async (req, res) => {
+    try {
+        const aditems = await AdItem.find({ advertiserId: req.params.id });
+        res.json(aditems);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

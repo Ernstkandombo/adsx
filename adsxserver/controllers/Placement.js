@@ -121,29 +121,30 @@ exports.deletePlacement = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-
 exports.getPlacementsByPublisher = async (req, res) => {
     try {
-        const placements = await Placement.find({ publisherId: req.params.publisherId });
-        res.json(placements);
+        const placements = await Placement.find({ publisherId: req.params.id });
+
+        const placementsWithUrls = await Promise.all(placements.map(async placement => {
+            const website = await Website.findById(placement.websiteId);
+
+            return {
+                _id: placement._id,
+                name: placement.name,
+                description: placement.description,
+                websiteId: placement.websiteId,
+                publisherId: placement.publisherId,
+                width: placement.width,
+                height: placement.height,
+                dateCreated: placement.dateCreated,
+                websiteUrl: website ? website.url : null // Set websiteUrl to null if website is not found
+            };
+        }));
+
+        res.json(placementsWithUrls);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-exports.getPlacementStats = async (req, res) => {
-    try {
-        const placement = await Placement.findById(req.params.id);
-        if (!placement) {
-            return res.status(404).json({ message: 'Placement not found' });
-        }
-        const impressions = placement.impressions || 0;
-        const clicks = placement.clicks || 0;
-        const ctr = (clicks / impressions) * 100 || 0;
-        const stats = { impressions, clicks, ctr };
-        res.json(stats);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+

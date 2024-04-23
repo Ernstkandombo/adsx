@@ -19,28 +19,28 @@ import {
 
 // Define the type for the Campaign
 export type CampaignAssignment = {
-  _id: string;
-  campaign: string;
-  placement: string;
-  website: string;
+  campaignAssignmentID: string;
+  campaignName: string;
+  placementName: string;
+  websiteURL: string;
   
 };
 
 export const columns: ColumnDef<CampaignAssignment>[] = [
  {
-    accessorKey: "_id",
+    accessorKey: "campaignAssignmentID",
     header: "Campaign Assignment",
   },
   {
-    accessorKey: "campaign",
+    accessorKey: "campaignName",
     header: "Campaign",
   },
   {
-    accessorKey: "placement",
+    accessorKey: "placementName",
     header: "placement",
   },
    {
-    accessorKey: "website",
+    accessorKey: "websiteURL",
     header: "website",
   },
   

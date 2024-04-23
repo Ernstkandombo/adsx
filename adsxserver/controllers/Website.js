@@ -57,37 +57,13 @@ exports.deleteWebsite = async (req, res) => {
 
 
 
-exports.getWebsitesByAdvertiser = async (req, res) => {
-    try {
-        const websites = await Website.find({ advertiserId: req.params.advertiserId });
-        res.json(websites);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
 exports.getWebsitesByPublisher = async (req, res) => {
     try {
-        const websites = await Website.find({ publisherId: req.params.publisherId });
+        const websites = await Website.find({ publisherId: req.params.id });
         res.json(websites);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-exports.getWebsiteStats = async (req, res) => {
-    try {
-        const website = await Website.findById(req.params.id);
-        if (!website) {
-            return res.status(404).json({ message: 'Website not found' });
-        }
-        const publishers = await Publisher.find({ websiteId: website._id });
-        const impressions = publishers.reduce((acc, publisher) => acc + (publisher.impressions || 0), 0);
-        const clicks = publishers.reduce((acc, publisher) => acc + (publisher.clicks || 0), 0);
-        const ctr = (clicks / impressions) * 100 || 0;
-        const stats = { impressions, clicks, ctr };
-        res.json(stats);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};

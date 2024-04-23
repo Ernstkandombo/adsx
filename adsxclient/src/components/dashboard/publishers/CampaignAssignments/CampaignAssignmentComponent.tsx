@@ -9,22 +9,16 @@ import { DataTable } from '@/components/dashboard/publishers/CampaignAssignments
 
 
 async function getData(): Promise<CampaignAssignment[]> {
+const currentUserID = "66241266565c9aa620c7402a";
+// Fetch data from your API here.
+try {
+  const response = await axios.get(`http://localhost:5001/api/campaignassignment/${currentUserID}`);
+  return response.data; // Assuming your API returns an array of Advert objects
+} catch (error) {
+  console.error('Error fetching data:', error);
+  return []; // Return empty array in case of an error
+}
 
-   return [
-  {
-    _id: "457689078907890",
-    campaign: "hjkl;hjkl",
-    placement: "success",
-    website: "ken99@yahoo.com",
-  },
-  {
-    _id: "457689078907890",
-    campaign: "hjkl;hjkl",
-    placement: "success",
-    website: "ken99@yahoo.com",
-    }
-  ]
-  
 }
  
 

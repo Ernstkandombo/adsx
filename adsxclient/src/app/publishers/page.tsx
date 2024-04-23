@@ -41,7 +41,7 @@ export default async function page() {
                             <CardHeader className="flex flex-row items-center">
                                 <div className="grid gap-2">
                                     <CardTitle className="text-xls">Placement Assignment</CardTitle>
-                                    <CardDescription>View All Available Placement </CardDescription>
+                                    <CardDescription>View All Your Placement </CardDescription>
                                 </div>
                              <CreatePlacement />
                             </CardHeader>

@@ -58,7 +58,7 @@ exports.deleteCampaign = async (req, res) => {
 
 exports.getCampaignsByAdvertiser = async (req, res) => {
     try {
-        const campaigns = await Campaign.find({ advertiserId: req.params.advertiserId });
+        const campaigns = await Campaign.find({ advertiserId: req.params.id });
         res.json(campaigns);
     } catch (error) {
         res.status(500).json({ message: error.message });

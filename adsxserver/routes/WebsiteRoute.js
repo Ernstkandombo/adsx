@@ -9,8 +9,7 @@ router.get('/:id', websiteController.getWebsite);
 router.put('/:id', websiteController.updateWebsite);
 router.delete('/:id', websiteController.deleteWebsite);
 
-router.get('/advertiser/:advertiserId', websiteController.getWebsitesByAdvertiser);
-router.get('/publisher/:publisherId', websiteController.getWebsitesByPublisher);
-router.get('/:id/stats', websiteController.getWebsiteStats);
+router.get('/publisher/:id', websiteController.getWebsitesByPublisher);
 
-module.exports = router;
+
+module.exports = router; 

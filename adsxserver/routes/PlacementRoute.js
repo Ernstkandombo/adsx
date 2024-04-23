@@ -8,7 +8,7 @@ router.get('/', placementController.getPlacements);
 router.get('/:id', placementController.getPlacement);
 router.put('/:id', placementController.updatePlacement);
 router.delete('/:id', placementController.deletePlacement);
-router.get('/publisher/:publisherId', placementController.getPlacementsByPublisher);
-router.get('/stats/:id', placementController.getPlacementStats);
+router.get('/publisher/:id', placementController.getPlacementsByPublisher);
+
 
 module.exports = router;

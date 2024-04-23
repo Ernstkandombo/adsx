@@ -1,7 +1,7 @@
 const CampaignAssignment = require('../models/CampaignAssignment');
 const Placement = require('../models/Placement');
-const Website = require('../models/Website');
 const Campaign = require('../models/Campaign');
+const Website = require('../models/Website');
 
 exports.associateCampaignWithZone = async (req, res) => {
     try {
@@ -46,20 +46,56 @@ exports.associateCampaignWithZone = async (req, res) => {
 
 // GET CampaignAssignment by ID
 exports.getCampaignAssignmentById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const campaignAssignment = await CampaignAssignment.findById(id);
+    const { id } = req.params;
+    console.log('userID:', id); // Log userID
 
-        if (!campaignAssignment) {
-            return res.status(404).json({ message: 'CampaignAssignment not found' });
+    try {
+        // Find all placements belonging to the publisher with the given userID
+        const placements = await Placement.find({ publisherId: id });
+        console.log('Placements:', placements);
+
+        // Extract placement IDs
+        const placementIds = placements.map(placement => placement._id);
+        console.log('Placement IDs:', placementIds);
+
+        // Find campaign assignments with placement IDs matching the found placements
+        const campaignAssignments = await CampaignAssignment.find({ placementId: { $in: placementIds } });
+        console.log('Campaign Assignments:', campaignAssignments);
+
+        // Prepare an array to store the results
+        const results = [];
+
+        // Iterate through each campaign assignment to gather additional information
+        for (const assignment of campaignAssignments) {
+            // Find the campaign associated with the assignment
+            const campaign = await Campaign.findById(assignment.campaignId);
+            console.log('Campaign:', campaign);
+            // Find the website associated with the campaign
+            const placement = await Placement.findById(assignment.placementId);
+            console.log('Placement:', Placement);
+            // Find the website associated with the campaign
+            const website = await Website.findById(assignment.websiteId);
+            console.log('Website:', website);
+
+            // Push the relevant information to the results array
+            results.push({
+                campaignAssignmentID: assignment._id,
+                campaignName: campaign.name,
+                placementName: placement.name, // Assuming placement name is stored in assignment
+                websiteURL: website.url
+            });
         }
 
-        res.status(200).json(campaignAssignment);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        // Send the results back as a JSON response
+        console.log('Results:', results);
+        res.json(results);
+    } catch (error) {
+        // Handle any errors that might occur
+        console.error('Error fetching campaign assignments:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 
 // DELETE CampaignAssignment by ID
 exports.deleteCampaignAssignmentById = async (req, res) => {

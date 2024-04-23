@@ -8,14 +8,16 @@ import { DataTable } from '@/components/dashboard/publishers/websites/data-table
 
 
 async function getData(): Promise<Website[]> {
-  // Fetch data from your API here.
- try {
-    const response = await axios.get('http://localhost:5001/api/websites/');
-    return response.data; // Assuming your API returns an array of Advert objects
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return []; // Return empty array in case of an error
-  }
+ const currentUserID = "66241266565c9aa620c7402a";
+// Fetch data from your API here.
+try {
+  const response = await axios.get(`http://localhost:5001/api/websites/publisher/${currentUserID}`);
+  return response.data; // Assuming your API returns an array of Advert objects
+} catch (error) {
+  console.error('Error fetching data:', error);
+  return []; // Return empty array in case of an error
+}
+
 }
  
 
