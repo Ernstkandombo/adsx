@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
@@ -60,18 +59,18 @@ export default function PublisherForm() {
                     setPassword('');
                     // Redirect to '/publishers'
                     router.push('/publishers');
-                } else {
-                    toast.error('Failed to create account. Please check the form and try again.');
                 }
             } catch (error: any) {
                 if (error.response) {
                     // Server responded with a status code different from 2xx
                     const errorData = error.response.data;
-                    if (errorData.errors) {
+                    if (errorData.message === "Email already exists. Please use another one.") {
+                        toast.error(errorData.message);
+                    } else {
                         setErrors(errorData.errors);
+                        // Show error toast
+                        toast.error('Failed to create user. Please check the form and try again.');
                     }
-                    // Show error toast
-                    toast.error('Failed to create user. Please check the form and try again.');
                 } else {
                     // Something happened in setting up the request that triggered an Error
                     console.error('Error:', error.message);

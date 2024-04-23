@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
@@ -63,9 +62,14 @@ export default function AdvertiserForm() {
                 if (error.response) {
                     // Server responded with a status code different from 2xx
                     const errorData = error.response.data;
-                    setErrors(errorData.errors || {});
-                    // Show error toast
-                    toast.error('Failed to create user. Please check the form and try again.');
+                    if (errorData.message === "Email already exists. Please use another one.") {
+                        // Show message in toast
+                        toast.error(errorData.message);
+                    } else {
+                        setErrors(errorData.errors || {});
+                        // Show error toast
+                        toast.error('Failed to create user. Please check the form and try again.');
+                    }
                 } else {
                     // Something happened in setting up the request that triggered an Error
                     console.error('Error:', error.message);

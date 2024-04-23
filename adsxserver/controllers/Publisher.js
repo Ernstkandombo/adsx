@@ -1,12 +1,26 @@
 const Publisher = require('../models/Publisher');
 
+
+
 exports.createPublisher = async (req, res) => {
     try {
-        const publisher = new Publisher(req.body);
-        await publisher.save();
-        res.status(201).json(publisher);
+        // Check if email already exists in the database
+        const existingPublisher = await Publisher.findOne({ email: req.body.email });
+
+        if (existingPublisher) {
+            // If email already exists, send a message to the client
+            return res.status(400).json({ message: 'Email already exists. Please use another one.' });
+        }
+
+        // If email doesn't exist, create the publisher
+        const newPublisher = new Publisher(req.body);
+        await newPublisher.save();
+
+        // Send success response with the created publisher
+        res.status(201).json(newPublisher);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        // Send error response if something went wrong
+        res.status(500).json({ message: 'Failed to create publisher.', error: error.message });
     }
 };
 

@@ -1,7 +1,18 @@
 const Advertiser = require('../models/Advertiser');
 
 exports.createAdvertiser = async (req, res) => {
+    const { email } = req.body;
+
     try {
+        // Check if the email already exists in the database
+        const existingAdvertiser = await Advertiser.findOne({ email });
+
+        if (existingAdvertiser) {
+            // If the email already exists, send a message to the client
+            return res.status(400).json({ message: "Email already exists. Please use another one." });
+        }
+
+        // If the email doesn't exist, create the advertiser
         const advertiser = new Advertiser(req.body);
         await advertiser.save();
         res.status(201).json(advertiser);
