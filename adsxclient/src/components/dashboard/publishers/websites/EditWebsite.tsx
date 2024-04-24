@@ -30,7 +30,7 @@ export default function EditWebsite({ websiteId }) {
 
     // Fetch website data based on websiteId when the component mounts
     useEffect(() => {
-        axios.get(`http://localhost:5001/api/websites/${websiteId}`)
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/${websiteId}`)
             .then(response => {
                 setFormData(response.data);
             })
@@ -50,7 +50,7 @@ export default function EditWebsite({ websiteId }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:5001/api/websites/${websiteId}`, formData)
+        axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/${websiteId}`, formData)
             .then(response => {
                 // Handle success
                 console.log('Website updated successfully:', response.data);

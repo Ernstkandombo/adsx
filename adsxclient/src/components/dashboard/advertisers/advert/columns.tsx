@@ -14,6 +14,7 @@ import {
 
 import EditAdvert from "./EditAdvert";
 import DeleteAdvert from "./DeleteAdvert";
+import ViewAdvertMetrix from "./ViewAdvertMetrix";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -72,10 +73,13 @@ export const columns: ColumnDef<Advert>[] = [
           <DropdownMenuContent align="center" className="flex flex-col">
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
+             <DropdownMenuItem asChild>
+                <ViewAdvertMetrix AdvertID={Advert._id} />
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
                 <EditAdvert AdvertID={Advert._id} />
             </DropdownMenuItem>
-
+            
             <DropdownMenuItem asChild>
                 <DeleteAdvert AdvertID={Advert._id} />
             </DropdownMenuItem>

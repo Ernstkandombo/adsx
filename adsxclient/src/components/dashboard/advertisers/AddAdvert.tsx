@@ -74,7 +74,7 @@ export default function AddAdvert() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5001/api/aditem/`, formData);
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/`, formData);
       console.log('Advert Created successfully');
       toast.success("Advert Created successfully");
       // Reset form data after successful submission

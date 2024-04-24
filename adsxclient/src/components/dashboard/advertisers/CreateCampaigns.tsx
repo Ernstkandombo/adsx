@@ -35,7 +35,7 @@ export default function CreateCampaigns() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5001/api/campaign', formData); // Adjust the URL to match your backend API endpoint
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`, formData); // Adjust the URL to match your backend API endpoint
             console.log('Campaign created successfully');
             toast.success('Campaign created successfully');
 

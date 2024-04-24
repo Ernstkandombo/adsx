@@ -12,7 +12,7 @@ async function getData(): Promise<CampaignAssignment[]> {
 const currentUserID = "66278baa053181ebcc05e0f7";
 // Fetch data from your API here.
 try {
-  const response = await axios.get(`http://localhost:5001/api/campaignassignment/${currentUserID}`);
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaignassignment/${currentUserID}`);
   return response.data; // Assuming your API returns an array of Advert objects
 } catch (error) {
   console.error('Error fetching data:', error);

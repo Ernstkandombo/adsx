@@ -40,7 +40,7 @@ export default function AddWebsite() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post(`http://localhost:5001/api/websites`, formData)
+        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites`, formData)
             .then(response => {
                 // Handle success
                 console.log('Website added successfully:', response.data);

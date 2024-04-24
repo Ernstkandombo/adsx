@@ -39,7 +39,7 @@ export default function EditAdvert({ AdvertID }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/api/aditem/${AdvertID}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/${AdvertID}`);
         setFormData(response.data);
       } catch (error) {
         console.error('Error fetching adverts details:', error);
@@ -50,7 +50,7 @@ export default function EditAdvert({ AdvertID }) {
   }, [AdvertID]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/api/campaign')
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`)
       .then(response => {
         setCampaigns(response.data);
       })
@@ -83,7 +83,7 @@ export default function EditAdvert({ AdvertID }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5001/api/aditem/${AdvertID}`, formData);
+      await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/${AdvertID}`, formData);
       console.log('Advert details updated successfully');
       toast.success("Advert details updated successfully");
     } catch (error) {

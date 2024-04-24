@@ -9,7 +9,7 @@ export default function DeleteWebsite({ websiteId }) {
 
     const handleDelete = () => {
         // Send DELETE request to the server to delete the website
-        axios.delete(`http://localhost:5001/api/websites/${websiteId}`)
+        axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/${websiteId}`)
             .then(response => {
                 // Handle success
                 console.log('Website deleted successfully:', response.data);

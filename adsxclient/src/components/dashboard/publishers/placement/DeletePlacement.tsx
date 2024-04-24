@@ -10,7 +10,7 @@ export default function DeletePlacement({ placementId }) {
 
   const handleDelete = () => {
     // Send delete request to delete the placement
-    axios.delete(`http://localhost:5001/api/placement/${placementId}`)
+    axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/${placementId}`)
       .then(response => {
         console.log('Placement deleted successfully:', response.data);
         toast.success('Placement deleted successfully');

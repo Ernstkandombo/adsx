@@ -47,7 +47,7 @@ export default function EditPlacement({ placementId }) {
 
     useEffect(() => {
         // Fetch placement details when component mounts
-        axios.get(`http://localhost:5001/api/placement/${placementId}`)
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/${placementId}`)
             .then(response => {
                 const { websiteId, ...placementData } = response.data;
                 setPlacementData(placementData);

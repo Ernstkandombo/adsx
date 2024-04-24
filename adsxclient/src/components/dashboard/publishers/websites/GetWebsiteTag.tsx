@@ -37,7 +37,7 @@ export default function GetWebsiteTag() {
         // Add your form submission logic here
 
          try {
-                const response = await fetch(`http://localhost:5001/api/adserve/${campaignAssignmentCode}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/adserve/${campaignAssignmentCode}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch embedding tag');
                 }

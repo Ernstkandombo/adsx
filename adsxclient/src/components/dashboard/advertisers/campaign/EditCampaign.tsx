@@ -19,7 +19,7 @@ export default function EditCampaign({ CampaignID }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5001/api/campaign/${CampaignID}`);
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/${CampaignID}`);
                 setFormData(response.data);
             } catch (error) {
                 console.error('Error fetching campaign details:', error);
@@ -40,7 +40,7 @@ export default function EditCampaign({ CampaignID }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5001/api/campaign/${CampaignID}`, formData);
+            await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/${CampaignID}`, formData);
             console.log('Campaign details updated successfully');
             toast.success("Campaign details updated successfully");
         } catch (error) {

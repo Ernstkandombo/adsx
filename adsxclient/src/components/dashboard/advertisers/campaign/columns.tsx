@@ -14,6 +14,7 @@ import {
 
 import EditCampaign from "./EditCampaign";
 import DeleteCampaign from "./DeleteCampaign";
+import ViewCampaignMetrix from "./ViewCampaignMetrix";
 
 // Define the type for the Campaign
 export type Campaign = {
@@ -75,6 +76,9 @@ export const columns: ColumnDef<Campaign>[] = [
           <DropdownMenuContent align="center" className="flex flex-col">
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <ViewCampaignMetrix CampaignID={campaign._id} />
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <EditCampaign CampaignID={campaign._id} />
             </DropdownMenuItem>

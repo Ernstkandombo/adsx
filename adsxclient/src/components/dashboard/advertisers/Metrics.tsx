@@ -11,7 +11,7 @@ export default function Metrics() {
     useEffect(() => {
         const fetchMetricsData = async () => {
             try {
-                const response = await axios.post(`http://localhost:5001/api/report/advertiser/${currentUserID}`);
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/report/advertiser/${currentUserID}`);
                 setMetricsData(response.data);
             } catch (error) {
                 console.error('Error fetching metrics data:', error);

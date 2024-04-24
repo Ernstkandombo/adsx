@@ -43,7 +43,7 @@ export default function CreatePlacement() {
     const form = useForm();
 
     useEffect(() => {
-        axios.get('http://localhost:5001/api/websites')
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites`)
             .then(response => {
                 setWebsites(response.data);
             })
@@ -74,7 +74,7 @@ export default function CreatePlacement() {
         };
 
         try {
-            const response = await axios.post('http://localhost:5001/api/placement', updatedPlacementData);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement`, updatedPlacementData);
             console.log('Placement created successfully:', response.data);
             toast.success('Placement created successfully');
             setPlacementData({

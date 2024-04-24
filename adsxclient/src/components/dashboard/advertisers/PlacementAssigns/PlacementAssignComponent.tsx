@@ -9,7 +9,7 @@ import { DataTable } from '@/components/dashboard/advertisers/PlacementAssigns/d
 async function getData(): Promise<PlacementAssign[]> {
   // Fetch data from your API here.
   try {
-    const response = await axios.get('http://localhost:5001/api/Placement/');
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/Placement/`);
     return response.data; // Assuming your API returns an array of Advert objects
   } catch (error) {
     console.error('Error fetching data:', error);

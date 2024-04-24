@@ -20,7 +20,7 @@ export default function AssignCampaign({ CampaignID }) {
 
     useEffect(() => {
         // Fetch placement options
-        axios.get('http://localhost:5001/api/placement')
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement`)
             .then(response => {
                 setPlacementOptions(response.data);
             })
@@ -29,7 +29,7 @@ export default function AssignCampaign({ CampaignID }) {
             });
 
         // Fetch website options
-        axios.get('http://localhost:5001/api/websites')
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites`)
             .then(response => {
                 setWebsiteOptions(response.data);
             })
@@ -61,7 +61,7 @@ export default function AssignCampaign({ CampaignID }) {
         };
 
         try {
-            const response = await axios.post('http://localhost:5001/api/campaignassignment', formData);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaignassignment`, formData);
             console.log('Campaign assigned successfully:', response.data);
             toast.success('Campaign assigned successfully');
             // Reset form after successful submission

@@ -11,7 +11,7 @@ export default function DeleteAdvert({ AdvertID }) {
   const handleDelete = async () => {
     try {
       // Make axios DELETE request to delete the advertisement
-      await axios.delete(`http://localhost:5001/api/aditem/${AdvertID}`);
+      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/${AdvertID}`);
       console.log('Advert deleted successfully');
       toast.success("Advert deleted successfully");
     } catch (error) {

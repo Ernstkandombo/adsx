@@ -8,7 +8,7 @@ export default function DeleteCampaign({ CampaignID }) {
     const handleDelete = async () => {
         try {
             // Send a delete request to the server
-            await axios.delete(`http://localhost:5001/api/campaign/${CampaignID}`);
+            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/${CampaignID}`);
             console.log('Campaign deleted successfully');
             toast.success("Campaign deleted successfully");
         } catch (error) {
