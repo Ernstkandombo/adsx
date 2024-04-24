@@ -6,8 +6,10 @@ const CampaignSchema = new mongoose.Schema({
     advertiserId: { type: mongoose.Schema.Types.ObjectId, ref: 'Advertiser', required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    dailyBudget: { type: Number, required: true },
-    totalBudget: { type: Number, required: true },
+    dailyBudget: { type: Number, required: true, min: 0 },
+    totalBudget: { type: Number, required: true, min: 0 },
+    costPerClick: { type: Number, required: true, min: 0 },
+    costPerImpression: { type: Number, required: true, min: 0 },
 
     dateCreated: { type: Date, default: Date.now }
 });
