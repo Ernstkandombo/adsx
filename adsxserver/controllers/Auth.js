@@ -1,4 +1,3 @@
-// controllers/authController.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Advertiser = require('../models/Advertiser');
@@ -17,10 +16,10 @@ exports.authenticate = async (req, res) => {
         let userType;
         if (advertiser) {
             user = advertiser;
-            userType = 'advertiser';
+            userType = advertiser.role; // Assuming role is the field in Advertiser model
         } else if (publisher) {
             user = publisher;
-            userType = 'publisher';
+            userType = publisher.role; // Assuming role is the field in Publisher model
         } else {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -32,9 +31,10 @@ exports.authenticate = async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ userId: user._id, userType }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ userId: user._id, userType }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-        return res.status(200).json({ token, userType });
+        // Return token, user type, and user id
+        return res.status(200).json({ token, userType, userId: user._id });
     } catch (error) {
         return res.status(500).json({ message: 'Internal server error' });
     }

@@ -1,7 +1,7 @@
-// pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 import axios from 'axios';
+import { useRouter } from 'next/router'; // Import useRouter
 
 export default NextAuth({
     providers: [
@@ -20,13 +20,14 @@ export default NextAuth({
 
                     // If authentication is successful, return the user object
                     if (response.status === 200 && response.data.token) {
-                        return { email, userType: response.data.userType, token: response.data.token };
+                        return { email, userType: response.data.userType, token: response.data.token, userId: response.data.userId };
                     } else {
                         // If authentication fails, return null
                         return null;
                     }
                 } catch (error) {
-                    // If an error occurs, return null
+                    // Log any errors that occur during authentication
+                    console.error('Authentication error:', error);
                     return null;
                 }
             }
@@ -55,6 +56,23 @@ export default NextAuth({
             // This callback is used to manage the user session
             session.user = token;
             return session;
+        }
+    },
+    events: {
+        async signIn({ user, account, profile, isNewUser }) {
+            const router = useRouter(); // Initialize useRouter
+
+            if (user) {
+                // Redirect based on user type
+                if (user.userType === 'advertiser') {
+                    router.push('/advertisers'); // Use router.push for redirection
+                } else if (user.userType === 'publisher') {
+                    router.push('/publishers'); // Use router.push for redirection
+                }
+            } else {
+                // Handle authentication failure with toast
+                toast.error('Authentication failed. Please check your credentials.');
+            }
         }
     }
 });

@@ -1,6 +1,5 @@
 'use client'
 
-// pages/auth/signin.js
 import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from 'next/link';
+import { toast } from 'sonner'
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ export default function SignIn() {
             newErrors.email = "Invalid email format";
         }
 
-         if (!password.trim()) {
+        if (!password.trim()) {
             newErrors.password = "Password is required";
         } else if (password.trim().length < 8) {
             newErrors.password = "Password must be at least 8 characters long";
@@ -42,12 +42,12 @@ export default function SignIn() {
             const result = await signIn('credentials', {
                 email,
                 password,
-                redirect: false // Set to true if you want NextAuth.js to handle redirection after authentication
+                redirect: true // Set to true if you want NextAuth.js to handle redirection after authentication
             });
 
             if (result?.error) {
-                // Handle authentication error
-                console.error('Authentication error:', result.error);
+                // Handle authentication error with toast
+                toast.error('Authentication failed. Please check your credentials.');
             }
         }
     };
