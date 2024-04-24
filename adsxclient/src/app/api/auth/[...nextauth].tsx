@@ -16,7 +16,7 @@ export default NextAuth({
                     const { email, password } = credentials;
 
                     // Make a request to your authentication endpoint
-                    const response = await axios.post('http://localhost:5001/api/auth/', { email, password });
+                    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/`, { email, password });
 
                     // If authentication is successful, return the user object
                     if (response.status === 200 && response.data.token) {

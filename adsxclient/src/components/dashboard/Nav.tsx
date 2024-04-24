@@ -48,7 +48,7 @@ export default function Nav() {
                     {/* Conditionally render the "Bidding" link if the user's role is 'publisher' */}
                     {isPublisher() && (
                         <div>
-                            <Link href="/" className="text-foreground font-semibold transition-colors mx-6 px-4 py-2 border rounded hover:text-foreground hover:text-amber-500">Bidding</Link>
+                            <Link href="/publishers/bidding" className="text-foreground font-semibold transition-colors mx-6 px-4 py-2 border rounded hover:text-foreground hover:text-amber-500">Bidding</Link>
                         </div>
                     )}
                 </div>

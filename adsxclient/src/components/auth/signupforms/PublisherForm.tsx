@@ -49,7 +49,7 @@ export default function PublisherForm() {
         
         if (validateForm()) {
             try {
-                const response = await axios.post('http://localhost:5001/api/publisher/', { name, email, password, role: "publisher" });
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/publisher/`, { name, email, password, role: "publisher" });
                 
                 if (response.status === 201) {
                     toast.success('Your Account has been successfully created');

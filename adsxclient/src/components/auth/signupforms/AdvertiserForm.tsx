@@ -49,7 +49,7 @@ export default function AdvertiserForm() {
 
         if (validateForm()) {
             try {
-                const response = await axios.post('http://localhost:5001/api/advertiser/', { name, email, password, role: "advertiser" });
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/advertiser/`, { name, email, password, role: "advertiser" });
                 // Clear form fields
                 setName('');
                 setEmail('');
