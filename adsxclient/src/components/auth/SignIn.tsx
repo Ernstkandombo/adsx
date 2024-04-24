@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { Button } from "@/components/ui/button";
@@ -7,12 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from 'next/link';
-import { toast } from 'sonner'
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation'; // Import useRouter for redirection
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const router = useRouter(); // Initialize useRouter
 
     const validateForm = () => {
         const newErrors: { [key: string]: string } = {};
@@ -42,10 +43,17 @@ export default function SignIn() {
             const result = await signIn('credentials', {
                 email,
                 password,
-                redirect: true // Set to true if you want NextAuth.js to handle redirection after authentication
+                redirect: false // Set to false to handle redirection manually
             });
 
-            if (result?.error) {
+            if (!result?.error) {
+                // Redirect based on user type
+                if (result?.user?.userType === 'advertiser') {
+                    router.push('/advertisers');
+                } else if (result?.user?.userType === 'publisher') {
+                    router.push('/publishers');
+                }
+            } else {
                 // Handle authentication error with toast
                 toast.error('Authentication failed. Please check your credentials.');
             }

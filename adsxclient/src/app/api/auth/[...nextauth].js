@@ -1,11 +1,10 @@
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
-import { useRouter } from 'next/router'; // Import useRouter
 
-export default NextAuth({
+const handler = NextAuth({
     providers: [
-        Providers.Credentials({
+        CredentialsProvider({
             name: 'Credentials',
             credentials: {
                 email: { label: "Email", type: "email" },
@@ -36,11 +35,6 @@ export default NextAuth({
     session: {
         jwt: true
     },
-    pages: {
-        signIn: '/', // Custom sign-in page
-        signUp: '/auth/sign-up', // Custom sign-up page
-    },
-
     callbacks: {
         async jwt(token, user) {
             // This callback is used to manage the JWT token
@@ -48,7 +42,7 @@ export default NextAuth({
                 token.id = user.userId;
                 token.userType = user.userType;
                 token.email = user.email;
-                token.accessToken = user.token;
+                token.token = user.token; // Corrected typo here
             }
             return token;
         },
@@ -57,22 +51,7 @@ export default NextAuth({
             session.user = token;
             return session;
         }
-    },
-    events: {
-        async signIn({ user, account, profile, isNewUser }) {
-            const router = useRouter(); // Initialize useRouter
-
-            if (user) {
-                // Redirect based on user type
-                if (user.userType === 'advertiser') {
-                    router.push('/advertisers'); // Use router.push for redirection
-                } else if (user.userType === 'publisher') {
-                    router.push('/publishers'); // Use router.push for redirection
-                }
-            } else {
-                // Handle authentication failure with toast
-                toast.error('Authentication failed. Please check your credentials.');
-            }
-        }
     }
 });
+
+export { handler as GET, handler as POST }
