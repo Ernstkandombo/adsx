@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster, toast } from 'sonner'
-import { SessionProvider } from "next-auth/react"
+import { AuthProvider } from "./Providers";
 
 
 
@@ -21,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
    
-        <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+       <AuthProvider>{children}</AuthProvider> 
+        </body>
         <Toaster richColors />
     
     </html>

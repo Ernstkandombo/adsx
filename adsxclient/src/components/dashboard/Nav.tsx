@@ -7,6 +7,7 @@ import { Import, Variable } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { signOut } from 'next-auth/react';
 import axios from 'axios';
 
 export default function Nav() {
@@ -74,7 +75,7 @@ export default function Nav() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>Settings</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem><Link href="/" className="w-full">Logout</Link></DropdownMenuItem>
+                            <DropdownMenuItem><Link  onClick={() => signOut()} href="/" className="w-full">Logout</Link></DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </nav>

@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
 
-const handler = NextAuth({
+const authOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -35,7 +35,7 @@ const handler = NextAuth({
     session: {
         jwt: true
     },
-    secret: process.env.JWT_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt(token, user) {
             // This callback is used to manage the JWT token
@@ -53,6 +53,8 @@ const handler = NextAuth({
             return session;
         }
     }
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }
