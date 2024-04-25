@@ -35,6 +35,7 @@ const handler = NextAuth({
     session: {
         jwt: true
     },
+    secret: process.env.JWT_SECRET,
     callbacks: {
         async jwt(token, user) {
             // This callback is used to manage the JWT token
