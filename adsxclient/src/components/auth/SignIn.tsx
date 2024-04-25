@@ -35,30 +35,33 @@ export default function SignIn() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-        if (validateForm()) {
-            // Call NextAuth.js signIn function
-            const result = await signIn('credentials', {
-                email,
-                password,
-                redirect: false // Set to false to handle redirection manually
-            });
+    if (validateForm()) {
+        console.log("Submitting form data:", email, password); // Log the form data
+        // Call NextAuth.js signIn function
+        const result = await signIn('credentials', {
+            email,
+            password,
+            redirect: false // Set to false to handle redirection manually
+        });
 
-            if (!result?.error) {
-                // Redirect based on user type
-                if (result?.user?.userType === 'advertiser') {
-                    router.push('/advertisers');
-                } else if (result?.user?.userType === 'publisher') {
-                    router.push('/publishers');
-                }
-            } else {
-                // Handle authentication error with toast
-                toast.error('Authentication failed. Please check your credentials.');
+        if (!result?.error) {
+            // Redirect based on user type
+            if (result?.user?.userType === 'advertiser') {
+                router.push('/advertisers');
+            } else if (result?.user?.userType === 'publisher') {
+                router.push('/publishers');
             }
+        } else {
+            // Handle authentication error with toast
+            toast.error('Authentication failed. Please check your credentials.');
         }
-    };
+    }
+};
+
+
 
     return (
         <div>

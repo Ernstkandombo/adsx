@@ -1,3 +1,6 @@
+
+//[...nextauth].js
+
 import NextAuth from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
@@ -19,6 +22,7 @@ const authOptions = {
 
                     // If authentication is successful, return the user object
                     if (response.status === 200 && response.data.token) {
+
                         return { email, userType: response.data.userType, token: response.data.token, userId: response.data.userId };
                     } else {
                         // If authentication fails, return null
@@ -58,3 +62,5 @@ const authOptions = {
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }
+
+
