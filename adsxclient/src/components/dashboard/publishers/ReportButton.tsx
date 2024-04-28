@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 export default function ReportButton() {
  const { data: session } = useSession(); 
-  const userID = session?.user._id || {};
+  const userID = session?.user._id || '';
   const currentUserID = userID; // Extracting currentUserID from session
 
 

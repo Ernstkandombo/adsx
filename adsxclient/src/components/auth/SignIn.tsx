@@ -52,13 +52,14 @@ export default function SignIn() {
         const result = await signIn('credentials', {
             email,
             password,
+            callbackUrl: "/",
             redirect: false, // Prevent automatic redirect after successful login
         });
 
         // Check result
         if (result?.error) {
             // Handle authentication error
-            toast.error(result.error);
+            toast.error("Incorrect Credentials, try again.");
         }
     };
 

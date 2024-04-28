@@ -1,6 +1,5 @@
 'use client'
 
-
 import React from 'react';
 import ReportExportButton from './publishers/ReportButton'; 
 import Link from "next/link";
@@ -15,7 +14,6 @@ import { useSession } from "next-auth/react";
 export default function Nav() {
     const router = useRouter();
     const { data: session } = useSession(); 
-     console.log("Session Data:", session);
 
     // Function to check if the user's userType is 'publisher'
     const isPublisher = () => {
@@ -60,11 +58,17 @@ export default function Nav() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
+                            {session && session.user && (
+                                <>
+                                    <DropdownMenuLabel>{session.user.name}</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                </>
+                            )}
                             <DropdownMenuItem>Settings</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem><Link  onClick={() => signOut()} href="/" className="w-full">Logout</Link></DropdownMenuItem>
+                            <DropdownMenuItem><Link onClick={() => signOut()} href="/" className="w-full">Logout</Link></DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </nav>

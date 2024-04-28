@@ -22,11 +22,9 @@ import { useSession } from "next-auth/react";
 export default function AddAdvert() {
   const { data: session } = useSession(); 
   const userID = session?.user._id || "";
-  console.log("userID: ", userID);
   const currentUserID = userID; // Set currentUserID to userID
 
- // Extracting currentUserID from session
-  console.log("CurrentID",currentUserID)
+ 
 
   const [formData, setFormData] = useState({
     title: '',
@@ -46,7 +44,7 @@ export default function AddAdvert() {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/api/campaign')
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/advertiser/${currentUserID}`)
       .then(response => {
         setCampaigns(response.data);
       })

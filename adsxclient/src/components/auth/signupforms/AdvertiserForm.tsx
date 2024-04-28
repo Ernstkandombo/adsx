@@ -1,4 +1,7 @@
 'use client'
+
+
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
@@ -6,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { signIn } from 'next-auth/react'; 
+
 
 interface FormErrors {
     name?: string;
@@ -54,6 +59,12 @@ export default function AdvertiserForm() {
                 setName('');
                 setEmail('');
                 setPassword('');
+                // Sign in the user after successful registration
+                await signIn('credentials', {
+                    email,
+                    password,
+                    redirect: false, // Prevent automatic redirection
+                });
                 // Show success toast
                 toast.success('Your Account has been successfully created');
                 // Redirect to '/advertisers'

@@ -1,4 +1,7 @@
 'use client'
+
+
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
@@ -6,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react'; 
 
 interface FormErrors {
     name?: string;
@@ -57,6 +61,11 @@ export default function PublisherForm() {
                     setName('');
                     setEmail('');
                     setPassword('');
+                     await signIn('credentials', {
+                        email,
+                        password,
+                        redirect: false, // Prevent automatic redirection
+                    });
                     // Redirect to '/publishers'
                     router.push('/publishers');
                 }

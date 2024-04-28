@@ -26,6 +26,8 @@ import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useSession } from "next-auth/react";
+
 
 const FormSchema = z.object({
     websiteId: z.string({
@@ -35,6 +37,10 @@ const FormSchema = z.object({
 
 export default function EditPlacement({ placementId }) {
     const [websites, setWebsites] = useState([]);
+    const { data: session } = useSession(); 
+  const userID = session?.user._id || "";
+  const currentUserID = userID; // Set currentUserID to userID
+
     const [placementData, setPlacementData] = useState({
         name: '',
         description: '',
@@ -59,7 +65,7 @@ export default function EditPlacement({ placementId }) {
             });
 
         // Fetch websites when component mounts
-        axios.get('http://localhost:5001/api/websites')
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`)
             .then(response => {
                 setWebsites(response.data);
             })

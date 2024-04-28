@@ -16,15 +16,19 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export default function EditAdvert({ AdvertID }) {
+  const { data: session } = useSession(); 
+  const userID = session?.user._id || "";
+  const currentUserID = userID; // Set currentUserID to userID
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     creative: '',
     clickUrl: '',
     campaignId: '',
-    advertiserId: "6623830857a0a0a874b17bc5",
+    advertiserId: currentUserID,
     height: 0,
     width: 0,
     impressions: 0,
@@ -50,7 +54,7 @@ export default function EditAdvert({ AdvertID }) {
   }, [AdvertID]);
 
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`)
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/advertiser/${currentUserID}`)
       .then(response => {
         setCampaigns(response.data);
       })

@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 export default function Metrics() {
     const [metricsData, setMetricsData] = useState(null);
  const { data: session } = useSession(); 
-  const userID = session?.user._id || {};
+  const userID = session?.user._id || '';
   const currentUserID = userID; // Extracting currentUserID from session
 
     useEffect(() => {

@@ -12,7 +12,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 async function getData(): Promise<CampaignAssignment[]> {
 
 const session = await getServerSession(authOptions);
-  const userID = session.user._id  || {};
+  const userID = session.user._id  || '';
   const currentUserID =userID; // Extracting userID from session
 // Fetch data from your API here.
 try {
