@@ -14,7 +14,7 @@ const session = await getServerSession(authOptions);
   const currentUserID =userID; // Extracting userID from session
 // Fetch data from your API here.
 try {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`);
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`, { next: { revalidate: 1 } });
   return response.data; // Assuming your API returns an array of Advert objects
 } catch (error) {
   console.error('Error fetching data:', error);

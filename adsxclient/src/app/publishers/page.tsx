@@ -26,6 +26,8 @@ export default async function page() {
 
     }
 
+
+
     return (
         <div>
             <Nav />
@@ -107,3 +109,4 @@ export default async function page() {
         </div>
     )
 }
+

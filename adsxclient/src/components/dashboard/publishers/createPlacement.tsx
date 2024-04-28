@@ -49,7 +49,7 @@ export default function CreatePlacement() {
     const form = useForm();
 
     useEffect(() => {
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites`)
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`)
             .then(response => {
                 setWebsites(response.data);
             })
