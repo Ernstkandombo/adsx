@@ -30,6 +30,7 @@ export default function AddWebsite() {
         description: "",
         category: "",
         publisherId: currentUserID,
+        views:"",
         ageRange: [],
         gender: [],
         interests: [],
@@ -59,6 +60,7 @@ export default function AddWebsite() {
                     description: "",
                     category: "",
                     publisherId: currentUserID,
+                    views:"",
                     ageRange: [],
                     gender: [],
                     interests: [],
@@ -99,6 +101,10 @@ export default function AddWebsite() {
                             <div>
                                 <Label>Category:</Label>
                                 <Input type="text" name="category" value={formData.category} onChange={handleChange} />
+                            </div>
+                              <div>
+                                <Label>Number of Views:</Label>
+                                <Input type="number" name="category" value={formData.category} onChange={handleChange} />
                             </div>
                         </div>
 
