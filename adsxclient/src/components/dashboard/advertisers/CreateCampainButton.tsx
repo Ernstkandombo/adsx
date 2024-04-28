@@ -15,11 +15,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label'; 
 import { toast } from 'sonner';
-
+import { useSession } from "next-auth/react";
 
 export default function CreateCampainButton() {
 
-        const currentUserID = "66278b87053181ebcc05e0ea";
+const { data: session } = useSession(); 
+  const userID = session?.user._id || {};
+  const currentUserID = userID; // Extracting currentUserID from session
+       
   
         const [formData, setFormData] = useState({
         name: '',

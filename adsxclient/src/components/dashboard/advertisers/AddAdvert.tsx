@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'; // Import React, useState, and useEffect
-import axios from 'axios'; // Import axios for making HTTP requests
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { toast } from "sonner";
 import {
   Dialog,
@@ -17,10 +17,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { useSession } from "next-auth/react";
 
 export default function AddAdvert() {
-
-  const currentUserID = "66278b87053181ebcc05e0ea";
+  const { data: session } = useSession(); 
+  const userID = session?.user._id || {};
+  const currentUserID = userID; // Extracting currentUserID from session
+       
 
   const [formData, setFormData] = useState({
     title: '',

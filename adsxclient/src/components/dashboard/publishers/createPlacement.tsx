@@ -24,11 +24,17 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
+import { useSession } from "next-auth/react";
+
+
+
+
 
 export default function CreatePlacement() {
 
-        
-  const currentUserID = "66278baa053181ebcc05e0f7";
+ const { data: session } = useSession(); 
+  const userID = session?.user._id || {};
+  const currentUserID = userID; // Extracting currentUserID from session
   
     const [placementData, setPlacementData] = useState({
         name: "",

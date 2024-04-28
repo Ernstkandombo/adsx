@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster, toast } from 'sonner'
-import { AuthProvider } from "./Providers";
-
+import { AuthProvider } from "./context/Providers";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,13 +18,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-   
+    <AuthProvider>
+      <html lang="en">
       <body className={inter.className}>
-       <AuthProvider>{children}</AuthProvider> 
-        </body>
-        <Toaster richColors />
-    
+      {children}
+      </body>
+      <Toaster richColors />
     </html>
+    </AuthProvider>
+    
   );
 }

@@ -3,12 +3,15 @@ import axios from 'axios';
 
 import { Placement, columns } from '@/components/dashboard/publishers/Placement/columns';
 import { DataTable } from '@/components/dashboard/publishers/Placement/data-table';
-
+import { getServerSession } from "next-auth"
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 
 
 async function getData(): Promise<Placement[]> {
-const currentUserID = "66278baa053181ebcc05e0f7";
+const session = await getServerSession(authOptions);
+  const userID = session.user._id  || {};
+  const currentUserID =userID; // Extracting userID from session
 // Fetch data from your API here.
 try {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`);

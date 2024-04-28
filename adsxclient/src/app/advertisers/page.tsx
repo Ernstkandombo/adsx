@@ -4,13 +4,30 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/com
 import CreateCampaigns from '@/components/dashboard/advertisers/CreateCampaigns';
 import AddAdvert from '@/components/dashboard/advertisers/AddAdvert';
 import Metrics from '@/components/dashboard/advertisers/Metrics';
-
+import { getServerSession } from "next-auth"
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import PlacementAssignComponent from '@/components/dashboard/advertisers/PlacementAssigns/PlacementAssignComponent';
 import CampaignComponent from '@/components/dashboard/advertisers/campaign/CampaignComponent';
 import AdvertComponent from '@/components/dashboard/advertisers/advert/AdvertComponent';
 
 
-export default function page() {
+export default async function page() {
+    const session = await getServerSession(authOptions);
+    console.log(session)
+    if(session.user.userType != 'advertiser') {
+
+	    return(
+            <section className="h-screen w-full  justify-center items-center">
+                <div className="container p-10">
+                    <h1 className="text-2xl font-bold text-center ">
+                        You are not Authorized to view this page.
+                    </h1>
+                </div>
+            </section>
+        )
+
+    }   
+
     return (
         <div>
             <Nav />

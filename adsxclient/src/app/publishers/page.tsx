@@ -2,14 +2,30 @@ import React from 'react'
 import Nav from '@/components/dashboard/Nav'
 import Metrics from '@/components/dashboard/publishers/Metrics';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card'
-
+import { getServerSession } from "next-auth"
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import CampaignComponent from '@/components/dashboard/publishers/Campaign/CampaignComponent';
 import WebsiteComponent from '@/components/dashboard/publishers/websites/WebsiteComponent';
 import PlacementComponent from '@/components/dashboard/publishers/placement/PlacementComponent';
 import CampaignAssignmentComponent from '@/components/dashboard/publishers/CampaignAssignments/CampaignAssignmentComponent';
 import CreatePlacement from '@/components/dashboard/publishers/createPlacement';
 export default async function page() {
-  
+    const session = await getServerSession(authOptions);
+    console.log(session)
+    if(session.user.userType != 'publisher') {
+
+	    return(
+            <section className="h-screen w-full  justify-center items-center">
+                <div className="container p-10">
+                    <h1 className="text-2xl font-bold text-center ">
+                        You are not Authorized to view this page.
+                    </h1>
+                </div>
+            </section>
+        )
+
+    }
+
     return (
         <div>
             <Nav />

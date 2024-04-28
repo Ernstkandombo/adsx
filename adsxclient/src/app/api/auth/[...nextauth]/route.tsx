@@ -1,11 +1,8 @@
-
-//[...nextauth].js
-
 import NextAuth from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
 
-const authOptions = {
+export const authOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -20,10 +17,12 @@ const authOptions = {
                     // Make a request to your authentication endpoint
                     const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/authenticate`, { email, password });
 
+                    // If authentication is successful, modify the response data to include the user key
                     // If authentication is successful, return the user object
                     if (response.status === 200 && response.data.token) {
-
-                        return { email, userType: response.data.userType, token: response.data.token, userId: response.data.userId };
+                        
+                        const user = response.data.user;
+                        return user;
                     } else {
                         // If authentication fails, return null
                         return null;
@@ -37,30 +36,30 @@ const authOptions = {
         })
     ],
     session: {
-        jwt: true
+       strategy: "jwt",
+    },
+    pages: {
+        signIn: '/',
+        signOut: '/',
     },
     secret: process.env.NEXTAUTH_SECRET,
+    debug: process.env.NODE_ENV === "development",
     callbacks: {
-        async jwt(token, user) {
-            // This callback is used to manage the JWT token
+        async jwt({ user, token }) {
             if (user) {
-                token.id = user.userId;
-                token.userType = user.userType;
-                token.email = user.email;
-                token.token = user.token; // Corrected typo here
+                token.user = { ...user };
             }
-            return token;
-        },
-        async session(session, token) {
-            // This callback is used to manage the user session
-            session.user = token;
-            return session;
-        }
+            return token
+            },
+        async session({ session, token }) {
+            if(token?.user){
+                session.user = token.user;
+            } 
+                return session;
+            }
     }
 };
 
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }
-
-

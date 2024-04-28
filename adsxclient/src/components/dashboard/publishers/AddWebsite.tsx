@@ -14,10 +14,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label'; // Import Label component
 import { Input } from '@/components/ui/input'; // Import Input component
+import { useSession } from "next-auth/react";
+
+
 
 export default function AddWebsite() {
 
-    const currentUserID = "66278baa053181ebcc05e0f7";
+   const { data: session } = useSession(); 
+  const userID = session?.user._id || {};
+  const currentUserID = userID; // Extracting currentUserID from session
 
     const [formData, setFormData] = useState({
         name: "",

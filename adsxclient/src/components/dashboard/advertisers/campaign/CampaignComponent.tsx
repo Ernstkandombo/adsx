@@ -3,11 +3,15 @@ import axios from 'axios';
 
 import { Campaign, columns } from '@/components/dashboard/advertisers/campaign/columns';
 import { DataTable } from '@/components/dashboard/advertisers/campaign/data-table';
-
+import { getServerSession } from "next-auth"
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 
 async function getData(): Promise<Campaign[]> {
-    const currentUserID = "66278b87053181ebcc05e0ea";
+   
+const session = await getServerSession(authOptions);
+  const userID = session.user._id  || {};
+  const currentUserID =userID; // Extracting userID from session
 // Fetch data from your API here.
 try {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/advertiser/${currentUserID}`);

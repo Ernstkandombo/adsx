@@ -4,10 +4,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import AddWebsite from './AddWebsite';
+import { useSession } from "next-auth/react";
+
 
 export default function Metrics() {
     const [metricsData, setMetricsData] = useState(null);
-    const currentUserID = "66278baa053181ebcc05e0f7";
+ const { data: session } = useSession(); 
+  const userID = session?.user._id || {};
+  const currentUserID = userID; // Extracting currentUserID from session
 
     useEffect(() => {
         const fetchMetricsData = async () => {

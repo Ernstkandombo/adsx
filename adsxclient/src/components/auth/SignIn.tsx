@@ -1,22 +1,27 @@
 'use client'
+
 import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation'; // Import useRouter for redirection
+
+import { useSession } from "next-auth/react";
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const router = useRouter(); // Initialize useRouter
+    const [errors, setErrors] = useState({});
+    const { data: session } = useSession();
+
+    const router = useRouter();
 
     const validateForm = () => {
-        const newErrors: { [key: string]: string } = {};
+        const newErrors = {};
 
         if (!email.trim()) {
             newErrors.email = "Email is required";
@@ -35,33 +40,36 @@ export default function SignIn() {
         return Object.keys(newErrors).length === 0;
     };
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    if (validateForm()) {
-        console.log("Submitting form data:", email, password); // Log the form data
-        // Call NextAuth.js signIn function
+        // Validate form
+        if (!validateForm()) {
+            return;
+        }
+
+        // Attempt sign in
         const result = await signIn('credentials', {
             email,
             password,
-            redirect: false // Set to false to handle redirection manually
+            redirect: false, // Prevent automatic redirect after successful login
         });
 
-        if (!result?.error) {
-            // Redirect based on user type
-            if (result?.user?.userType === 'advertiser') {
-                router.push('/advertisers');
-            } else if (result?.user?.userType === 'publisher') {
-                router.push('/publishers');
-            }
-        } else {
-            // Handle authentication error with toast
-            toast.error('Authentication failed. Please check your credentials.');
+        // Check result
+        if (result?.error) {
+            // Handle authentication error
+            toast.error(result.error);
+        }
+    };
+
+    // Redirect based on userType using next/router
+    if (session && session.user) {
+        if (session.user.userType === 'advertiser') {
+            router.push('/advertisers');
+        } else if (session.user.userType === 'publisher') {
+            router.push('/publishers');
         }
     }
-};
-
-
 
     return (
         <div>
