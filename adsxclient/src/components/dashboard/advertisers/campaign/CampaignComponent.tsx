@@ -5,11 +5,6 @@ import { Campaign, columns } from '@/components/dashboard/advertisers/campaign/c
 import { DataTable } from '@/components/dashboard/advertisers/campaign/data-table';
 import { getServerSession } from "next-auth"
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-//import BidComponent from '../bidding/BidComponent';
-import dynamic from 'next/dynamic';
-
-const BidComponent = dynamic(() => import('@/components/dashboard/advertisers/bidding/BidComponent'), { ssr: false });
-
 
 
 async function getData(): Promise<Campaign[]> {
@@ -36,9 +31,6 @@ export default async function CampaignComponent() {
 
 
   return (
-    <>
-      <DataTable columns={columns} data={data} />
-      <BidComponent campaigns={data.filter(campaign => campaign.biddable)} /> {/* Pass biddable campaigns to BidComponent */}
-    </>
+     <DataTable columns={columns} data={data} />
   )
 }

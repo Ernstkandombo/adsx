@@ -29,7 +29,6 @@ export type Campaign = {
   clicks: number;
   impressions: number;
   dateCreated: Date;
-  biddable: boolean; 
 };
 
 // Define the columns for the React table
