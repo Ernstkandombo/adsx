@@ -1,5 +1,7 @@
 'use client'
 
+
+
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import axios from 'axios';
@@ -11,54 +13,70 @@ import { Label } from '@/components/ui/label'; // Import Label component
 import { useSession } from "next-auth/react";
 
 export default function CreateCampaigns() {
-        
-const { data: session } = useSession(); 
-  const userID = session?.user._id || {};
-  const currentUserID = userID; // Extracting currentUserID from session
-       
-    
-    
-       const [formData, setFormData] = useState({
+    const { data: session } = useSession();
+    const userID = session?.user._id || {};
+    const currentUserID = userID; // Extracting currentUserID from session
+
+    const [formData, setFormData] = useState({
         name: '',
         description: '',
         startDate: '',
         endDate: '',
         dailyBudget: '',
-         totalBudget: '',
-        advertiserId: currentUserID, 
-    
+        totalBudget: '',
+        costPerClick: '',
+        costPerImpression: '',
+        advertiserId: currentUserID,
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+        let newFormData = { ...formData, [name]: value };
+
+        if (name === 'startDate' || name === 'endDate' || name === 'totalBudget') {
+            const { startDate, endDate, totalBudget } = newFormData;
+            const totalBudgetFloat = parseFloat(totalBudget);
+            const startDateObj = new Date(startDate);
+            const endDateObj = new Date(endDate);
+            const durationInDays = Math.ceil((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
+            const dailyBudget = (totalBudgetFloat / durationInDays).toFixed(2);
+
+            newFormData = { ...newFormData, dailyBudget };
+        }
+
+        if (name === 'costPerClick' || name === 'costPerImpression') {
+            newFormData = { ...newFormData, [name]: value };
+        }
+
+        setFormData(newFormData);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`, formData); // Adjust the URL to match your backend API endpoint
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`, formData);
             console.log('Campaign created successfully');
             toast.success('Campaign created successfully');
 
             // Reset form data after successful submission
-      setFormData({
-       name: '',
-        description: '',
-        startDate: '',
-        endDate: '',
-        dailyBudget: '',
-         totalBudget: '',
-        advertiserId: currentUserID, 
-      });
+            setFormData({
+                name: '',
+                description: '',
+                startDate: '',
+                endDate: '',
+                dailyBudget: '',
+                totalBudget: '',
+                costPerClick: '',
+                costPerImpression: '',
+                advertiserId: currentUserID,
+            });
         } catch (error) {
             console.error('Error creating campaign:', error);
             toast.error('Error creating campaign');
         }
     };
+
 
     return (
         <Dialog>
@@ -93,11 +111,19 @@ const { data: session } = useSession();
                         </div>
                         <div>
                             <Label>Daily Budget:</Label>
-                            <Input type="number" name="dailyBudget" value={formData.dailyBudget} onChange={handleChange} />
+                            <Input type="number" className="shadow-none" name="dailyBudget" value={formData.dailyBudget} onChange={handleChange} disabled />
                         </div>
                         <div>
                             <Label>Total Budget:</Label>
                             <Input type="number" name="totalBudget" value={formData.totalBudget} onChange={handleChange} />
+                        </div>
+                        <div>
+                            <Label>Cost per click:</Label>
+                            <Input type="number" name="costPerClick" value={formData.costPerClick} onChange={handleChange} />
+                        </div>
+                        <div>
+                            <Label>Cost per Impression:</Label>
+                            <Input type="number" name="costPerImpression" value={formData.costPerImpression} onChange={handleChange} />
                         </div>
                     </div>
                     <DialogFooter className="py-8">

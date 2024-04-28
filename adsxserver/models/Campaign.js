@@ -8,8 +8,8 @@ const CampaignSchema = new mongoose.Schema({
     endDate: { type: Date, required: true },
     dailyBudget: { type: Number, required: true, min: 0 },
     totalBudget: { type: Number, required: true, min: 0 },
-    costPerClick: { type: Number, min: 0 },
-    costPerImpression: { type: Number, min: 0 },
+    costPerClick: { type: Number, required: true, min: 0 },
+    costPerImpression: { type: Number, required: true, min: 0 },
 
     dateCreated: { type: Date, default: Date.now }
 });

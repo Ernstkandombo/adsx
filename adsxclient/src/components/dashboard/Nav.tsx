@@ -62,10 +62,13 @@ export default function Nav() {
                             <DropdownMenuSeparator />
                             {session && session.user && (
                                 <>
-                                    <DropdownMenuLabel>{session.user.name}</DropdownMenuLabel>
+                                    <DropdownMenuLabel>
+                                        {session.user.name.length > 10 ? session.user.name.substring(0, 12) + "..." : session.user.name}
+                                    </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                 </>
                             )}
+
                             <DropdownMenuItem>Settings</DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem><Link onClick={() => signOut()} href="/" className="w-full">Logout</Link></DropdownMenuItem>

@@ -13,7 +13,9 @@ export default function EditCampaign({ CampaignID }) {
         startDate: '',
         endDate: '',
         dailyBudget: '',
-        totalBudget: ''
+        costPerClick: '',
+        costPerImpression: '',
+        totalBudget: '',
     });
 
     useEffect(() => {
@@ -21,6 +23,7 @@ export default function EditCampaign({ CampaignID }) {
             try {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/${CampaignID}`);
                 setFormData(response.data);
+                calculateDailyBudget(response.data);
             } catch (error) {
                 console.error('Error fetching campaign details:', error);
             }
@@ -29,12 +32,29 @@ export default function EditCampaign({ CampaignID }) {
         fetchData();
     }, [CampaignID]);
 
+    const calculateDailyBudget = (data) => {
+        const { startDate, endDate, totalBudget } = data;
+        const totalBudgetFloat = parseFloat(totalBudget);
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+        const durationInDays = Math.ceil((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
+        const dailyBudget = (totalBudgetFloat / durationInDays).toFixed(2);
+        setFormData(prevState => ({
+            ...prevState,
+            dailyBudget: dailyBudget,
+        }));
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
         }));
+
+        if (name === 'startDate' || name === 'endDate' || name === 'totalBudget') {
+            calculateDailyBudget({ ...formData, [name]: value });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -83,11 +103,19 @@ export default function EditCampaign({ CampaignID }) {
                         </div>
                         <div>
                             <Label>Daily Budget:</Label>
-                            <Input type="number" name="dailyBudget" value={formData.dailyBudget} onChange={handleChange} />
+                            <Input type="number" className="shadow-none" name="dailyBudget" value={formData.dailyBudget} onChange={handleChange} disabled/>
                         </div>
                         <div>
                             <Label>Total Budget:</Label>
                             <Input type="number" name="totalBudget" value={formData.totalBudget} onChange={handleChange} />
+                        </div>
+                        <div>
+                            <Label>Cost per click:</Label>
+                            <Input type="number" name="costPerClick" value={formData.costPerClick} onChange={handleChange} />
+                        </div>
+                        <div>
+                            <Label>Cost per Impression:</Label>
+                            <Input type="number" name="costPerImpression" value={formData.costPerImpression} onChange={handleChange} />
                         </div>
                     </div>
                     <DialogFooter className="py-8">
