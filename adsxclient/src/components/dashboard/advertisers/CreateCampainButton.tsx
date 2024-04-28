@@ -47,6 +47,16 @@ const { data: session } = useSession();
     e.preventDefault();
     try {
         await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`, formData); // Adjust the URL to match your backend API endpoint
+
+        setFormData({
+       name: '',
+        description: '',
+        startDate: '',
+        endDate: '',
+        dailyBudget: '',
+         totalBudget: '',
+        advertiserId: currentUserID, 
+      });
         console.log('Campaign created successfully');
         toast.success('Campaign created successfully');
     } catch (error) {

@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
+import SignUp from '@/components/auth/SignUp';
 
 export const authOptions = {
     providers: [
@@ -40,6 +41,7 @@ export const authOptions = {
     },
     pages: {
         signIn: '/',
+        SignUp: '/auth/sign-up',
         signOut: '/',
     },
     secret: process.env.NEXTAUTH_SECRET,

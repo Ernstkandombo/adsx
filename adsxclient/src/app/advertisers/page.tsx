@@ -13,7 +13,6 @@ import AdvertComponent from '@/components/dashboard/advertisers/advert/AdvertCom
 
 export default async function page() {
     const session = await getServerSession(authOptions);
-    console.log(session)
     if(session.user.userType != 'advertiser') {
 
 	    return(

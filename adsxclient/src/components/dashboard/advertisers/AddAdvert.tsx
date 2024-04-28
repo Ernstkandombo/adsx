@@ -21,9 +21,12 @@ import { useSession } from "next-auth/react";
 
 export default function AddAdvert() {
   const { data: session } = useSession(); 
-  const userID = session?.user._id || {};
-  const currentUserID = userID; // Extracting currentUserID from session
-       
+  const userID = session?.user._id || "";
+  console.log("userID: ", userID);
+  const currentUserID = userID; // Set currentUserID to userID
+
+ // Extracting currentUserID from session
+  console.log("CurrentID",currentUserID)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -77,7 +80,9 @@ export default function AddAdvert() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+     console.log('Request payload:', formData); 
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/`, formData);
+
       console.log('Advert Created successfully');
       toast.success("Advert Created successfully");
       // Reset form data after successful submission
