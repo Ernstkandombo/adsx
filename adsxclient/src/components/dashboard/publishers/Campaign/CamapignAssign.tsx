@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { useSession } from "next-auth/react";
 import { Input } from '@/components/ui/input';
 
 export default function AssignCampaign({ CampaignID }) {
@@ -17,10 +18,13 @@ export default function AssignCampaign({ CampaignID }) {
     const [selectedPlacement, setSelectedPlacement] = useState("");
     const [selectedWebsite, setSelectedWebsite] = useState("");
     const [campaignIdResponse, setCampaignIdResponse] = useState(null); // State to store campaignId response
+    const { data: session } = useSession(); 
+    const userID = session?.user._id || '';
+    const currentUserID = userID; // Extracting currentUserID from session
 
     useEffect(() => {
         // Fetch placement options
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement`)
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`)
             .then(response => {
                 setPlacementOptions(response.data);
             })
@@ -29,7 +33,7 @@ export default function AssignCampaign({ CampaignID }) {
             });
 
         // Fetch website options
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites`)
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`)
             .then(response => {
                 setWebsiteOptions(response.data);
             })

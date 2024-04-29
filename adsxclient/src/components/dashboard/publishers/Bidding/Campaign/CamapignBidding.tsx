@@ -33,6 +33,7 @@ export default function biddingCampaign({ CampaignID }) {
                 <form>
                     <div className="grid grid-cols-2 gap-4 py-4">
                         
+                        {/* ADD the requeried form field fot the data going to the bidding API. */}
                         
                     </div>
                     <DialogFooter className="col-span-2 py-6">
