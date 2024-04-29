@@ -6,6 +6,7 @@ import { Advert, columns } from '@/components/dashboard/advertisers/advert/colum
 import { DataTable } from '@/components/dashboard/advertisers/advert/data-table';
 import { getServerSession } from "next-auth"
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { revalidatePath } from 'next/cache';
 
 
 async function getData(): Promise<Advert[]> {
@@ -14,7 +15,7 @@ async function getData(): Promise<Advert[]> {
   const currentUserID =userID; // Extracting userID from session
 // Fetch data from your API here.
 try {
-  const response = await axios.get(`http://localhost:5001/api/aditem/advertiser/${currentUserID}`);
+  const response = await axios.get(`http://localhost:5001/api/aditem/advertiser/${currentUserID}`, { next: { revalidate: 1 } });
   return response.data; // Assuming your API returns an array of Advert objects
 } catch (error) {
   console.error('Error fetching data:', error);

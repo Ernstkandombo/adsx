@@ -44,7 +44,7 @@ export default function AddAdvert() {
   const [campaigns, setCampaigns] = useState([]);
 
  useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/advertiser/${currentUserID}`, { cache: 'force-cache' })
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/advertiser/${currentUserID}`, { next: { revalidate: 1 } })
       .then(response => {
         setCampaigns(response.data);
       })
