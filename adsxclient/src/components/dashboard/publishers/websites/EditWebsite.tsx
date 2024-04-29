@@ -31,7 +31,7 @@ export default function EditWebsite({ websiteId }) {
 
     // Fetch website data based on websiteId when the component mounts
     useEffect(() => {
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/${websiteId}`)
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/${websiteId}`, { cache: 'force-cache' })
             .then(response => {
                 setFormData(response.data);
             })

@@ -1,5 +1,6 @@
 'use client'
 
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from "sonner";
@@ -24,8 +25,6 @@ export default function AddAdvert() {
   const userID = session?.user._id || "";
   const currentUserID = userID; // Set currentUserID to userID
 
- 
-
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -43,15 +42,30 @@ export default function AddAdvert() {
   });
   const [campaigns, setCampaigns] = useState([]);
 
- useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/advertiser/${currentUserID}`, { next: { revalidate: 1 } })
-      .then(response => {
+  useEffect(() => {
+    // Fetch campaigns when component mounts or when currentUserID changes
+    const fetchCampaigns = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign/advertiser/${currentUserID}`);
         setCampaigns(response.data);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching campaigns:', error);
-      });
-  }, []);
+      }
+    };
+
+    fetchCampaigns();
+
+    // Listen for changes in currentUserID and fetch campaigns again
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'currentUserID') {
+        fetchCampaigns();
+      }
+    });
+
+    return () => {
+      window.removeEventListener('storage', () => {});
+    };
+  }, [currentUserID]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,9 +92,8 @@ export default function AddAdvert() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-     console.log('Request payload:', formData); 
+      console.log('Request payload:', formData); 
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/`, formData);
-
       console.log('Advert Created successfully');
       toast.success("Advert Created successfully");
       // Reset form data after successful submission
@@ -165,10 +178,7 @@ export default function AddAdvert() {
                 <Label>height:</Label>
                 <Input type="text" name="height" value={formData.height} onChange={handleChange} />
               </div>
-
             </div>
-
-
             <div className="grid grid-cols-3 gap-4 pt-2">
               <div className="col-span-3 text-bold ">
                 <p className="font-semibold">Targeting credentials</p>
@@ -185,7 +195,6 @@ export default function AddAdvert() {
                 <Label>Interests:</Label>
                 <Input type="text" name="interests" value={formData.interests.join(',')} onChange={handleChange} />
               </div>
-
             </div>
             <DialogFooter className="col-span-2 pt-10">
               <Button type="submit">Add Advert</Button>

@@ -38,8 +38,8 @@ const FormSchema = z.object({
 export default function EditPlacement({ placementId }) {
     const [websites, setWebsites] = useState([]);
     const { data: session } = useSession(); 
-  const userID = session?.user._id || "";
-  const currentUserID = userID; // Set currentUserID to userID
+    const userID = session?.user._id || "";
+    const currentUserID = userID; // Set currentUserID to userID
 
     const [placementData, setPlacementData] = useState({
         name: '',
@@ -52,7 +52,7 @@ export default function EditPlacement({ placementId }) {
     })
 
     useEffect(() => {
-        // Fetch placement details when component mounts
+        // Fetch placement details when component mounts or when currentUserID changes
         axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/${placementId}`)
             .then(response => {
                 const { websiteId, ...placementData } = response.data;
@@ -64,7 +64,7 @@ export default function EditPlacement({ placementId }) {
                 toast.error('Failed to fetch placement');
             });
 
-        // Fetch websites when component mounts
+        // Fetch websites when component mounts or when currentUserID changes
         axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`)
             .then(response => {
                 setWebsites(response.data);
@@ -73,7 +73,7 @@ export default function EditPlacement({ placementId }) {
                 console.error('Error fetching websites:', error);
                 toast.error('Failed to fetch websites');
             });
-    }, [placementId]);
+    }, [placementId, currentUserID]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

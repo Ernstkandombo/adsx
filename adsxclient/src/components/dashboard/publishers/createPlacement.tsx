@@ -26,16 +26,12 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useSession } from "next-auth/react";
 
-
-
-
-
 export default function CreatePlacement() {
 
- const { data: session } = useSession(); 
-  const userID = session?.user._id || '';
-  const currentUserID = userID; // Extracting currentUserID from session
-  
+    const { data: session } = useSession(); 
+    const userID = session?.user._id || '';
+    const currentUserID = userID; // Extracting currentUserID from session
+
     const [placementData, setPlacementData] = useState({
         name: "",
         description: "",
@@ -49,14 +45,29 @@ export default function CreatePlacement() {
     const form = useForm();
 
     useEffect(() => {
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`)
-            .then(response => {
+        // Fetch websites when component mounts or when currentUserID changes
+        const fetchWebsites = async () => {
+            try {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`);
                 setWebsites(response.data);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching websites:', error);
-            });
-    }, []);
+            }
+        };
+
+        fetchWebsites();
+
+        // Listen for changes in currentUserID and fetch websites again
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'currentUserID') {
+                fetchWebsites();
+            }
+        });
+
+        return () => {
+            window.removeEventListener('storage', () => {});
+        };
+    }, [currentUserID]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

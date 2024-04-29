@@ -1,4 +1,5 @@
 import React from 'react'
+import { revalidatePath } from 'next/cache';
 import Nav from '@/components/dashboard/Nav';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card'
 import CreateCampaigns from '@/components/dashboard/advertisers/CreateCampaigns';
@@ -88,4 +89,4 @@ export default async function page() {
         </div>
     )
 }
-export const dynamic = 'auto'
+revalidatePath('/advertisers')
