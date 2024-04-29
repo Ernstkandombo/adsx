@@ -9,4 +9,6 @@ router.post('/publisher/:userID', controller.getPublisherMetrixData);
 
 router.get('/campaigns/:campaignId', controller.getCampaignMetrics);
 
+router.get('/:id', controller.getFullReport);
+
 module.exports = router;

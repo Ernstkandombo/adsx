@@ -2,6 +2,8 @@ const Campaign = require('../models/Campaign');
 const CampaignAssignment = require('../models/CampaignAssignment');
 const Placement = require('../models/Placement');
 const AdItem = require('../models/AdItem');
+const Website = require('../models/Website');
+const Publisher = require('../models/Publisher');
 
 exports.getAdvertiserMetrixData = async (req, res) => {
     const { userID } = req.params;
@@ -142,3 +144,22 @@ exports.getCampaignMetrics = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+exports.getFullReport = async (req, res) => {
+
+    // it should receive the id of the user, check if the id is for an advertiser or Publisher, throught the advertiser and publisher collections,
+
+    //     if the id is for advertiser do this:
+    //         get the total clicks, total impression, total cost
+    //         collect all the info for each campaign - clicks, impression, cost and number of adverts.
+    //         number of website liked and their names.
+
+    //     if the id is for publisher do this:
+    //         get the total clicks, total impression, total revenue
+    //         collect all the info for each campaignAssignments - clicks, impression, revenue
+    //         number of Campaigns and thier names.
+
+    // it must return those data based on the id 
+
+}

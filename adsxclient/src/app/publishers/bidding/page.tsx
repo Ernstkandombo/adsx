@@ -3,6 +3,9 @@ import Nav from '@/components/dashboard/Nav'
 import { getServerSession } from "next-auth"
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card'
+import CampaignAssignmentComponent from '@/components/dashboard/publishers/Bidding/CampaignAssignments/CampaignAssignmentComponent';
+import CampaignComponent from '@/components/dashboard/publishers/Bidding/Campaign/CampaignComponent';
+
 
 export default async function page() {
    const session = await getServerSession(authOptions);
@@ -40,6 +43,25 @@ export default async function page() {
                             </CardHeader>
                             <CardContent className="grid gap-8">
                                
+                                <div className="grid sm:grid-cols-2 grid-cols-1 grid-rows-1 gap-6">
+                                    <div >
+                                        <Card>
+                                            <CardContent className="grid gap-8">
+                                                <CampaignComponent />
+                                            </CardContent>
+                                        </Card>
+                                       
+                                    </div>
+                                    <div >
+                                        <Card>
+                                            <CardContent className="grid gap-8">
+                                                <CampaignAssignmentComponent />
+                                            </CardContent>
+                                        </Card>
+                                       
+                                    </div>
+                                </div>
+    
                             </CardContent>
                         </Card>
                     </section>

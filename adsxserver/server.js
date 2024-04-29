@@ -15,6 +15,7 @@ const PlacementRoutes = require("./routes/PlacementRoute");
 const WebsiteRoutes = require("./routes/WebsiteRoute");
 const ReportRoutes = require("./routes/ReportRoute");
 const AuthRoutes = require("./routes/AuthRoute");
+const BidRoutes = require("./routes/BiddingRoute");
 // Middleware to parse JSON bodies
 app.use(express.json());
 // Enable CORS for all requests
@@ -31,6 +32,7 @@ app.use("/api/publisher", PublisherRoutes);
 app.use("/api/websites", WebsiteRoutes);
 app.use("/api/report", ReportRoutes);
 app.use("/api/auth", AuthRoutes);
+app.use("/api/bid", BidRoutes);
 // Middleware to enable CORS
 // Middleware
 app.use(bodyParser.json({ limit: "50mb" }));
