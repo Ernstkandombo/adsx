@@ -99,7 +99,7 @@ export default function EditWebsite({ websiteId }) {
                             </div>
                             <div>
                                 <Label>Number of Views:</Label>
-                                <Input type="number" name="category" value={formData.category} onChange={handleChange} />
+                                <Input type="number" name="views" value={formData.views} onChange={handleChange} />
                             </div>
                         </div>
                         
