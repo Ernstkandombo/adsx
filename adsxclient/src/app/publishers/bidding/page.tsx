@@ -6,7 +6,7 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/com
 
 export default async function page() {
    const session = await getServerSession(authOptions);
-    console.log(session)
+
     if(session.user.userType != 'publisher') {
 
 	    return(
