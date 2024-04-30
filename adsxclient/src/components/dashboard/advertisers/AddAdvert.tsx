@@ -1,6 +1,5 @@
 'use client'
 
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from "sonner";
@@ -23,7 +22,11 @@ import { useSession } from "next-auth/react";
 export default function AddAdvert() {
   const { data: session } = useSession(); 
   const userID = session?.user._id || "";
-  const currentUserID = userID; // Set currentUserID to userID
+  const [currentUserID, setCurrentUserID] = useState(() => {
+    // Initialize currentUserID from sessionStorage if available, or set it to userID
+    const storedUserID = sessionStorage.getItem('currentUserID');
+    return storedUserID ? storedUserID : userID;
+  });
 
   const [formData, setFormData] = useState({
     title: '',
@@ -58,13 +61,18 @@ export default function AddAdvert() {
     // Listen for changes in currentUserID and fetch campaigns again
     window.addEventListener('storage', (event) => {
       if (event.key === 'currentUserID') {
-        fetchCampaigns();
+        setCurrentUserID(event.newValue);
       }
     });
 
     return () => {
       window.removeEventListener('storage', () => {});
     };
+  }, [currentUserID]);
+
+  useEffect(() => {
+    // Store currentUserID in sessionStorage
+    sessionStorage.setItem('currentUserID', currentUserID);
   }, [currentUserID]);
 
   const handleChange = (e) => {
