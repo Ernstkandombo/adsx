@@ -90,7 +90,7 @@ export default function Nav() {
 
                             <DropdownMenuItem>Settings</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem><Link onClick={() => signOut()} href="/" className="w-full">Logout</Link></DropdownMenuItem>
+                            <DropdownMenuItem><Link onClick={() => signOut()} href="/" className="w-full">Log Out</Link></DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </nav>
