@@ -18,21 +18,19 @@ exports.bidding = async (req, res) => {
     try {
         const { websiteId, placementId } = req.body;
 
-        // Retrieve the list of campaigns eligible for bidding
-        const eligibleCampaigns = await Campaign.find({ biddable: true }); // Assuming there's a field 'biddable' in the Campaign model
+        // we get the list of campaigns eligible for bidding
+        const eligibleCampaigns = await Campaign.find({ biddable: true }); // add the 'biddable' field in the Campaign model
 
-        // Perform the bidding logic to select the best campaigns for the given website and placement
-        const selectedCampaigns = []; // Store the selected campaigns here
+        // our logic to select the best campaigns for the given website and placement
+        const selectedCampaigns = []; // store the selected campaigns 
 
-        // Your bidding logic goes here
-
-        // For example, select campaigns with the highest total budget
+        // we select the campaigns with the highest total budget
         eligibleCampaigns.sort((a, b) => b.totalBudget - a.totalBudget);
 
         // Select the top 4 campaigns (assuming a maximum of 4 bids per website)
         selectedCampaigns.push(...eligibleCampaigns.slice(0, 4));
 
-        // Create CampaignAssignment documents for the selected campaigns
+        // creat CampaignAssignment documents for selected that we campaigns
         const campaignAssignments = await Promise.all(selectedCampaigns.map(async (campaign) => {
             const newCampaignAssignment = new CampaignAssignment({
                 campaignId: campaign._id,

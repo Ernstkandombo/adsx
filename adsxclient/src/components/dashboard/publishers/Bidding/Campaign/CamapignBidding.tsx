@@ -42,7 +42,7 @@ export default function BiddingCampaign({ CampaignID }) {
                 <form onSubmit={handleBid}>
                     <div className="grid grid-cols-2 gap-4 py-4">
                         <Label>Bid Amount</Label>
-                        <Input type="number" value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} />
+                        <Input type="number" value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} /> 
                     </div>
                     <DialogFooter className="col-span-2 py-6">
                         <Button type="submit" className="px-6">Bid</Button>
