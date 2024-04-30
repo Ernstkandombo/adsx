@@ -1,19 +1,21 @@
 'use client'
 
 import React from 'react';
-import ReportExportButton from './ReportButton'; 
+import ReportExportButton from './ReportButton';
 import Link from "next/link";
-import { Variable } from "lucide-react";
+import { Variable, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { signOut } from 'next-auth/react';
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Notification from './Notification';
+
 
 export default function Nav() {
     const router = useRouter();
-    const { data: session } = useSession(); 
+    const { data: session } = useSession();
 
     // Function to check if the user's userType is 'publisher'
     const isPublisher = () => {
@@ -39,10 +41,27 @@ export default function Nav() {
                             <Link href="/publishers/bidding" className="text-foreground font-semibold transition-colors mx-6 px-4 py-2 border rounded hover:text-foreground hover:text-amber-500">Bidding</Link>
                         </div>
                     )}
+
                 </div>
                 <nav className="ml-auto flex items-center space-x-4">
                     <div className="flex items-center tracking-tight gap-2" >
                         <ReportExportButton />
+                    </div>
+                    <div className="flex items-center tracking-tight gap-2">
+                    
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
+                                    <Bell className="h-4 w-4" />
+                                    <span className="sr-only">Toggle notifications</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56">
+                                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <Notification />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

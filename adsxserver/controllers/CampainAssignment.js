@@ -2,6 +2,8 @@ const CampaignAssignment = require('../models/CampaignAssignment');
 const Placement = require('../models/Placement');
 const Campaign = require('../models/Campaign');
 const Website = require('../models/Website');
+const Publisher = require('../models/Publisher');
+const Notification = require('../models/Notification');
 
 exports.associateCampaignWithPlacement = async (req, res) => {
     try {
@@ -44,23 +46,51 @@ exports.associateCampaignWithPlacement = async (req, res) => {
     }
 };
 
-// GET CampaignAssignment by ID
+// Store the initial count of CampaignAssignments
+let initialAssignmentCount = 0;
+
 exports.getCampaignAssignmentById = async (req, res) => {
     const { id } = req.params;
-
 
     try {
         // Find all placements belonging to the publisher with the given userID
         const placements = await Placement.find({ publisherId: id });
 
-
         // Extract placement IDs
         const placementIds = placements.map(placement => placement._id);
-
 
         // Find campaign assignments with placement IDs matching the found placements
         const campaignAssignments = await CampaignAssignment.find({ placementId: { $in: placementIds } });
 
+        // Get the current count of CampaignAssignments
+        const currentAssignmentCount = await CampaignAssignment.countDocuments({ placementId: { $in: placementIds } });
+
+        // If it's the first request, set the initial count
+        if (initialAssignmentCount === 0) {
+            initialAssignmentCount = currentAssignmentCount;
+        }
+
+        // Check if there are new campaign assignments
+        if (currentAssignmentCount > initialAssignmentCount) {
+            // Send message to the publisher for new campaign assignments
+            const newCampaignAssignments = await CampaignAssignment.find({ placementId: { $in: placementIds } }).skip(initialAssignmentCount);
+            for (const assignment of newCampaignAssignments) {
+                const campaign = await Campaign.findById(assignment.campaignId);
+                const placement = await Placement.findById(assignment.placementId);
+                const website = await Website.findById(assignment.websiteId);
+                const publisher = await Publisher.findById(placement.publisherId);
+                const message = `Congratulations! You won the bid for the campaign "${campaign.name}".`;
+
+                // Save the message to the notification collection
+                const notification = new Notification({
+                    message,
+                    userId: publisher._id
+                });
+                await notification.save();
+            }
+            // Update the initial count to the current count
+            initialAssignmentCount = currentAssignmentCount;
+        }
 
         // Prepare an array to store the results
         const results = [];
@@ -70,24 +100,22 @@ exports.getCampaignAssignmentById = async (req, res) => {
             // Find the campaign associated with the assignment
             const campaign = await Campaign.findById(assignment.campaignId);
 
-            // Find the website associated with the campaign
+            // Find the placement associated with the campaign assignment
             const placement = await Placement.findById(assignment.placementId);
 
-            // Find the website associated with the campaign
+            // Find the website associated with the campaign assignment
             const website = await Website.findById(assignment.websiteId);
-
 
             // Push the relevant information to the results array
             results.push({
                 campaignAssignmentID: assignment._id,
                 campaignName: campaign.name,
-                placementName: placement.name, // Assuming placement name is stored in assignment
+                placementName: placement.name,
                 websiteURL: website.url
             });
         }
 
         // Send the results back as a JSON response
-
         res.json(results);
     } catch (error) {
         // Handle any errors that might occur
@@ -95,7 +123,6 @@ exports.getCampaignAssignmentById = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 
 
 // DELETE CampaignAssignment by ID
