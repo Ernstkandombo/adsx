@@ -34,7 +34,7 @@ app.use("/api/websites", WebsiteRoutes);
 app.use("/api/report", ReportRoutes);
 app.use("/api/auth", AuthRoutes);
 app.use("/api/bid", BidRoutes);
-app.use('/api/notifications', notificationRoutes);
+app.use('/api/notification', notificationRoutes);
 
 // Middleware to enable CORS
 // Middleware

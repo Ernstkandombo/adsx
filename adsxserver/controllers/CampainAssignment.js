@@ -84,6 +84,7 @@ exports.getCampaignAssignmentById = async (req, res) => {
                 // Save the message to the notification collection
                 const notification = new Notification({
                     message,
+                    notificationType: 'Campaign Assignment', // Set the notification type
                     userId: publisher._id
                 });
                 await notification.save();

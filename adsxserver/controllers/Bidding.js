@@ -98,7 +98,7 @@ exports.bidding = async (req, res) => {
 
             // Remove all bids for this campaign
             await Bid.deleteMany({ campaignId });
-            console.log('All bids deleted for this campaign.');
+
             return res.status(201).json({ bid: winningBid, bidNumber: 1 }); // Since only one bid is selected
         }
 
