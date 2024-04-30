@@ -61,6 +61,8 @@ export default function PublisherForm() {
                     setName('');
                     setEmail('');
                     setPassword('');
+
+                    // Sign in the user after successful registration
                      await signIn('credentials', {
                         email,
                         password,
