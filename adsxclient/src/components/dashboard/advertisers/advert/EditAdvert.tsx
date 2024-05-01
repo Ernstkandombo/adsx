@@ -19,9 +19,21 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 
 export default function EditAdvert({ AdvertID }) {
-  const { data: session } = useSession(); 
-  const userID = session?.user._id || "";
-  const currentUserID = userID; // Set currentUserID to userID
+  const { data: session, status } = useSession(); 
+  const [currentUserID, setCurrentUserID] = useState("");
+
+  useEffect(() => {
+    // Update currentUserID when session changes
+    if (status === "authenticated") {
+      setCurrentUserID(session.user._id);
+    }
+  }, [session, status]);
+
+  useEffect(() => {
+    // Save currentUserID to sessionStorage
+    sessionStorage.setItem('currentUserID', currentUserID);
+  }, [currentUserID]);
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -38,7 +50,7 @@ export default function EditAdvert({ AdvertID }) {
     interests: []
   });
   const [campaigns, setCampaigns] = useState([]);
- 
+ const [placements, setPlacements] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +75,20 @@ export default function EditAdvert({ AdvertID }) {
       });
   }, []);
 
+
+useEffect(() => {
+
+    const fetchPlacement = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/Placement/dimensions/`);
+        setPlacements(response.data);
+      } catch (error) {
+        console.error('Error fetching Placement Size:', error);
+      }
+    };
+    fetchPlacement();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "ageRange" || name === "gender" || name === "interests") {
@@ -81,6 +107,17 @@ export default function EditAdvert({ AdvertID }) {
     setFormData(prevData => ({
       ...prevData,
       campaignId: value
+    }));
+  };
+  const handlePlacementChange = (value) => {
+    // Split the selected value into width and height
+    const [width, height] = value.split('x').map(dim => parseInt(dim.trim(), 10));
+
+    // Update formData with width and height
+    setFormData(prevData => ({
+      ...prevData,
+      width: width,
+      height: height
     }));
   };
 
@@ -150,13 +187,19 @@ export default function EditAdvert({ AdvertID }) {
               <div className="col-span-2 text-bold ">
                 <p className="font-semibold">Size:</p>
               </div>
-              <div>
-                <Label>width:</Label>
-                <Input type="text" name="width" value={formData.width} onChange={handleChange} />
-              </div>
-                    <div>
-                <Label>height:</Label>
-                <Input type="text" name="height" value={formData.height} onChange={handleChange} />
+              <div >
+                <Select onValueChange={handlePlacementChange} defaultValue="">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Placement" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {placements.map(placement => (
+                      <SelectItem key={placement._id} value={`${placement.width}x${placement.height}`}>
+                        {`${placement.name}`}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
                
             </div>
