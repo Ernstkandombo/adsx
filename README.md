@@ -64,9 +64,6 @@ To get started with this project, follow these steps:
 
 Once the application is running, you can begin using the ad server to manage advertisements. Ensure you have appropriate permissions and authentication credentials if required.
 
-## Contributing
-
-Contributions to this project are welcome! Feel free to submit bug reports, feature requests, or pull requests to help improve the functionality and usability of the ad server.
 
 ## License
 
