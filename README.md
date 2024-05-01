@@ -40,7 +40,7 @@ To get started with this project, follow these steps:
 3. Install dependencies for the client and server components:
 
    ```bash
-   cd adxclient
+   cd adsxclient
    npm install
    cd ../adsxserver
    npm install
