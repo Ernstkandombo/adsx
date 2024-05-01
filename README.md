@@ -42,7 +42,7 @@ To get started with this project, follow these steps:
    ```bash
    cd adxclient
    npm install
-   cd ../adxserver
+   cd ../adsxserver
    npm install
    ```
 
@@ -54,7 +54,7 @@ To get started with this project, follow these steps:
    npm run dev
    
    # In another terminal tab
-   cd ../adxserver
+   cd ../adsxserver
    npm run start
    ```
 

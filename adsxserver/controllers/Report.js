@@ -174,16 +174,11 @@ exports.getFullReport = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        console.log('User Type:', userType);
-        console.log('User Data:', userData);
-
         // Fetch relevant data based on user type
         if (userType === 'advertiser') {
             const campaigns = await Campaign.find({ advertiserId: userId });
             const websites = await Website.find({ publisherId: userId });
 
-            console.log('Campaigns:', campaigns);
-            console.log('Websites:', websites);
 
             // Aggregate data for each campaign
             const campaignData = await Promise.all(campaigns.map(async (campaign) => {
@@ -201,11 +196,11 @@ exports.getFullReport = async (req, res) => {
                 };
             }));
 
-            console.log('Campaign Data:', campaignData);
+
 
             // Call getAdvertiserMetrixData to get additional metrics
             const metrixData = await getAdvertiserMetrixData(userId);
-            console.log('Advertiser Metrics:', metrixData);
+
 
             reportData = {
                 userData: {
@@ -223,7 +218,6 @@ exports.getFullReport = async (req, res) => {
         } else {
             const websites = await Website.find({ publisherId: userId });
 
-            console.log('Websites:', websites);
 
             // Fetch campaign assignments for each website
             const websiteCampaignAssignments = await Promise.all(websites.map(async (website) => {
@@ -231,7 +225,7 @@ exports.getFullReport = async (req, res) => {
                 return { website, assignments };
             }));
 
-            console.log('Website Campaign Assignments:', websiteCampaignAssignments);
+
 
             // Aggregate data for campaign assignments
             const campaignAssignmentData = websiteCampaignAssignments.reduce((acc, { website, assignments }) => {
@@ -247,11 +241,11 @@ exports.getFullReport = async (req, res) => {
                 return acc;
             }, []);
 
-            console.log('Campaign Assignment Data:', campaignAssignmentData);
+
 
             // Call getPublisherMetrixData to get additional metrics
             const metrixData = await getPublisherMetrixData(userId);
-            console.log('Publisher Metrics:', metrixData);
+
 
             reportData = {
                 userData: {
@@ -267,7 +261,7 @@ exports.getFullReport = async (req, res) => {
             };
         }
 
-        console.log('Report Data:', reportData);
+
 
         return res.status(200).json(reportData);
     } catch (error) {
