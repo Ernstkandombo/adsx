@@ -18,38 +18,58 @@ export default function BiddingCampaign({ CampaignID }) {
     const [selectedWebsite, setSelectedWebsite] = useState("");
     const [error, setError] = useState(null);
     const [bidNumber, setBidNumber] = useState(0); // State to store bid number
-    const { data: session } = useSession();
-    const userID = session?.user._id || '';
-    const currentUserID = userID;
+    const { data: session, status } = useSession();
+    const [currentUserID, setCurrentUserID] = useState("");
 
     useEffect(() => {
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`)
-            .then(response => {
+        // Update currentUserID when session changes
+        if (status === "authenticated") {
+            setCurrentUserID(session.user._id);
+        }
+    }, [session, status]);
+
+    useEffect(() => {
+        // Save currentUserID to sessionStorage
+        sessionStorage.setItem('currentUserID', currentUserID);
+    }, [currentUserID]);
+
+    useEffect(() => {
+        const fetchPlacement = async () => {
+            try {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`);
                 setPlacementOptions(response.data);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching placement options:', error);
                 setError('Error fetching placement options');
-            });
+            }
+        }
+        fetchPlacement();
 
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`)
-            .then(response => {
+        const fetchWebsites = async () => {
+            try {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`);
                 setWebsiteOptions(response.data);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching website options:', error);
                 setError('Error fetching website options');
-            });
+            }
+        }
+        fetchWebsites();
 
-        // Fetch bid number
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/bid/number/${CampaignID}`)
-            .then(response => {
-                setBidNumber(response.data.bidNumber);
-            })
-            .catch(error => {
+        const fetchBidNumber = async () => {
+            try {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/bid/number/${CampaignID}`);
+                if (response.data.bidNumber) {
+                    setBidNumber(response.data.bidNumber);
+                } else {
+                    setBidNumber('Place a bid');
+                }
+            } catch (error) {
                 console.error('Error fetching bid number:', error);
                 setError('Error fetching bid number');
-            });
+            }
+        }
+        fetchBidNumber();
     }, [CampaignID]); // Include CampaignID in dependencies to fetch bid number whenever it changes
 
     const handleCloseDialog = () => {
