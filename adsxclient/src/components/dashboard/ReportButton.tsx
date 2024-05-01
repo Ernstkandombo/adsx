@@ -5,9 +5,8 @@ import axios from 'axios';
 import { Button } from "@/components/ui/button";
 import { FileDown } from "lucide-react";
 import { useSession } from "next-auth/react";
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { toast } from 'sonner';
+import jsPDF from 'jspdf';
 
 export default function ReportButton() {
     const { data: session } = useSession(); 
@@ -30,71 +29,74 @@ export default function ReportButton() {
         }
     };
 
-   const fetchAndProcessData = async () => {
-    try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/report/${userID}`);
-        const data = response.data;
-        const docDefinition = createPDF(data);
-        // Trigger download using pdfMake's download() method
-        pdfMake.createPdf(docDefinition).download('report.pdf', () => {
-            console.log('Downloaded successfully!');
-        });
-    } catch (error) {
-        console.error('Error fetching data or generating PDF:', error);
-        toast.error('Error fetching data or generating PDF');
-    } finally {
-        setLoading(false);
-    }
-};
+    const fetchAndProcessData = async () => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/report/${userID}`);
+            const data = response.data;
+            generatePDF(data);
+           
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            toast.error('Error fetching data');
+        }
+    };
 
-    const createPDF = (data) => {
-        let docDefinition = {};
+    const generatePDF = (data) => {
+        const doc = new jsPDF();
         
         if (data?.userData?.role === 'advertiser') {
-            docDefinition = createAdvertiserPDF(data);
+            createAdvertiserPDF(doc, data);
         } else if (data?.userData?.role === 'publisher') {
-            docDefinition = createPublisherPDF(data);
+            createPublisherPDF(doc, data);
         }
         
-        return docDefinition;
+        // Trigger download
+        doc.save('report.pdf');
     };
 
-    const createAdvertiserPDF = (data) => {
-        const docDefinition = {
-            content: [
-                { text: 'Advertiser Report', style: 'header' },
-                { text: `Name: ${data.userData.name}`, style: 'subheader' },
-            ],
-            styles: {
-                header: { fontSize: 18, bold: true },
-                subheader: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
-            },
-        };
-        return docDefinition;
-    };
+ const createAdvertiserPDF = (doc, data) => {
+    doc.text('Advertiser Report', 10, 10);
+    doc.text(`Name: ${data.userData.name}`, 10, 20);
 
-    const createPublisherPDF = (data) => {
-        const docDefinition = {
-            content: [
-                { text: 'Publisher Report', style: 'header' },
-                { text: `Name: ${data.userData.name}`, style: 'subheader' },
-            ],
-            styles: {
-                header: { fontSize: 18, bold: true },
-                subheader: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
-            },
-        };
-        return docDefinition;
-    };
+    // Campaign data
+    doc.text('Campaigns:', 10, 40);
+    data.campaignData.forEach((campaign, index) => {
+        const y = 50 + index * 10;
+        doc.text(`- ${campaign.campaignName}: Clicks: ${campaign.totalClicks}, Impressions: ${campaign.totalImpressions}, Cost: ${campaign.totalCost}`, 15, y);
+    });
+
+    // Metrix data
+    const yMetrix = 50 + data.campaignData.length * 10 + 20;
+    doc.text(`Total Clicks: ${data.metrixData.totalClicks}`, 10, yMetrix);
+    doc.text(`Total Impressions: ${data.metrixData.totalImpressions}`, 10, yMetrix + 10);
+    doc.text(`Total Cost: ${data.metrixData.totalCost}`, 10, yMetrix + 20);
+};
+
+
+const createPublisherPDF = (doc, data) => {
+    doc.text('Publisher Report', 10, 10);
+    doc.text(`Name: ${data.userData.name}`, 10, 20);
+
+    // Campaign assignment data
+    doc.text('Campaign Assignments:', 10, 40);
+    data.campaignAssignmentData.forEach((assignment, index) => {
+        const y = 50 + index * 10;
+        doc.text(`- ${assignment.websiteName}: Clicks: ${assignment.clicks}, Impressions: ${assignment.impressions}`, 15, y);
+    });
+
+    // Metrix data
+    const yMetrix = 50 + data.campaignAssignmentData.length * 10 + 20;
+    doc.text(`Total Clicks: ${data.metrixData.totalClicks}`, 10, yMetrix);
+    doc.text(`Total Impressions: ${data.metrixData.totalImpressions}`, 10, yMetrix + 10);
+    doc.text(`Total Revenue: ${data.metrixData.totalRevenue}`, 10, yMetrix + 20);
+};
+
 
     return (
         <div>
-            
             <Button className="mx-4" onClick={handleDownload} disabled={loading}>
                 <FileDown className="h-6 w-6 px-1 text-amber-500" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export Report</span>
-          {/* Hidden anchor element for triggering the download */}
-            <a id="downloadAnchor" style={{ display: 'none' }}></a>
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export Report</span>
             </Button>
         </div>
     );
