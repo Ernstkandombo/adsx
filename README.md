@@ -19,12 +19,12 @@ To get started with this project, follow these steps:
 Clone the repository to your local machine:
 bash
 Copy code
-git clone https://github.com/your-username/adsx.git
+git clone https://github.com/Ernstkandombo/adsx.git
 Navigate to the project directory:
 bash
 Copy code
 cd adsx
-Install dependencies for both the client and server components:
+Install dependencies for the client:
 bash
 Copy code
 cd adxclient
@@ -36,6 +36,7 @@ bash
 Copy code
 # In one terminal tab
 cd adxclient
+npm i
 npm run dev
 
 # In another terminal tab
