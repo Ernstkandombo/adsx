@@ -11,7 +11,15 @@ The project is designed to function as an ad server, facilitating the management
 - **Next.js Frontend**: Utilizes Next.js for the client-side rendering, providing a fast and dynamic user experience.
 - **Express Server Backend**: The backend is powered by Express.js, offering robust API endpoints and server-side logic.
 - **NextAuth Authentication**: Implements NextAuth for authentication purposes, ensuring secure access to the application.
-- **TypeScript**: The entire project is written in TypeScript, promoting code reliability and maintainability.
+- **TypeScript**: The client-side code is written in TypeScript, promoting code reliability and maintainability.
+- **MongoDB**: Requires MongoDB for data storage. Install MongoDB Community Edition from [MongoDB website](https://www.mongodb.com/try/download/community). Follow the instructions provided for your operating system.
+
+## Prerequisites
+
+Before running this application, ensure you have the following installed on your computer:
+
+- **Node.js**: Install from [Node.js website](https://nodejs.org/).
+- **MongoDB**: Install MongoDB Community Edition from [MongoDB website](https://www.mongodb.com/try/download/community). Follow the instructions provided for your operating system.
 
 ## Getting Started
 
