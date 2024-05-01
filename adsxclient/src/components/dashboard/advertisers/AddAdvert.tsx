@@ -118,14 +118,17 @@ export default function AddAdvert() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Update formData with currentUserID
-      setFormData(prevData => ({
-        ...prevData,
-        advertiserId: currentUserID
-      }));
+      // Retrieve currentUserID from sessionStorage
+            const currentUserID = sessionStorage.getItem('currentUserID');
+
+            // Update formData with currentUserID
+            const updatedFormData = {
+                ...formData,
+                advertiserId: currentUserID
+            };
 
       console.log('Request payload:', formData); 
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/`, formData);
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/`, updatedFormData);
       console.log('Advert Created successfully');
       toast.success("Advert Created successfully");
       // Reset form data after successful submission

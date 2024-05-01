@@ -63,7 +63,16 @@ export default function CreateCampaignButton() {
         e.preventDefault();
 
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`, formData);
+
+            // Retrieve currentUserID from sessionStorage
+        const currentUserID = sessionStorage.getItem('currentUserID');
+
+        // Update formData with currentUserID
+        const updatedFormData = {
+            ...formData,
+            advertiserId: currentUserID
+        };
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`, updatedFormData);
             console.log('Campaign created successfully');
             toast.success('Campaign created successfully');
 
