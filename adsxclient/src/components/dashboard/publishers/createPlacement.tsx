@@ -29,8 +29,12 @@ import { useSession } from "next-auth/react";
 export default function CreatePlacement() {
 
     const { data: session } = useSession(); 
-    const userID = session?.user._id || '';
-    const currentUserID = userID; // Extracting currentUserID from session
+  const userID = session?.user._id || "";
+  const [currentUserID, setCurrentUserID] = useState(() => {
+    // Initialize currentUserID from sessionStorage if available, or set it to userID
+    const storedUserID = sessionStorage.getItem('currentUserID');
+    return storedUserID ? storedUserID : userID;
+  });
 
     const [placementData, setPlacementData] = useState({
         name: "",

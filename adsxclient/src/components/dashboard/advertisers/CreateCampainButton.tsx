@@ -10,9 +10,13 @@ import { toast } from 'sonner';
 import { useSession } from "next-auth/react";
 
 export default function CreateCampaignButton() {
-    const { data: session } = useSession();
-    const userID = session?.user._id || {};
-    const currentUserID = userID; // Extracting currentUserID from session
+    const { data: session } = useSession(); 
+  const userID = session?.user._id || "";
+  const [currentUserID, setCurrentUserID] = useState(() => {
+    // Initialize currentUserID from sessionStorage if available, or set it to userID
+    const storedUserID = sessionStorage.getItem('currentUserID');
+    return storedUserID ? storedUserID : userID;
+  });
 
     const [formData, setFormData] = useState({
         name: '',
