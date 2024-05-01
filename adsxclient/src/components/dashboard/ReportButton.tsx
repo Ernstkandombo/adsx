@@ -54,9 +54,10 @@ export default function ReportButton() {
         doc.save('report.pdf');
     };
 
- const createAdvertiserPDF = (doc, data) => {
+    const createAdvertiserPDF = (doc, data) => {
     doc.text('Advertiser Report', 10, 10);
     doc.text(`Name: ${data.userData.name}`, 10, 20);
+    doc.text(`Name: ${data.userData.email}`, 10, 30);
 
     // Campaign data
     doc.text('Campaigns:', 10, 40);
@@ -73,9 +74,10 @@ export default function ReportButton() {
 };
 
 
-const createPublisherPDF = (doc, data) => {
+    const createPublisherPDF = (doc, data) => {
     doc.text('Publisher Report', 10, 10);
     doc.text(`Name: ${data.userData.name}`, 10, 20);
+    doc.text(`Name: ${data.userData.email}`, 10, 30);
 
     // Campaign assignment data
     doc.text('Campaign Assignments:', 10, 40);

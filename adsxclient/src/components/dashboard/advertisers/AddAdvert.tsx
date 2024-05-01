@@ -1,5 +1,8 @@
 'use client'
 
+
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from "sonner";
@@ -17,16 +20,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-import { useSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 
 export default function AddAdvert() {
-  const { data: session } = useSession(); 
-  const userID = session?.user._id || "";
-  const [currentUserID, setCurrentUserID] = useState(() => {
-    // Initialize currentUserID from sessionStorage if available, or set it to userID
-    const storedUserID = sessionStorage.getItem('currentUserID');
-    return storedUserID ? storedUserID : userID;
-  });
+  const { data: session, status } = useSession(); 
+  const [currentUserID, setCurrentUserID] = useState("");
+
+  useEffect(() => {
+    // Update currentUserID when session changes
+    if (status === "authenticated") {
+      setCurrentUserID(session.user._id);
+    }
+  }, [session, status]);
+
+  useEffect(() => {
+    // Save currentUserID to sessionStorage
+    sessionStorage.setItem('currentUserID', currentUserID);
+  }, [currentUserID]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -44,6 +54,7 @@ export default function AddAdvert() {
     interests: []
   });
   const [campaigns, setCampaigns] = useState([]);
+  const [placements, setPlacements] = useState([]);
 
   useEffect(() => {
     // Fetch campaigns when component mounts or when currentUserID changes
@@ -55,24 +66,19 @@ export default function AddAdvert() {
         console.error('Error fetching campaigns:', error);
       }
     };
-
     fetchCampaigns();
-
-    // Listen for changes in currentUserID and fetch campaigns again
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'currentUserID') {
-        setCurrentUserID(event.newValue);
+    const fetchPlacement = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/Placement/dimensions/`);
+        setPlacements(response.data);
+      } catch (error) {
+        console.error('Error fetching Placement Size:', error);
       }
-    });
-
-    return () => {
-      window.removeEventListener('storage', () => {});
     };
-  }, [currentUserID]);
+    fetchPlacement();
+    
 
-  useEffect(() => {
-    // Store currentUserID in sessionStorage
-    sessionStorage.setItem('currentUserID', currentUserID);
+
   }, [currentUserID]);
 
   const handleChange = (e) => {
@@ -97,9 +103,27 @@ export default function AddAdvert() {
     }));
   };
 
+  const handlePlacementChange = (value) => {
+    // Split the selected value into width and height
+    const [width, height] = value.split('x').map(dim => parseInt(dim.trim(), 10));
+
+    // Update formData with width and height
+    setFormData(prevData => ({
+      ...prevData,
+      width: width,
+      height: height
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Update formData with currentUserID
+      setFormData(prevData => ({
+        ...prevData,
+        advertiserId: currentUserID
+      }));
+
       console.log('Request payload:', formData); 
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/aditem/`, formData);
       console.log('Advert Created successfully');
@@ -178,13 +202,19 @@ export default function AddAdvert() {
               <div className="col-span-2 text-bold ">
                 <p className="font-semibold">Size:</p>
               </div>
-              <div>
-                <Label>width:</Label>
-                <Input type="text" name="width" value={formData.width} onChange={handleChange} />
-              </div>
-              <div>
-                <Label>height:</Label>
-                <Input type="text" name="height" value={formData.height} onChange={handleChange} />
+              <div >
+                <Select onValueChange={handlePlacementChange} defaultValue="">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Placement" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {placements.map(placement => (
+                      <SelectItem key={placement._id} value={`${placement.width}x${placement.height}`}>
+                        {`${placement.name}`}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4 pt-2">

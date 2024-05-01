@@ -1,18 +1,28 @@
 const Publisher = require('../models/Publisher');
-
+const Advertiser = require('../models/Advertiser');
 
 
 exports.createPublisher = async (req, res) => {
+    const { email } = req.body;
+
     try {
-        // Check if email already exists in the database
-        const existingPublisher = await Publisher.findOne({ email: req.body.email });
+        // Check if the email already exists in the Publisher collection
+        const existingPublisher = await Publisher.findOne({ email });
 
         if (existingPublisher) {
-            // If email already exists, send a message to the client
+            // If the email already exists in the Publisher collection, send a message to the client
             return res.status(400).json({ message: 'Email already exists. Please use another one.' });
         }
 
-        // If email doesn't exist, create the publisher
+        // Check if the email already exists in the Advertiser collection
+        const existingAdvertiser = await Advertiser.findOne({ email });
+
+        if (existingAdvertiser) {
+            // If the email already exists in the Advertiser collection, send a message to the client
+            return res.status(400).json({ message: 'Email already exists as an advertiser. Please use another one.' });
+        }
+
+        // If the email doesn't exist in either collection, create the publisher
         const newPublisher = new Publisher(req.body);
         await newPublisher.save();
 

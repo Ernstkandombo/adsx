@@ -2,7 +2,7 @@ const express = require('express');
 const placementController = require('../controllers/Placement');
 
 const router = express.Router();
-
+router.get('/dimensions', placementController.getPlacementsSize);
 router.post('/', placementController.createPlacement);
 router.get('/', placementController.getPlacements);
 router.get('/:id', placementController.getPlacement);

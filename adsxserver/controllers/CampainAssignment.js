@@ -4,6 +4,8 @@ const Campaign = require('../models/Campaign');
 const Website = require('../models/Website');
 const Publisher = require('../models/Publisher');
 const Notification = require('../models/Notification');
+const cron = require('node-cron');
+
 
 exports.associateCampaignWithPlacement = async (req, res) => {
     try {
@@ -81,13 +83,30 @@ exports.getCampaignAssignmentById = async (req, res) => {
                 const publisher = await Publisher.findById(placement.publisherId);
                 const message = `Congratulations! You won the bid for the campaign "${campaign.name}".`;
 
-                // Save the message to the notification collection
-                const notification = new Notification({
+                // Save the message to the notification collection for the publisher
+                const notificationForPublisher = new Notification({
                     message,
-                    notificationType: 'Campaign Assignment', // Set the notification type
+                    notificationType: 'Campaign Assignment',
                     userId: publisher._id
                 });
-                await notification.save();
+                await notificationForPublisher.save();
+
+                // Retrieve the advertiser ID from the campaign
+                const advertiserId = campaign.advertiserId;
+
+                // Find the advertiser associated with the campaign
+                const advertiser = await Advertiser.findById(advertiserId);
+
+                // Construct a message for the advertiser
+                const advertiserMessage = `Your campaign "${campaign.name}" has been assigned to the website "${website.name}".`;
+
+                // Save the message to the notification collection for the advertiser
+                const notificationForAdvertiser = new Notification({
+                    message: advertiserMessage,
+                    notificationType: 'Campaign Assignment',
+                    userId: advertiser._id
+                });
+                await notificationForAdvertiser.save();
             }
             // Update the initial count to the current count
             initialAssignmentCount = currentAssignmentCount;
@@ -126,18 +145,21 @@ exports.getCampaignAssignmentById = async (req, res) => {
 };
 
 
-// DELETE CampaignAssignment by ID
-exports.deleteCampaignAssignmentById = async (req, res) => {
-    const { id } = req.params;
 
+// Schedule the job to run every day at midnight
+cron.schedule('0 0 * * *', async () => {
     try {
-        // Find the CampaignAssignment document by ID and delete it
-        await CampaignAssignment.findByIdAndDelete(id);
-        res.status(204).send(); // Respond with success status
+        // Find campaign assignments with end date less than or equal to current date
+        const expiredAssignments = await CampaignAssignment.find({ endDate: { $lte: new Date() } });
+
+        // Delete expired campaign assignments
+        await CampaignAssignment.deleteMany({ endDate: { $lte: new Date() } });
+
+        console.log(`${expiredAssignments.length} expired campaign assignments deleted.`);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error deleting expired campaign assignments:', error);
     }
-};
+});
 
 // Mongoose middleware to delete associated CampaignAssignments when a Campaign or Placement is deleted
 const deleteAssociatedCampaignAssignments = async function () {

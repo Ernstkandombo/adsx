@@ -28,14 +28,21 @@ import { useSession } from "next-auth/react";
 
 export default function CreatePlacement() {
 
-    const { data: session } = useSession(); 
-  const userID = session?.user._id || "";
-  const [currentUserID, setCurrentUserID] = useState(() => {
-    // Initialize currentUserID from sessionStorage if available, or set it to userID
-    const storedUserID = sessionStorage.getItem('currentUserID');
-    return storedUserID ? storedUserID : userID;
-  });
+    const { data: session, status } = useSession(); 
+    const [currentUserID, setCurrentUserID] = useState("");
 
+    useEffect(() => {
+        // Update currentUserID when session changes
+        if (status === "authenticated") {
+        setCurrentUserID(session.user._id);
+        }
+    }, [session, status]);
+
+    useEffect(() => {
+        // Save currentUserID to sessionStorage
+        sessionStorage.setItem('currentUserID', currentUserID);
+    }, [currentUserID]);
+        
     const [placementData, setPlacementData] = useState({
         name: "",
         description: "",
@@ -81,37 +88,41 @@ export default function CreatePlacement() {
         });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // Extract websiteId and websiteUrl from the selected value
-        const [websiteId, websiteUrl] = placementData.websiteId.split(',');
-
-        // Update placementData with websiteId and websiteUrl
-        const updatedPlacementData = {
-            ...placementData,
-            websiteId,
-            websiteUrl
-        };
-
-        try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement`, updatedPlacementData);
-            console.log('Placement created successfully:', response.data);
-            toast.success('Placement created successfully');
-            setPlacementData({
-                name: "",
-                description: "",
-                websiteId: "",
-                websiteUrl: "",
-                publisherId: currentUserID,
-                width: 0,
-                height: 0,
-            })
-        } catch (error) {
-            console.error('Error creating placement:', error);
-            toast.error('Error creating placement');
-        }
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+ try {
+    // Extract websiteId and websiteUrl from the selected value
+    const [websiteId, websiteUrl] = placementData.websiteId.split(',');
+    // Retrieve currentUserID from sessionStorage
+    const currentUserID = sessionStorage.getItem('currentUserID');
+    // Update placementData with websiteId and websiteUrl
+    const updatedPlacementData = {
+        ...placementData,
+        websiteId,
+        websiteUrl,
+        publisherId: currentUserID
     };
+
+
+   
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement`, updatedPlacementData);
+        console.log('Placement created successfully:', response.data);
+        toast.success('Placement created successfully');
+        setPlacementData({
+            name: "",
+            description: "",
+            websiteId: "",
+            websiteUrl: "",
+            publisherId: currentUserID,
+            width: 0,
+            height: 0,
+        });
+    } catch (error) {
+        console.error('Error creating placement:', error);
+        toast.error('Error creating placement');
+    }
+};
+
 
     return (
         <Dialog>

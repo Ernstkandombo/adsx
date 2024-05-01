@@ -148,3 +148,37 @@ exports.getPlacementsByPublisher = async (req, res) => {
 };
 
 
+exports.getPlacementsSize = async (req, res) => {
+    try {
+        // Get placements from the Placement collection
+        const placements = await Placement.find();
+
+        // Create a Map to store unique placements based on width and height
+        const uniquePlacementsMap = new Map();
+
+        // Filter out duplicate placements based on width and height
+        placements.forEach(placement => {
+            const key = `${placement.width}x${placement.height}`;
+            if (!uniquePlacementsMap.has(key)) {
+                uniquePlacementsMap.set(key, placement);
+            }
+        });
+
+        // Format placement dimensions and construct the response
+        const formattedPlacements = Array.from(uniquePlacementsMap.values()).map(placement => ({
+            name: `Dimensions: ${placement.width}x${placement.height}`,
+            width: placement.width,
+            height: placement.height
+        }));
+
+        // Return formatted placements
+        res.json(formattedPlacements);
+    } catch (error) {
+        // Send error response if something went wrong
+        res.status(500).json({ message: 'Failed to fetch placements.', error: error.message });
+    }
+};
+
+
+
+

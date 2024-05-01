@@ -2,7 +2,7 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
@@ -13,13 +13,20 @@ import { Label } from '@/components/ui/label'; // Import Label component
 import { useSession } from "next-auth/react";
 
 export default function CreateCampaigns() {
-    const { data: session } = useSession(); 
-  const userID = session?.user._id || "";
-  const [currentUserID, setCurrentUserID] = useState(() => {
-    // Initialize currentUserID from sessionStorage if available, or set it to userID
-    const storedUserID = sessionStorage.getItem('currentUserID');
-    return storedUserID ? storedUserID : userID;
-  });
+    const { data: session, status } = useSession(); 
+  const [currentUserID, setCurrentUserID] = useState("");
+
+  useEffect(() => {
+    // Update currentUserID when session changes
+    if (status === "authenticated") {
+      setCurrentUserID(session.user._id);
+    }
+  }, [session, status]);
+
+  useEffect(() => {
+    // Save currentUserID to sessionStorage
+    sessionStorage.setItem('currentUserID', currentUserID);
+  }, [currentUserID]);
 
     const [formData, setFormData] = useState({
         name: '',
