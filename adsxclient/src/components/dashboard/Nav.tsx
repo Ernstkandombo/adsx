@@ -82,7 +82,7 @@ export default function Nav() {
                             {session && session.user && (
                                 <>
                                     <DropdownMenuLabel>
-                                        {session.user.name.length > 10 ? session.user.name.substring(0, 12) + "..." : session.user.name}
+                                        {session.user.name.length > 10 ? session.user.name.substring(0, 15) + "..." : session.user.name}
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                 </>
