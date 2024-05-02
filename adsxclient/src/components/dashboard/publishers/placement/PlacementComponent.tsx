@@ -1,8 +1,8 @@
 import React from 'react'
 import axios from 'axios';
 
-import { Placement, columns } from '@/components/dashboard/publishers/Placement/columns';
-import { DataTable } from '@/components/dashboard/publishers/Placement/data-table';
+import { Placement, columns } from '@/components/dashboard/publishers/placement/columns';
+import { DataTable } from '@/components/dashboard/publishers/placement/data-table';
 import { getServerSession } from "next-auth"
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
@@ -14,7 +14,7 @@ const session = await getServerSession(authOptions);
   const currentUserID =userID; // Extracting userID from session
 // Fetch data from your API here.
 try {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`, { next: { revalidate: 1 } });
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`);
   return response.data; // Assuming your API returns an array of Advert objects
 } catch (error) {
   console.error('Error fetching data:', error);

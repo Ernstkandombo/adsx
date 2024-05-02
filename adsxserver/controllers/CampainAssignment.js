@@ -48,9 +48,6 @@ exports.associateCampaignWithPlacement = async (req, res) => {
     }
 };
 
-// Store the initial count of CampaignAssignments
-let initialAssignmentCount = 0;
-
 exports.getCampaignAssignmentById = async (req, res) => {
     const { id } = req.params;
 
@@ -58,59 +55,16 @@ exports.getCampaignAssignmentById = async (req, res) => {
         // Find all placements belonging to the publisher with the given userID
         const placements = await Placement.find({ publisherId: id });
 
+        // Check if no placements are found
+        if (!placements || placements.length === 0) {
+            return res.status(404).json({ error: 'No placements found for the given publisher ID' });
+        }
+
         // Extract placement IDs
         const placementIds = placements.map(placement => placement._id);
 
         // Find campaign assignments with placement IDs matching the found placements
         const campaignAssignments = await CampaignAssignment.find({ placementId: { $in: placementIds } });
-
-        // Get the current count of CampaignAssignments
-        const currentAssignmentCount = await CampaignAssignment.countDocuments({ placementId: { $in: placementIds } });
-
-        // If it's the first request, set the initial count
-        if (initialAssignmentCount === 0) {
-            initialAssignmentCount = currentAssignmentCount;
-        }
-
-        // Check if there are new campaign assignments
-        if (currentAssignmentCount > initialAssignmentCount) {
-            // Send message to the publisher for new campaign assignments
-            const newCampaignAssignments = await CampaignAssignment.find({ placementId: { $in: placementIds } }).skip(initialAssignmentCount);
-            for (const assignment of newCampaignAssignments) {
-                const campaign = await Campaign.findById(assignment.campaignId);
-                const placement = await Placement.findById(assignment.placementId);
-                const website = await Website.findById(assignment.websiteId);
-                const publisher = await Publisher.findById(placement.publisherId);
-                const message = `Congratulations! You won the bid for the campaign "${campaign.name}".`;
-
-                // Save the message to the notification collection for the publisher
-                const notificationForPublisher = new Notification({
-                    message,
-                    notificationType: 'Campaign Assignment',
-                    userId: publisher._id
-                });
-                await notificationForPublisher.save();
-
-                // Retrieve the advertiser ID from the campaign
-                const advertiserId = campaign.advertiserId;
-
-                // Find the advertiser associated with the campaign
-                const advertiser = await Advertiser.findById(advertiserId);
-
-                // Construct a message for the advertiser
-                const advertiserMessage = `Your campaign "${campaign.name}" has been assigned to the website "${website.name}".`;
-
-                // Save the message to the notification collection for the advertiser
-                const notificationForAdvertiser = new Notification({
-                    message: advertiserMessage,
-                    notificationType: 'Campaign Assignment',
-                    userId: advertiser._id
-                });
-                await notificationForAdvertiser.save();
-            }
-            // Update the initial count to the current count
-            initialAssignmentCount = currentAssignmentCount;
-        }
 
         // Prepare an array to store the results
         const results = [];
@@ -143,8 +97,6 @@ exports.getCampaignAssignmentById = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
-
 
 // Schedule the job to run every day at midnight
 cron.schedule('0 0 * * *', async () => {

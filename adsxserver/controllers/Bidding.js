@@ -5,6 +5,7 @@ const Placement = require('../models/Placement');
 const Campaign = require('../models/Campaign');
 const Website = require('../models/Website');
 const Bid = require('../models/Bid');
+const Notification = require('../models/Notification');
 
 // Objective Clarity: The publisher aims for the highest total budget, clicks, and impression cost in the campaign, whereas the advertiser seeks the highest views per website.
 
@@ -37,8 +38,9 @@ const Bid = require('../models/Bid');
 
 exports.bidding = async (req, res) => {
     try {
-
         const { campaignId, websiteId, placementId } = req.body;
+        console.log('Received bidding request with campaignId:', campaignId, 'websiteId:', websiteId, 'placementId:', placementId);
+
         // Validate bid data
         if (!campaignId || !websiteId || !placementId) {
             console.error('Missing required fields in bid request:', req.body);
@@ -51,6 +53,7 @@ exports.bidding = async (req, res) => {
             console.error('Campaign not found. Campaign ID:', campaignId);
             return res.status(404).json({ message: 'Campaign not found.' });
         }
+        console.log('Found campaign:', campaign);
 
         // Check if the website has already been used in previous bids for this campaign
         const existingBid = await Bid.findOne({ campaignId, websiteId });
@@ -58,6 +61,7 @@ exports.bidding = async (req, res) => {
             console.error('Website already used in a previous bid for this campaign. Campaign ID:', campaignId, 'Website ID:', websiteId);
             return res.status(400).json({ message: 'The website can only be used once per campaign bid.' });
         }
+
         // Fetch views from the website
         const website = await Website.findById(websiteId);
         if (!website) {
@@ -65,22 +69,24 @@ exports.bidding = async (req, res) => {
             return res.status(404).json({ message: 'Website not found.' });
         }
         const views = website.views; // Get views from the website
+        console.log('Fetched views from website:', views);
+
         // Create and save the bid with views
         const bid = new Bid({ campaignId, websiteId, placementId, views }); // Include views in the bid
         await bid.save();
-
+        console.log('Saved bid:', bid);
 
         // Increment bidNumber or perform actions when bidNumber reaches 4
-        // Example:
         const bidNumber = await Bid.countDocuments({ campaignId });
+        console.log('Current bid number:', bidNumber);
         if (bidNumber === 4) {
-            // Your actions when bidNumber reaches 4
             // Find the winning bid for the campaign based on highest views per website
             const winningBid = await Bid.findOne({ campaignId }).sort({ views: -1 });
             if (!winningBid) {
                 console.error('No winning bid found for this campaign. Campaign ID:', campaignId);
                 return res.status(404).json({ message: 'No bids found for this campaign.' });
             }
+            console.log('Found winning bid:', winningBid);
 
             // Create campaign assignment using winning bid data
             const campaignAssignment = new CampaignAssignment({
@@ -95,14 +101,50 @@ exports.bidding = async (req, res) => {
                 impressions: 0
             });
             await campaignAssignment.save();
+            console.log('Created campaign assignment:', campaignAssignment);
 
             // Remove all bids for this campaign
             await Bid.deleteMany({ campaignId });
+            console.log('Deleted all bids for campaign:', campaignId);
 
-            return res.status(201).json({ bid: winningBid, bidNumber: 1 }); // Since only one bid is selected
+            // Get publisherId from the placement associated with the winning campaignAssignment
+            const placement = await Placement.findById(winningBid.placementId);
+            if (!placement) {
+                console.error('Placement not found for winning bid. Placement ID:', winningBid.placementId);
+                return res.status(404).json({ message: 'Placement not found.' });
+            }
+            const publisherId = placement.publisherId;
+            console.log('Publisher ID:', publisherId);
+
+            // Save notification for publisher
+            const messagePublisher = `Congratulations! You won the bid for the campaign "${campaign.name}".`;
+            const notificationPublisher = new Notification({
+                message: messagePublisher,
+                notificationType: 'Campaign Assignment',
+                userId: publisherId
+            });
+            await notificationPublisher.save();
+            console.log('Created notification for publisher:', notificationPublisher);
+
+            // Get advertiserId from the campaign associated with the winning campaignAssignment
+            const advertiserId = campaign.advertiserId;
+            console.log('Advertiser ID:', advertiserId);
+
+            // Save notification for advertiser
+            const messageAdvertiser = `Your campaign "${campaign.name}" has been assigned to the website "${website.url}".`;
+            const notificationAdvertiser = new Notification({
+                message: messageAdvertiser,
+                notificationType: 'Campaign Assignment',
+                userId: advertiserId
+            });
+            await notificationAdvertiser.save();
+            console.log('Created notification for advertiser:', notificationAdvertiser);
+
+            // Send response indicating the winning bid
+            return res.status(201).json({ bid: winningBid, bidNumber: 1 });
         }
 
-
+        // Send response indicating the bid was saved
         return res.status(201).json({ bid, bidNumber });
     } catch (error) {
         console.error('Error in bidding:', error);

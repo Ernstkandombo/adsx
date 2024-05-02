@@ -1,4 +1,3 @@
-
 'use client'
 
 import React, { useState, useEffect } from 'react';
@@ -9,18 +8,16 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { useSession } from "next-auth/react";
-import { Input } from '@/components/ui/input';
+
 
 export default function BiddingCampaign({ CampaignID }) {
     const [placementOptions, setPlacementOptions] = useState([]);
     const [websiteOptions, setWebsiteOptions] = useState([]);
     const [selectedPlacement, setSelectedPlacement] = useState("");
     const [selectedWebsite, setSelectedWebsite] = useState("");
-    const [error, setError] = useState(null);
     const [bidNumber, setBidNumber] = useState(0); // State to store bid number
     const { data: session, status } = useSession();
     const [currentUserID, setCurrentUserID] = useState("");
-
     useEffect(() => {
         // Update currentUserID when session changes
         if (status === "authenticated") {
@@ -34,28 +31,6 @@ export default function BiddingCampaign({ CampaignID }) {
     }, [currentUserID]);
 
     useEffect(() => {
-        const fetchPlacement = async () => {
-            try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`);
-                setPlacementOptions(response.data);
-            } catch (error) {
-                console.error('Error fetching placement options:', error);
-                setError('Error fetching placement options');
-            }
-        }
-        fetchPlacement();
-
-        const fetchWebsites = async () => {
-            try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`);
-                setWebsiteOptions(response.data);
-            } catch (error) {
-                console.error('Error fetching website options:', error);
-                setError('Error fetching website options');
-            }
-        }
-        fetchWebsites();
-
         const fetchBidNumber = async () => {
             try {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/bid/number/${CampaignID}`);
@@ -66,21 +41,49 @@ export default function BiddingCampaign({ CampaignID }) {
                 }
             } catch (error) {
                 console.error('Error fetching bid number:', error);
-                setError('Error fetching bid number');
+
             }
-        }
+        };
         fetchBidNumber();
-    }, [CampaignID]); // Include CampaignID in dependencies to fetch bid number whenever it changes
+    }, [CampaignID]);
+
+    useEffect(() => {
+        const fetchPlacement = async () => {
+            try {
+                const placementResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/placement/publisher/${currentUserID}`);
+                setPlacementOptions(placementResponse.data);
+            } catch (error) {
+                console.error('Error fetching placement options:', error);
+            
+            }
+        };
+
+        fetchPlacement();
+    }, [currentUserID]);
+
+    useEffect(() => {
+        const fetchWebsites = async () => {
+            try {
+                const websiteResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites/publisher/${currentUserID}`);
+                setWebsiteOptions(websiteResponse.data);
+            } catch (error) {
+                console.error('Error fetching website options:', error);
+             
+            }
+        };
+
+        fetchWebsites();
+    }, [currentUserID]);
 
     const handleCloseDialog = () => {
-        setError(null);
+        // Close the dialog
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (!selectedPlacement || !selectedWebsite) {
-            setError('Please select both a website and a placement');
+            toast.error('Please select both a website and a placement');
             return;
         }
 
@@ -98,7 +101,7 @@ export default function BiddingCampaign({ CampaignID }) {
             setBidNumber(response.data.bidNumber); // Update bid number after successful bid
         } catch (error) {
             console.error('Error bidding campaign:', error.response.data.message);
-            setError(error.response.data.message);
+            toast.error(error.response.data.message);
         }
     };
 
@@ -149,7 +152,7 @@ export default function BiddingCampaign({ CampaignID }) {
                             </Select>
                         </div>
                     </div>
-                    {error && <p className="text-red-500">{error}</p>}
+
                     <p>Bid number: {bidNumber}</p> {/* Display bid number */}
                     <DialogFooter className="col-span-2 py-6">
                         <Button type="submit">Bid</Button>
