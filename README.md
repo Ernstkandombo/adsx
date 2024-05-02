@@ -63,7 +63,13 @@ To get started with this project, follow these steps:
 ## Usage
 
 Once the application is running, you can begin using the ad server to manage advertisements. Ensure you have appropriate permissions and authentication credentials if required.
+# Creative
 
+use this creative link to this will display a mock image:
+
+```bash
+https://placehold.co/728x90/orange/white?text=this+is+a+Summer+advert
+```
 
 ## License
 

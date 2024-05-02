@@ -5,10 +5,20 @@ import { useSession } from "next-auth/react";
 
 export default function Notifications() {
     const [notifications, setNotifications] = useState([]);
-    const { data: session } = useSession(); 
-    const userID = session?.user._id || '';
-    const currentUserID = userID; // Extracting currentUserID from session
+     const { data: session, status } = useSession(); 
+    const [currentUserID, setCurrentUserID] = useState("");
 
+    useEffect(() => {
+        // Update currentUserID when session changes
+        if (status === "authenticated") {
+        setCurrentUserID(session.user._id);
+        }
+    }, [session, status]);
+
+    useEffect(() => {
+        // Save currentUserID to sessionStorage
+        sessionStorage.setItem('currentUserID', currentUserID);
+    }, [currentUserID]);
     // Fetch notifications from the API
     useEffect(() => {
         const fetchNotifications = () => {
@@ -42,6 +52,7 @@ export default function Notifications() {
                     </div>
                 </div>
             ))}
+
         </div>
     );
 
