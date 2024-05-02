@@ -39,7 +39,6 @@ const Notification = require('../models/Notification');
 exports.bidding = async (req, res) => {
     try {
         const { campaignId, websiteId, placementId } = req.body;
-        console.log('Received bidding request with campaignId:', campaignId, 'websiteId:', websiteId, 'placementId:', placementId);
 
         // Validate bid data
         if (!campaignId || !websiteId || !placementId) {
@@ -53,7 +52,6 @@ exports.bidding = async (req, res) => {
             console.error('Campaign not found. Campaign ID:', campaignId);
             return res.status(404).json({ message: 'Campaign not found.' });
         }
-        console.log('Found campaign:', campaign);
 
         // Check if the website has already been used in previous bids for this campaign
         const existingBid = await Bid.findOne({ campaignId, websiteId });
@@ -69,16 +67,16 @@ exports.bidding = async (req, res) => {
             return res.status(404).json({ message: 'Website not found.' });
         }
         const views = website.views; // Get views from the website
-        console.log('Fetched views from website:', views);
+
 
         // Create and save the bid with views
         const bid = new Bid({ campaignId, websiteId, placementId, views }); // Include views in the bid
         await bid.save();
-        console.log('Saved bid:', bid);
+
 
         // Increment bidNumber or perform actions when bidNumber reaches 4
         const bidNumber = await Bid.countDocuments({ campaignId });
-        console.log('Current bid number:', bidNumber);
+
         if (bidNumber === 4) {
             // Find the winning bid for the campaign based on highest views per website
             const winningBid = await Bid.findOne({ campaignId }).sort({ views: -1 });
@@ -86,7 +84,7 @@ exports.bidding = async (req, res) => {
                 console.error('No winning bid found for this campaign. Campaign ID:', campaignId);
                 return res.status(404).json({ message: 'No bids found for this campaign.' });
             }
-            console.log('Found winning bid:', winningBid);
+
 
             // Create campaign assignment using winning bid data
             const campaignAssignment = new CampaignAssignment({
@@ -101,11 +99,9 @@ exports.bidding = async (req, res) => {
                 impressions: 0
             });
             await campaignAssignment.save();
-            console.log('Created campaign assignment:', campaignAssignment);
 
             // Remove all bids for this campaign
             await Bid.deleteMany({ campaignId });
-            console.log('Deleted all bids for campaign:', campaignId);
 
             // Get publisherId from the placement associated with the winning campaignAssignment
             const placement = await Placement.findById(winningBid.placementId);
@@ -114,7 +110,7 @@ exports.bidding = async (req, res) => {
                 return res.status(404).json({ message: 'Placement not found.' });
             }
             const publisherId = placement.publisherId;
-            console.log('Publisher ID:', publisherId);
+
 
             // Save notification for publisher
             const messagePublisher = `Congratulations! You won the bid for the campaign "${campaign.name}".`;
@@ -124,11 +120,11 @@ exports.bidding = async (req, res) => {
                 userId: publisherId
             });
             await notificationPublisher.save();
-            console.log('Created notification for publisher:', notificationPublisher);
+
 
             // Get advertiserId from the campaign associated with the winning campaignAssignment
             const advertiserId = campaign.advertiserId;
-            console.log('Advertiser ID:', advertiserId);
+
 
             // Save notification for advertiser
             const messageAdvertiser = `Your campaign "${campaign.name}" has been assigned to the website "${website.url}".`;
@@ -138,7 +134,7 @@ exports.bidding = async (req, res) => {
                 userId: advertiserId
             });
             await notificationAdvertiser.save();
-            console.log('Created notification for advertiser:', notificationAdvertiser);
+
 
             // Send response indicating the winning bid
             return res.status(201).json({ bid: winningBid, bidNumber: 1 });
