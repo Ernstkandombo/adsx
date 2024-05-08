@@ -106,7 +106,7 @@ export default function EditPlacement({ placementId }) {
                 <DialogHeader>
                     <DialogTitle className="my-2">Edit Placement</DialogTitle>
                     <DialogDescription>
-                        Make changes to your Placement. Click save when you're done.
+                        Make changes to your Placement. Click save when you are done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="overflow-y-auto">

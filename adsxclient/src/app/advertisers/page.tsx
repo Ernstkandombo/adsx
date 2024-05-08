@@ -14,7 +14,7 @@ import AdvertComponent from '@/components/dashboard/advertisers/advert/AdvertCom
 
 export default async function page() {
     const session = await getServerSession(authOptions);
-    if(session.user.userType != 'advertiser') {
+    if (!session.user || session.user.userType !== 'advertiser')  {
 
 	    return(
             <section className="h-screen w-full  justify-center items-center">
