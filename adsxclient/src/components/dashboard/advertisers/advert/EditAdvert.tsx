@@ -73,7 +73,7 @@ export default function EditAdvert({ AdvertID }) {
       .catch(error => {
         console.error('Error fetching campaigns:', error);
       });
-  }, []);
+  }, [currentUserID]);
 
 
 useEffect(() => {

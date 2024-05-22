@@ -28,7 +28,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useSession } from "next-auth/react";
 
-
 const FormSchema = z.object({
     websiteId: z.string({
         required_error: "Please select a website.",
@@ -73,7 +72,7 @@ export default function EditPlacement({ placementId }) {
                 console.error('Error fetching websites:', error);
                 toast.error('Failed to fetch websites');
             });
-    }, [placementId, currentUserID]);
+    }, [placementId, currentUserID, form]); // Include currentUserID and form in the dependency array
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -94,6 +93,7 @@ export default function EditPlacement({ placementId }) {
                 toast.error('Failed to update placement');
             });
     };
+
 
     return (
         <Dialog>
