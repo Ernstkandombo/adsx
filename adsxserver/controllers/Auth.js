@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Advertiser = require('../models/Advertiser');
 const Publisher = require('../models/Publisher');
