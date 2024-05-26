@@ -42,8 +42,8 @@ app.use('/api/notification', notificationRoutes);
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-app.use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
+app.use(express.static(path.join(__dirname, './../public')))
+  .set('views', path.join(__dirname, './../views'))
   .set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
