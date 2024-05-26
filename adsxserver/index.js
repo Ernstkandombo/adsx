@@ -3,6 +3,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const path = require('path')
 const bodyParser = require('body-parser');
 const db = require('./config/db');
 const AdItemRoutes = require("./routes/AdItemRoute");
@@ -41,8 +42,15 @@ app.use('/api/notification', notificationRoutes);
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
+app.use(express.static(path.join(__dirname, 'public')))
+  .set('views', path.join(__dirname, 'views'))
+  .set('view engine', 'ejs');
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
+  res.render('index');
+});
+
+app.get('/api', function (req, res) {
   res.send('Hello this is Ads X Server');
 });
 
