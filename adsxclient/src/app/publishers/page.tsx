@@ -9,8 +9,11 @@ import WebsiteComponent from '@/components/dashboard/publishers/websites/Website
 import PlacementComponent from '@/components/dashboard/publishers/placement/PlacementComponent';
 import CampaignAssignmentComponent from '@/components/dashboard/publishers/CampaignAssignments/CampaignAssignmentComponent';
 import CreatePlacement from '@/components/dashboard/publishers/createPlacement';
+
+
+
 export default async function page() {
-    const session = await getServerSession(authOptions);
+      const session = await getServerSession(authOptions);
     if(session.user.userType != 'publisher') {
 
 	    return(

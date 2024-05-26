@@ -2,6 +2,10 @@ const CampaignAssignment = require('../models/CampaignAssignment');
 const Placement = require('../models/Placement');
 const Campaign = require('../models/Campaign');
 const Website = require('../models/Website');
+const Publisher = require('../models/Publisher');
+const Notification = require('../models/Notification');
+const cron = require('node-cron');
+
 
 exports.associateCampaignWithPlacement = async (req, res) => {
     try {
@@ -44,23 +48,23 @@ exports.associateCampaignWithPlacement = async (req, res) => {
     }
 };
 
-// GET CampaignAssignment by ID
 exports.getCampaignAssignmentById = async (req, res) => {
     const { id } = req.params;
-
 
     try {
         // Find all placements belonging to the publisher with the given userID
         const placements = await Placement.find({ publisherId: id });
 
+        // Check if no placements are found
+        if (!placements || placements.length === 0) {
+            return res.status(404).json({ error: 'No placements found for the given publisher ID' });
+        }
 
         // Extract placement IDs
         const placementIds = placements.map(placement => placement._id);
 
-
         // Find campaign assignments with placement IDs matching the found placements
         const campaignAssignments = await CampaignAssignment.find({ placementId: { $in: placementIds } });
-
 
         // Prepare an array to store the results
         const results = [];
@@ -70,24 +74,22 @@ exports.getCampaignAssignmentById = async (req, res) => {
             // Find the campaign associated with the assignment
             const campaign = await Campaign.findById(assignment.campaignId);
 
-            // Find the website associated with the campaign
+            // Find the placement associated with the campaign assignment
             const placement = await Placement.findById(assignment.placementId);
 
-            // Find the website associated with the campaign
+            // Find the website associated with the campaign assignment
             const website = await Website.findById(assignment.websiteId);
-
 
             // Push the relevant information to the results array
             results.push({
                 campaignAssignmentID: assignment._id,
                 campaignName: campaign.name,
-                placementName: placement.name, // Assuming placement name is stored in assignment
+                placementName: placement.name,
                 websiteURL: website.url
             });
         }
 
         // Send the results back as a JSON response
-
         res.json(results);
     } catch (error) {
         // Handle any errors that might occur
@@ -96,20 +98,20 @@ exports.getCampaignAssignmentById = async (req, res) => {
     }
 };
 
-
-
-// DELETE CampaignAssignment by ID
-exports.deleteCampaignAssignmentById = async (req, res) => {
-    const { id } = req.params;
-
+// Schedule the job to run every day at midnight
+cron.schedule('0 0 * * *', async () => {
     try {
-        // Find the CampaignAssignment document by ID and delete it
-        await CampaignAssignment.findByIdAndDelete(id);
-        res.status(204).send(); // Respond with success status
+        // Find campaign assignments with end date less than or equal to current date
+        const expiredAssignments = await CampaignAssignment.find({ endDate: { $lte: new Date() } });
+
+        // Delete expired campaign assignments
+        await CampaignAssignment.deleteMany({ endDate: { $lte: new Date() } });
+
+        console.log(`${expiredAssignments.length} expired campaign assignments deleted.`);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error deleting expired campaign assignments:', error);
     }
-};
+});
 
 // Mongoose middleware to delete associated CampaignAssignments when a Campaign or Placement is deleted
 const deleteAssociatedCampaignAssignments = async function () {

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner'; // Import toast from Sonner
 import {
@@ -20,10 +20,22 @@ import { useSession } from "next-auth/react";
 
 export default function AddWebsite() {
 
-   const { data: session } = useSession(); 
-  const userID = session?.user._id || '';
-  const currentUserID = userID; // Extracting currentUserID from session
+    const { data: session, status } = useSession(); 
+    const [currentUserID, setCurrentUserID] = useState("");
 
+    useEffect(() => {
+        // Update currentUserID when session changes
+        if (status === "authenticated") {
+        setCurrentUserID(session.user._id);
+        }
+    }, [session, status]);
+
+    useEffect(() => {
+        // Save currentUserID to sessionStorage
+        sessionStorage.setItem('currentUserID', currentUserID);
+    }, [currentUserID]);
+        
+    
     const [formData, setFormData] = useState({
         name: "",
         url: "",
@@ -44,34 +56,44 @@ export default function AddWebsite() {
         });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites`, formData)
-            .then(response => {
-                // Handle success
-                console.log('Website added successfully:', response.data);
-                toast.success('Website added successfully');
+const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+        // Retrieve currentUserID from sessionStorage
+        const currentUserID = sessionStorage.getItem('currentUserID');
+
+        // Update formData with currentUserID
+        const updatedFormData = {
+            ...formData,
+            publisherId: currentUserID
+        };
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites`, updatedFormData);
+        // Handle success
+        console.log('Website added successfully:', response.data);
+        toast.success('Website added successfully');
+
+        // Reset form data after successful submission
+        setFormData({
+            name: "",
+            url: "",
+            description: "",
+            category: "",
+            publisherId: currentUserID,
+            views: "",
+            ageRange: [],
+            gender: [],
+            interests: [],
+        });
+    } catch (error) {
+        // Handle error
+        console.error('Error adding website:', error);
+        toast.error('Error adding website');
+    }
+};
 
 
-                // Reset form data after successful submission
-                setFormData({
-                    name: "",
-                    url: "",
-                    description: "",
-                    category: "",
-                    publisherId: currentUserID,
-                    views:"",
-                    ageRange: [],
-                    gender: [],
-                    interests: [],
-                });
-            })
-            .catch(error => {
-                // Handle error
-                console.error('Error adding website:', error);
-                toast.error('Error adding website');
-            });
-    };
 
     return (
         <Dialog>

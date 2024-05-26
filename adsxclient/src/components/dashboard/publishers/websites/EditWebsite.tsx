@@ -75,7 +75,7 @@ export default function EditWebsite({ websiteId }) {
                 <DialogHeader>
                     <DialogTitle className="my-2">Edit Website</DialogTitle>
                     <DialogDescription>
-                        Make changes to your Website. Click save when you're done.
+                        Make changes to your Website. Click save when you are done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="overflow-y-auto">

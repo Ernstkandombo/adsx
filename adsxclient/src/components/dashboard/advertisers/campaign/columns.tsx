@@ -15,6 +15,7 @@ import {
 import EditCampaign from "./EditCampaign";
 import DeleteCampaign from "./DeleteCampaign";
 import ViewCampaignMetrix from "./ViewCampaignMetrix";
+import moment from 'moment';
 
 // Define the type for the Campaign
 export type Campaign = {
@@ -44,12 +45,13 @@ export const columns: ColumnDef<Campaign>[] = [
   {
     accessorKey: "startDate",
     header: "Start Date",
-   
+    cell: ({ value }) => {return moment(value).local().format("DD/MM/YYYY");},
+
   },
   {
     accessorKey: "endDate",
     header: "End Date",
-     
+    cell: ({ value }) => {return moment(value).local().format("DD/MM/YYYY");}, 
   },
   {
     accessorKey: "dailyBudget",

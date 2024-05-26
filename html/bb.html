@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advertiser Report - Example Advertiser</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      margin: 10px 0;
+    }
+    .width{
+        width: 100px;
+    }
+    .height{
+        height: 100px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      padding: 5px;
+      border: 1px solid #ddd;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .header img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+    <div>
+         <h1>Ads X </h1>
+    </div>
+  <div class="header">
+   
+    <h2>Advertiser Report</h2>
+    <div>
+      <img src="https://placehold.co/728x900" alt="Advertiser Avatar">
+      <h3><%= userData.name %> - <%= userData.email %></h3>
+    </div>
+  </div>
+  <h2>Overall Performance</h2>
+  <table>
+    <tr>
+      <th>Total Clicks</th>
+      <th>Total Impressions</th>
+      <th>Total Cost</th>
+    </tr>
+    <tr>
+      <td><%= metrixData.totalClicks %></td>
+      <td><%= metrixData.totalImpressions %></td>
+      <td>$<%= metrixData.totalCost %></td>
+    </tr>
+  </table>
+  <h2>Campaigns</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Campaign Name</th>
+        <th>Clicks</th>
+        <th>Impressions</th>
+        <th>Cost</th>
+        <th>Number of Ads</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const campaign of campaignData) { %>
+        <tr>
+          <td><%= campaign.campaignName %></td>
+          <td><%= campaign.totalClicks %></td>
+          <td><%= campaign.totalImpressions %></td>
+          <td>$<%= campaign.totalCost %></td>
+          <td><%= campaign.numberOfAds %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</body>
+</html>

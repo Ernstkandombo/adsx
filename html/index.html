@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <br>
+    <h1 style="text-align: center; font-family:Verdana, Geneva, Tahoma, sans-serif;">Ad Server</h1>
+     <div class="flex flex-col justify-center items-center py-10">
+      <h2 class="py-6">This is the test advert</h2>
+
+
+      <div id="advert">
+        <a id="66279290053181ebcc05e2a6" href="https://placehold.co/728x90" target="_blank">
+          <img src="https://placehold.co/728x90" alt="Test Advert 1" />
+        </a>
+      </div>
+
+
+    </div>
+    <p
+      style="text-align: center; font-family:Verdana, Geneva, Tahoma, sans-serif; padding-left: 20%; padding-right: 20%; padding-top: 5%; text-align: justify;;">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ipsum tellus, tristique a turpis sagittis, cursus
+      tristique felis. Morbi eu vestibulum turpis, dapibus auctor nibh. Maecenas volutpat libero leo, eget placerat
+      tellus lacinia placerat. Sed feugiat, odio id aliquam sollicitudin, lectus felis ultricies dolor, nec pulvinar
+      felis leo ut elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed
+      velit urna, gravida id urna non, molestie posuere leo. Aenean sit amet enim ut elit venenatis tempus.</p>
+   
+
+    <style>
+      body {
+        background-image: url("img.jpg");
+        background-size: cover;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const advertDiv = document.getElementById("advert");
+        const anchorTag = advertDiv.querySelector("a");
+        const adItemId = anchorTag.getAttribute("id");
+
+        let impressions = 0;
+        let clicks = 0;
+
+        // Function to record impressions
+        function recordImpression() {
+          impressions++;
+          updateTracking();
+        }
+
+        // Function to record clicks
+        function recordClick() {
+          clicks++;
+          updateTracking();
+        }
+
+        // Function to update tracking on the server
+        function updateTracking() {
+          const data = {
+            adItemId: adItemId,
+            impressions: impressions,
+            clicks: clicks
+          };
+
+          console.log("Data being sent:", data);
+
+          fetch("http://localhost:5001/api/adserve/tracking", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error("Failed to update tracking");
+              }
+              console.log("Tracking updated successfully");
+              // Clear impressions and clicks after sending
+              impressions = 0;
+              clicks = 0;
+            })
+            .catch(error => {
+              console.error("Error updating tracking:", error);
+            });
+        }
+
+        // Add event listeners for impression and click
+        advertDiv.addEventListener("impression", recordImpression);
+        anchorTag.addEventListener("click", recordClick);
+
+        // Initial impression recording
+        recordImpression();
+      });
+    </script>
+  </head>
+
+  <body>
+  </body>
+
+</html>

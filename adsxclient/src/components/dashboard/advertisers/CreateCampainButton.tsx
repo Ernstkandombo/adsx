@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { PlusCircle } from "lucide-react";
@@ -10,9 +10,20 @@ import { toast } from 'sonner';
 import { useSession } from "next-auth/react";
 
 export default function CreateCampaignButton() {
-    const { data: session } = useSession();
-    const userID = session?.user._id || {};
-    const currentUserID = userID; // Extracting currentUserID from session
+    const { data: session, status } = useSession(); 
+  const [currentUserID, setCurrentUserID] = useState("");
+
+  useEffect(() => {
+    // Update currentUserID when session changes
+    if (status === "authenticated") {
+      setCurrentUserID(session.user._id);
+    }
+  }, [session, status]);
+
+  useEffect(() => {
+    // Save currentUserID to sessionStorage
+    sessionStorage.setItem('currentUserID', currentUserID);
+  }, [currentUserID]);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -52,7 +63,16 @@ export default function CreateCampaignButton() {
         e.preventDefault();
 
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`, formData);
+
+            // Retrieve currentUserID from sessionStorage
+        const currentUserID = sessionStorage.getItem('currentUserID');
+
+        // Update formData with currentUserID
+        const updatedFormData = {
+            ...formData,
+            advertiserId: currentUserID
+        };
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaign`, updatedFormData);
             console.log('Campaign created successfully');
             toast.success('Campaign created successfully');
 

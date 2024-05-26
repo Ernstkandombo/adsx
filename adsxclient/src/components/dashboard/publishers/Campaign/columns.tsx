@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import AssignCampaign from "./CamapignAssign"
-
+import moment from "moment"
 
 
 // Define the type for the Campaign
@@ -28,6 +28,8 @@ export type Campaign = {
   dailyBudget: number;
   totalBudget: number;
   clicks: number;
+  costPerClick: number;
+  costPerImpression: number;
   impressions: number;
   dateCreated: Date;
 };
@@ -44,12 +46,12 @@ export const columns: ColumnDef<Campaign>[] = [
   {
     accessorKey: "startDate",
     header: "Start Date",
-   
+   cell: ({ value }) => {return moment(value).local().format("DD/MM/YYYY");},
   },
   {
     accessorKey: "endDate",
     header: "End Date",
-     
+     cell: ({ value }) => {return moment(value).local().format("DD/MM/YYYY");},
   },
   {
     accessorKey: "dailyBudget",
@@ -59,31 +61,14 @@ export const columns: ColumnDef<Campaign>[] = [
     accessorKey: "totalBudget",
     header: "Total Budget",
   },
-  
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const Campaign = row.original
- 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="center" className="flex flex-col">
-            <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-                <AssignCampaign CampaignID={Campaign._id} />
-            </DropdownMenuItem>
-
-           
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+   {
+    accessorKey: "costPerClick",
+    header: "cost/Click",
   },
+   {
+    accessorKey: "costPerImpression",
+    header: "cost/Impression",
+  },
+  
+
 ]

@@ -80,7 +80,7 @@ export default function EditCampaign({ CampaignID }) {
                 <DialogHeader>
                     <DialogTitle className="my-2">Edit Campaign</DialogTitle>
                     <DialogDescription>
-                        Make changes to your Campaign. Click save when you're done.
+                        Make changes to your Campaign. Click save when you are done.
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>

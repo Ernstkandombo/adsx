@@ -37,7 +37,8 @@ export const authOptions = {
         })
     ],
     session: {
-       strategy: "jwt",
+        strategy: "jwt",
+        
     },
     pages: {
         signIn: '/',
@@ -57,7 +58,7 @@ export const authOptions = {
             if(token?.user){
                 session.user = token.user;
             } 
-                return session;
+                return Promise.resolve(session);
             }
     }
 };

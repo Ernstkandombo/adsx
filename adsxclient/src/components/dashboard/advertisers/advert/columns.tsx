@@ -74,7 +74,7 @@ export const columns: ColumnDef<Advert>[] = [
             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
              <DropdownMenuItem asChild>
-                <ViewAdvertMetrix AdvertID={Advert._id} />
+                {/* <ViewAdvertMetrix AdvertID={Advert._id} /> */}
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
                 <EditAdvert AdvertID={Advert._id} />
