@@ -5,19 +5,19 @@ const app = express();
 const cors = require('cors');
 const path = require('path')
 const bodyParser = require('body-parser');
-const db = require('../config/db');
-const AdItemRoutes = require("../routes/AdItemRoute");
-const AdvertiserRoutes = require("../routes/AdvertiserRoute");
-const PublisherRoutes = require("../routes/PublisherRoute");
-const AdSenseRoutes = require("../routes/AdServeRoute");
-const CampaignRoutes = require("../routes/CampaignRoute");
-const CampaignAssignmentRoutes = require("../routes/CampaignAssignment");
-const PlacementRoutes = require("../routes/PlacementRoute");
-const WebsiteRoutes = require("../routes/WebsiteRoute");
-const ReportRoutes = require("../routes/ReportRoute");
-const AuthRoutes = require("../routes/AuthRoute");
-const BidRoutes = require("../routes/BiddingRoute");
-const notificationRoutes = require('../routes/NotificationRoute');
+const db = require('./config/db');
+const AdItemRoutes = require("./routes/AdItemRoute");
+const AdvertiserRoutes = require("./routes/AdvertiserRoute");
+const PublisherRoutes = require("./routes/PublisherRoute");
+const AdSenseRoutes = require("./routes/AdServeRoute");
+const CampaignRoutes = require("./routes/CampaignRoute");
+const CampaignAssignmentRoutes = require("./routes/CampaignAssignment");
+const PlacementRoutes = require("./routes/PlacementRoute");
+const WebsiteRoutes = require("./routes/WebsiteRoute");
+const ReportRoutes = require("./routes/ReportRoute");
+const AuthRoutes = require("./routes/AuthRoute");
+const BidRoutes = require("./routes/BiddingRoute");
+const notificationRoutes = require('./routes/NotificationRoute');
 // Middleware to parse JSON bodies
 app.use(express.json());
 // Enable CORS for all requests
@@ -42,8 +42,8 @@ app.use('/api/notification', notificationRoutes);
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-app.use(express.static(path.join(__dirname, './../public')))
-  .set('views', path.join(__dirname, './../views'))
+app.use(express.static(path.join(__dirname, './public')))
+  .set('views', path.join(__dirname, './views'))
   .set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
