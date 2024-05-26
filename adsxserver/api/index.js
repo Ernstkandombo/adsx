@@ -5,19 +5,19 @@ const app = express();
 const cors = require('cors');
 const path = require('path')
 const bodyParser = require('body-parser');
-const db = require('./config/db');
-const AdItemRoutes = require("./routes/AdItemRoute");
-const AdvertiserRoutes = require("./routes/AdvertiserRoute");
-const PublisherRoutes = require("./routes/PublisherRoute");
-const AdSenseRoutes = require("./routes/AdServeRoute");
-const CampaignRoutes = require("./routes/CampaignRoute");
-const CampaignAssignmentRoutes = require("./routes/CampaignAssignment");
-const PlacementRoutes = require("./routes/PlacementRoute");
-const WebsiteRoutes = require("./routes/WebsiteRoute");
-const ReportRoutes = require("./routes/ReportRoute");
-const AuthRoutes = require("./routes/AuthRoute");
-const BidRoutes = require("./routes/BiddingRoute");
-const notificationRoutes = require('./routes/NotificationRoute');
+const db = require('../config/db');
+const AdItemRoutes = require("../routes/AdItemRoute");
+const AdvertiserRoutes = require("../routes/AdvertiserRoute");
+const PublisherRoutes = require("../routes/PublisherRoute");
+const AdSenseRoutes = require("../routes/AdServeRoute");
+const CampaignRoutes = require("../routes/CampaignRoute");
+const CampaignAssignmentRoutes = require("../routes/CampaignAssignment");
+const PlacementRoutes = require("../routes/PlacementRoute");
+const WebsiteRoutes = require("../routes/WebsiteRoute");
+const ReportRoutes = require("../routes/ReportRoute");
+const AuthRoutes = require("../routes/AuthRoute");
+const BidRoutes = require("../routes/BiddingRoute");
+const notificationRoutes = require('../routes/NotificationRoute');
 // Middleware to parse JSON bodies
 app.use(express.json());
 // Enable CORS for all requests
@@ -50,9 +50,7 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-app.get('/api', function (req, res) {
-  res.send('Hello this is Ads X Server');
-});
+
 
 // Start server
 const PORT = process.env.PORT || 5001;
